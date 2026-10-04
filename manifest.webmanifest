@@ -1,0 +1,12 @@
+{
+  "name":"Itinerario Artistico",
+  "short_name":"Itinerario",
+  "description":"Crea e presenta itinerari artistici con mappa, immagini, distanze e tempi a piedi.",
+  "lang":"it",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f2efe8",
+  "theme_color":"#1f211e",
+  "icons":[{"src":"./icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
