@@ -9,7 +9,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="./styles.css?v=14">
+  <link rel="stylesheet" href="./styles.css?v=15">
 </head>
 <body>
   <div id="library" class="library"></div>
@@ -61,7 +61,6 @@
       L.map = function(id, options) {
         return originalMap.call(L, id, Object.assign({}, options || {}, { preferCanvas: false }));
       };
-
       const originalTileLayer = L.tileLayer;
       L.tileLayer = function(url, options) {
         const opts = Object.assign({}, options || {}, {
@@ -76,11 +75,8 @@
       };
     }
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <script src="./app.js?v=14"></script>
-  <script src="./progressive-route.js?v=14"></script>
-  <script src="./share-presentation.js?v=14"></script>
-  <script src="./classroom-tools.js?v=14"></script>
+  <script src="./app.js?v=15"></script>
+  <script src="./progressive-route.js?v=15"></script>
+  <script src="./share-presentation.js?v=15"></script>
 </body>
 </html>
