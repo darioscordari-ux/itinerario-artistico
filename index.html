@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1f211e">
+  <title>Itinerario Artistico</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="library" class="library"></div>
+
+  <div id="app" class="app hidden">
+    <header class="topbar">
+      <div class="brand"><span class="brandmark">IA</span><div><b>Itinerario Artistico</b><small id="projectName"></small></div></div>
+      <div class="toolbar">
+        <button id="backBtn" class="btn">← Indietro</button>
+        <button id="homeBtn" class="btn">⌂ Home</button>
+        <button id="addStopBtn" class="btn primary">＋ Tappa</button>
+        <button id="editStopBtn" class="btn">✎ Modifica</button>
+        <button id="showAllBtn" class="btn">Percorso completo</button>
+        <button id="presentBtn" class="btn">▶ Presenta</button>
+        <button id="settingsBtn" class="btn">⚙</button>
+        <button id="installBtn" class="btn hidden">⇩ Installa</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="mapPanel">
+        <div id="map"></div>
+        <div id="mapHint" class="mapHint">Seleziona una tappa oppure premi <b>Avanti</b>.</div>
+        <div id="routeSummary" class="routeSummary hidden"></div>
+      </section>
+
+      <aside class="slidePanel">
+        <div id="slide" class="slide"></div>
+        <div class="slideNav">
+          <button id="prevBtn" class="btn">←</button>
+          <div class="progressWrap"><div class="progress"><i id="progressBar"></i></div><small id="stepText"></small></div>
+          <button id="nextBtn" class="btn primary">Avanti →</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <div id="modalBack" class="modalBack hidden">
+    <div id="modal" class="modal"></div>
+  </div>
+
+  <input id="photoPicker" type="file" accept="image/*" class="hidden">
+  <input id="importPicker" type="file" accept="application/json,.json" class="hidden">
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
