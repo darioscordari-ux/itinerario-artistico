@@ -7,7 +7,8 @@
   function getProjects(){try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch{return []}}
   function saveProjects(p){localStorage.setItem(STORE,JSON.stringify(p))}
   function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-  function fileName(title){return (title||'itinerario').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()+'-presentazione.json'}
+  function slug(title){return (title||'itinerario').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()}
+  function fileName(title,mode){return `${slug(title)}-${mode==='presentation'?'presentazione':'lavoro'}.json`}
 
   function projectForCurrentView(){
     const projects=getProjects();
@@ -19,24 +20,28 @@
   function setReadonlyMode(on){
     activeReadonly=!!on;
     document.body.classList.toggle('readonly-mode',activeReadonly);
-    ['addStopBtn','editStopBtn','settingsBtn'].forEach(id=>document.getElementById(id)?.classList.toggle('hidden',activeReadonly));
-    const share=document.getElementById('sharePresentationBtn');
-    if(share)share.classList.toggle('hidden',activeReadonly);
+    ['addStopBtn','editStopBtn','settingsBtn','shareBtn'].forEach(id=>document.getElementById(id)?.classList.toggle('hidden',activeReadonly));
   }
 
-  async function sharePresentation(){
-    const p=projectForCurrentView();
-    if(!p)return alert('Apri prima un itinerario.');
+  async function sendPayload(p,mode){
     const clone=JSON.parse(JSON.stringify(p));
     delete clone.id;
-    clone.readOnly=true;
-    clone.presentationOnly=true;
-    const payload={type:'itinerario-artistico-presentation',version:1,presentationOnly:true,project:clone};
+    const isPresentation=mode==='presentation';
+    clone.readOnly=isPresentation;
+    clone.presentationOnly=isPresentation;
+    const payload={
+      type:isPresentation?'itinerario-artistico-presentation':'itinerario-artistico-work',
+      version:2,
+      presentationOnly:isPresentation,
+      editable:!isPresentation,
+      project:clone
+    };
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-    const file=new File([blob],fileName(p.title),{type:'application/json'});
+    const file=new File([blob],fileName(p.title,mode),{type:'application/json'});
+    const shareText=isPresentation?'Presentazione Itinerario Artistico · sola lettura':'Itinerario Artistico · file di lavoro modificabile';
     try{
       if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
-        await navigator.share({title:p.title,text:'Presentazione Itinerario Artistico · sola lettura',files:[file]});
+        await navigator.share({title:p.title,text:shareText,files:[file]});
         return;
       }
     }catch(e){if(e?.name==='AbortError')return}
@@ -45,13 +50,38 @@
     setTimeout(()=>URL.revokeObjectURL(a.href),1500);
   }
 
+  function openShareMenu(){
+    const p=projectForCurrentView();
+    if(!p)return alert('Apri prima un itinerario.');
+    const back=document.getElementById('modalBack'),modal=document.getElementById('modal');
+    if(!back||!modal)return;
+    modal.innerHTML=`
+      <h2>Condividi itinerario</h2>
+      <p style="margin-top:0;color:#6b6255">Scegli come vuoi inviarlo.</p>
+      <div style="display:grid;gap:12px;margin-top:18px">
+        <button id="shareWorkChoice" class="btn" style="text-align:left;padding:14px 16px;height:auto">
+          <b style="display:block;font-size:15px;margin-bottom:4px">✎ Condividi lavoro</b>
+          <span style="font-size:13px">Chi lo riceve può importarlo e modificarlo.</span>
+        </button>
+        <button id="sharePresentationChoice" class="btn primary" style="text-align:left;padding:14px 16px;height:auto">
+          <b style="display:block;font-size:15px;margin-bottom:4px">▶ Condividi presentazione</b>
+          <span style="font-size:13px">Prodotto finito: sola lettura, senza strumenti di modifica.</span>
+        </button>
+      </div>
+      <div class="modalFoot"><button id="closeShareChoice" class="btn">Chiudi</button></div>`;
+    back.classList.remove('hidden');
+    document.getElementById('shareWorkChoice').onclick=async()=>{back.classList.add('hidden');await sendPayload(p,'work')};
+    document.getElementById('sharePresentationChoice').onclick=async()=>{back.classList.add('hidden');await sendPayload(p,'presentation')};
+    document.getElementById('closeShareChoice').onclick=()=>back.classList.add('hidden');
+  }
+
   function ensureToolbarButton(){
-    if(document.getElementById('sharePresentationBtn'))return;
+    if(document.getElementById('shareBtn'))return;
     const settings=document.getElementById('settingsBtn');
     if(!settings)return;
     const b=document.createElement('button');
-    b.id='sharePresentationBtn';b.className='btn';b.textContent='↗ Condividi presentazione';
-    b.onclick=sharePresentation;
+    b.id='shareBtn';b.className='btn';b.textContent='↗ Condividi';
+    b.onclick=openShareMenu;
     settings.after(b);
     if(activeReadonly)b.classList.add('hidden');
   }
@@ -73,17 +103,20 @@
       const p=projects[i];if(!p)return;
       card.dataset.projectId=p.id;
       card.dataset.readonly=p.readOnly||p.presentationOnly?'1':'0';
+      const old=card.querySelector('.readonlyBadge');if(old)old.remove();
       if(p.readOnly||p.presentationOnly){
-        if(!card.querySelector('.readonlyBadge')){
-          const badge=document.createElement('div');
-          badge.className='readonlyBadge';
-          badge.textContent='🔒 Presentazione · sola lettura';
-          badge.style.cssText='font-size:12px;font-weight:700;margin:8px 0 0;color:#6b6255';
-          card.querySelector('.cardBody')?.insertBefore(badge,card.querySelector('.cardActions'));
-        }
+        const badge=document.createElement('div');
+        badge.className='readonlyBadge';
+        badge.textContent='🔒 Presentazione · sola lettura';
+        badge.style.cssText='font-size:12px;font-weight:700;margin:8px 0 0;color:#6b6255';
+        card.querySelector('.cardBody')?.insertBefore(badge,card.querySelector('.cardActions'));
         const open=card.querySelector('[data-o]');if(open)open.textContent='Apri presentazione';
         const present=card.querySelector('[data-p]');if(present)present.style.display='none';
         const dup=card.querySelector('[data-d]');if(dup)dup.style.display='none';
+      } else {
+        const open=card.querySelector('[data-o]');if(open)open.textContent='Apri';
+        const present=card.querySelector('[data-p]');if(present)present.style.display='';
+        const dup=card.querySelector('[data-d]');if(dup)dup.style.display='';
       }
     });
   }
@@ -114,9 +147,10 @@
         const p=obj.project||obj;
         if(!p||!Array.isArray(p.stops))throw new Error();
         const isPresentation=obj.presentationOnly===true||obj.type==='itinerario-artistico-presentation'||p.presentationOnly===true||p.readOnly===true;
-        const imported={...p,id:uid(),created:Date.now(),updated:Date.now(),title:(p.title||'Itinerario')+(isPresentation?' · presentazione':' · importato')};
+        const imported={...p,id:uid(),created:Date.now(),updated:Date.now(),title:(p.title||'Itinerario')+(isPresentation?' · presentazione':' · condiviso')};
         imported.readOnly=!!isPresentation;
         imported.presentationOnly=!!isPresentation;
+        if(!isPresentation){delete imported.readOnly;delete imported.presentationOnly}
         const projects=getProjects();projects.push(imported);saveProjects(projects);
         location.reload();
       }catch{alert('File non valido o non compatibile.')}
@@ -125,7 +159,7 @@
   }
 
   const style=document.createElement('style');
-  style.textContent='body.readonly-mode #addStopBtn,body.readonly-mode #editStopBtn,body.readonly-mode #settingsBtn,body.readonly-mode #sharePresentationBtn{display:none!important}';
+  style.textContent='body.readonly-mode #addStopBtn,body.readonly-mode #editStopBtn,body.readonly-mode #settingsBtn,body.readonly-mode #shareBtn{display:none!important}';
   document.head.appendChild(style);
 
   const observer=new MutationObserver(()=>{ensureToolbarButton();ensureImportButton();decorateCards()});
