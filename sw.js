@@ -1,5 +1,8 @@
-const CACHE='itinerario-artistico-v15';
-const SHELL=['./','./index.html','./styles.css?v=15','./app.js?v=15','./progressive-route.js?v=15','./share-presentation.js?v=15','./manifest.webmanifest','./icons/icon.svg'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;const u=new URL(e.request.url);if(u.origin===location.origin)e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))))});
+self.addEventListener('install',event=>{self.skipWaiting()});
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    try{const keys=await caches.keys();await Promise.all(keys.map(k=>caches.delete(k)))}catch{}
+    try{await self.registration.unregister()}catch{}
+    try{const clientsList=await self.clients.matchAll({type:'window'});clientsList.forEach(c=>c.navigate(c.url))}catch{}
+  })());
+});
