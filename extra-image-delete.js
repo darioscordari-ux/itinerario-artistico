@@ -46,32 +46,37 @@
     const nodes=hero?.querySelectorAll('.extraSlideImage');
     nodes?.[index]?.remove();
     if(hero)updateGrid(hero);
-    refresh();
+    schedule();
   }
-  function refresh(){
-    const slide=$('slide'),actions=slide?.querySelector('.photoActions'),hero=slide?.querySelector('.hero');
-    if(!slide||!actions||!hero)return;
-    const x=currentExtra(), images=Array.isArray(x?.data?.images)?x.data.images:[];
-    const primary=!!hero.querySelector('img:not(.extraSlideImage)');
-    const existing=[...actions.querySelectorAll('.extraImageDeleteBtn')];
-    const sig=images.map((_,i)=>String(i)).join(',');
-    const currentSig=existing.map(b=>b.dataset.extraIndex).join(',');
-    if(existing.length===images.length&&sig===currentSig)return;
-    existing.forEach(b=>b.remove());
-    images.forEach((_,i)=>{
-      const b=document.createElement('button');
-      b.className='btn red extraImageDeleteBtn';
-      b.dataset.extraIndex=String(i);
-      b.textContent=`🗑 Elimina immagine ${i+(primary?2:1)}`;
-      b.title='Elimina questa immagine dalla slide';
-      b.onclick=e=>{
+  function bindImageClicks(){
+    const slide=$('slide'),hero=slide?.querySelector('.hero');
+    if(!slide||!hero)return;
+
+    slide.querySelectorAll('.extraImageDeleteBtn').forEach(b=>b.remove());
+
+    const primary=hero.querySelector('img:not(.extraSlideImage)');
+    if(primary){
+      primary.style.cursor='pointer';
+      primary.title='Clicca per eliminare questa immagine';
+      primary.onclick=e=>{
+        if(document.body.classList.contains('presentation'))return;
+        e.preventDefault();e.stopPropagation();
+        const btn=$('deletePhotoBtn');
+        if(btn)btn.click();
+      };
+    }
+
+    [...hero.querySelectorAll('.extraSlideImage')].forEach((img,i)=>{
+      img.style.cursor='pointer';
+      img.title='Clicca per eliminare questa immagine';
+      img.onclick=e=>{
+        if(document.body.classList.contains('presentation'))return;
         e.preventDefault();e.stopPropagation();
         if(confirm('Eliminare questa immagine dalla slide?'))removeExtra(i);
       };
-      actions.appendChild(b);
     });
   }
-  function schedule(){clearTimeout(timer);timer=setTimeout(refresh,80)}
+  function schedule(){clearTimeout(timer);timer=setTimeout(bindImageClicks,80)}
   window.addEventListener('load',()=>{
     const slide=$('slide');
     if(slide)new MutationObserver(schedule).observe(slide,{childList:true,subtree:true});
