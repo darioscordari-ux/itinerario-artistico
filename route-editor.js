@@ -156,6 +156,7 @@
       label:selectedLabel?{latlng:selectedLabel.getLatLng(),html:labelEl?.innerHTML||labelEl?.textContent||`${segmentIndex+1}→${segmentIndex+2}`} : null
     };
     selectedLine.on('click',onLineClick);
+    selectedLine.setStyle({weight:8,opacity:1});
     return true;
   }
   function loadSegment(index){
@@ -167,7 +168,7 @@
     currentRoute=saved||{points:originalSnapshot.points,distance:0,time:0};
     if(saved)applyRouteToSegment(index,saved);
     renderWaypointMarkers();
-    status(currentWaypoints.length?`${currentWaypoints.length} punto/i di passaggio. Trascinali oppure clicca sulla linea.`:'Clicca sulla linea per creare un punto di passaggio, oppure usa “+ Punto”.');
+    status(currentWaypoints.length?`${currentWaypoints.length} punto/i di passaggio. Trascinali oppure clicca sulla linea.`:'La linea evidenziata è modificabile: cliccala per creare un punto di passaggio, oppure premi “+ Punto”.');
   }
   async function recalcPreview(){
     const stops=stopMarkers(); if(stops.length<segmentIndex+2)return;
@@ -176,12 +177,13 @@
     try{
       const route=await pedestrianRoute([a,...currentWaypoints,b]); currentRoute={...route,waypoints:currentWaypoints.map(p=>({lat:p.lat,lng:p.lng}))};
       applyRouteToSegment(segmentIndex,currentRoute); renderWaypointMarkers();
-      status('Percorso aggiornato. Puoi spostare ancora i punti oppure salvarlo.');
+      if(selectedLine)selectedLine.setStyle({weight:8,opacity:1});
+      status('Percorso aggiornato. Trascina il punto numerato per rifinirlo, poi premi “Salva percorso”.');
     }catch{ status('Non riesco a calcolare il percorso da questi punti. Spostane uno e riprova.',true); }
     finally{setButtonsBusy(false)}
   }
   async function addWaypoint(latlng){
-    if(!latlng)return; currentWaypoints.push({lat:latlng.lat,lng:latlng.lng}); addPointMode=false; await recalcPreview();
+    if(!latlng)return; currentWaypoints.push({lat:latlng.lat,lng:latlng.lng}); addPointMode=false; $('map')?.classList.remove('routeAddCursor'); await recalcPreview();
   }
   function mapAddPoint(e){ if(editing&&addPointMode)addWaypoint(e.latlng); }
 
@@ -189,7 +191,9 @@
     if(!editing)return;
     if(!save)restoreSnapshot();
     detachLineClick(); clearWaypointMarkers(); map()?.off('click',mapAddPoint); editing=false; addPointMode=false;
-    $('modalBack')?.classList.add('hidden'); if($('modal'))$('modal').innerHTML='';
+    $('map')?.classList.remove('routeAddCursor');
+    const back=$('modalBack'); if(back){back.classList.remove('routeEditing');back.classList.add('hidden');}
+    if($('modal'))$('modal').innerHTML='';
     if(save)scheduleApplySaved();
   }
   function openEditor(){
@@ -201,13 +205,13 @@
     const options=Array.from({length:stops.length-1},(_,i)=>`<option value="${i}" ${i===segmentIndex?'selected':''}>Tratto ${i+1} → ${i+2}</option>`).join('');
     $('modal').innerHTML=`<h2>Modifica percorso</h2>
       <div class="field"><label>Tratto da modificare</label><select id="routeSegment">${options}</select></div>
-      <div class="routeEditHelp">Clicca direttamente sulla linea per aggiungere un punto di passaggio. I punti numerati possono essere trascinati sulla strada che preferisci.</div>
-      <div class="routeEditActions"><button class="btn" id="routeAddPoint">＋ Punto</button><button class="btn" id="routeReset">Ripristina automatico</button></div>
+      <div class="routeEditHelp"><b>La mappa resta attiva.</b> Clicca sulla linea evidenziata per creare un punto di passaggio, poi trascina il punto numerato sulla strada che preferisci.</div>
+      <div class="routeEditActions"><button class="btn" id="routeAddPoint">＋ Punto sulla mappa</button><button class="btn" id="routeReset">Ripristina automatico</button></div>
       <div id="routeEditStatus" class="routeEditStatus"></div>
       <div class="modalFoot"><button class="btn" id="routeCancel">Annulla</button><button class="btn primary" id="routeSave">Salva percorso</button></div>`;
-    $('modalBack').classList.remove('hidden');
+    const back=$('modalBack'); back.classList.add('routeEditing'); back.classList.remove('hidden');
     $('routeSegment').onchange=e=>loadSegment(Number(e.target.value));
-    $('routeAddPoint').onclick=()=>{addPointMode=true;status('Ora clicca sulla mappa nel punto da cui vuoi far passare il percorso.');};
+    $('routeAddPoint').onclick=()=>{addPointMode=true;$('map')?.classList.add('routeAddCursor');status('Ora clicca sulla mappa nel punto da cui vuoi far passare il percorso.');};
     $('routeReset').onclick=async()=>{currentWaypoints=[];renderWaypointMarkers();await recalcPreview();status('Percorso automatico ripristinato. Premi “Salva percorso” per confermare.');};
     $('routeCancel').onclick=()=>closeEditor(false);
     $('routeSave').onclick=()=>{
@@ -225,10 +229,14 @@
     const b=document.createElement('button'); b.id='editRouteBtn'; b.className='btn'; b.textContent='🛣 Modifica percorso'; b.onclick=openEditor; ref.insertAdjacentElement('afterend',b);
     const style=document.createElement('style');
     style.textContent=`
-      .routeHandle{width:28px;height:28px;border-radius:50%;background:#fff;border:3px solid #b42318;color:#b42318;font:700 13px/22px system-ui;text-align:center;box-shadow:0 2px 8px #0004;cursor:grab;box-sizing:border-box}
-      .routeHandle:active{cursor:grabbing}.routeEditHelp{padding:10px 12px;background:#f5f1e9;border-radius:10px;font-size:13px;line-height:1.35;margin:8px 0 12px}
+      .routeHandle{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid #b42318;color:#b42318;font:800 13px/24px system-ui;text-align:center;box-shadow:0 2px 10px #0006;cursor:grab;box-sizing:border-box}
+      .routeHandle:active{cursor:grabbing}.routeEditHelp{padding:10px 12px;background:#f5f1e9;border-radius:10px;font-size:13px;line-height:1.4;margin:8px 0 12px}
       .routeEditActions{display:flex;gap:8px;flex-wrap:wrap}.routeEditStatus{min-height:22px;margin-top:10px;font-size:13px;color:#405044}.routeEditStatus.bad{color:#b42318}
       #routeSegment{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;background:white;font:inherit}
+      .modalBack.routeEditing{background:transparent;pointer-events:none;align-items:flex-start;justify-content:flex-end;padding:72px 14px 14px}
+      .modalBack.routeEditing .modal{pointer-events:auto;width:min(370px,92vw);max-height:calc(100vh - 90px);box-shadow:0 12px 35px #0005;border:1px solid #d9d2c8}
+      #map.routeAddCursor,.routeEditing~* #map.routeAddCursor{cursor:crosshair!important}
+      @media(max-width:640px){.modalBack.routeEditing{padding:58px 6px 6px;justify-content:flex-end}.modalBack.routeEditing .modal{width:min(320px,86vw);padding:14px}.modalBack.routeEditing .modal h2{font-size:21px}}
     `;
     document.head.appendChild(style);
   }
