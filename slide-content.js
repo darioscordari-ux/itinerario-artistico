@@ -3,7 +3,7 @@
 
   const PROJECT_STORE='itinerarioArtistico.projects.v4';
   const EXTRA_STORE='itinerarioArtistico.slideExtras.v1';
-  let applying=false, timer=null;
+  let applying=false, timer=null, forceNext=false;
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
@@ -27,9 +27,9 @@
     if(create){store[p.id]=store[p.id]||{};store[p.id][idx]=store[p.id][idx]||{images:[],video:'',textMode:'paragraph',bullets:[]};return {store,data:store[p.id][idx],pid:p.id,idx};}
     return store?.[p.id]?.[idx]||null;
   }
-  function mutate(fn){const x=getExtra(true);if(!x)return;fn(x.data);saveExtras(x.store);schedule()}
+  function mutate(fn){const x=getExtra(true);if(!x)return;fn(x.data);saveExtras(x.store);schedule(true)}
 
-  function schedule(){clearTimeout(timer);timer=setTimeout(apply,50)}
+  function schedule(force=false){if(force)forceNext=true;clearTimeout(timer);timer=setTimeout(apply,50)}
   function closeModal(){const b=$('modalBack');if(b){b.classList.add('hidden');b.classList.remove('slideToolsModal')}if($('modal'))$('modal').innerHTML=''}
   function openModal(html){const b=$('modalBack'),m=$('modal');if(!b||!m)return;m.innerHTML=html;b.classList.add('slideToolsModal');b.classList.remove('hidden')}
 
@@ -120,6 +120,8 @@
     if(applying)return;
     const slide=$('slide');if(!slide||$('app')?.classList.contains('hidden'))return;
     const hero=slide.querySelector('.hero');const actions=slide.querySelector('.photoActions');if(!hero||!actions)return;
+    const force=forceNext;forceNext=false;
+    if(actions.dataset.slideToolsApplied==='1'&&!force)return;
     applying=true;
     try{
       const d=getExtra(false)||{};
@@ -139,6 +141,7 @@
         actions.insertAdjacentHTML('beforeend',' <button class="btn" id="addSlideImage">＋ Altra immagine</button> <button class="btn" id="slideVideoBtn">🎬 Video</button> <button class="btn" id="slideTextBtn">☷ Testo</button> <button class="btn" id="slideMediaBtn">⋯ Media</button>');
         $('addSlideImage').onclick=addImages;$('slideVideoBtn').onclick=editVideo;$('slideTextBtn').onclick=editText;$('slideMediaBtn').onclick=manageMedia;
       }
+      actions.dataset.slideToolsApplied='1';
     }finally{applying=false}
   }
 
