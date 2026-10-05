@@ -18,11 +18,6 @@
     return [...document.querySelectorAll('#map .leaflet-marker-pane .routeLabel')];
   }
 
-  function stopMarkerIcons(){
-    return [...document.querySelectorAll('#map .leaflet-marker-pane .leaflet-marker-icon')]
-      .filter(el => el.querySelector('.markerPin'));
-  }
-
   function parseDistance(text){
     const s = String(text || '').trim().toLowerCase().replace(',', '.');
     const n = parseFloat(s) || 0;
@@ -115,7 +110,6 @@
     const step = currentStep();
     const paths = routePaths();
     const labels = routeLabels();
-    const markers = stopMarkerIcons();
 
     paths.forEach((p,i)=>{
       const visible = showComplete || i < step - 1;
@@ -124,10 +118,6 @@
     labels.forEach((l,i)=>{
       const visible = showComplete || i < step - 1;
       l.style.display = visible ? '' : 'none';
-    });
-    markers.forEach((m,i)=>{
-      const visible = showComplete || i < step;
-      m.style.display = visible ? '' : 'none';
     });
 
     if (!showComplete && animateNew && step > lastStep && step >= 2) {
