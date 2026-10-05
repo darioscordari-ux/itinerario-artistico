@@ -66,7 +66,9 @@
     if (window.L) {
       const originalMap = L.map;
       L.map = function(id, options) {
-        return originalMap.call(L, id, Object.assign({}, options || {}, { preferCanvas: false }));
+        const m = originalMap.call(L, id, Object.assign({}, options || {}, { preferCanvas: false }));
+        window.__IA_MAP = m;
+        return m;
       };
       const originalTileLayer = L.tileLayer;
       L.tileLayer = function(url, options) {
@@ -84,5 +86,6 @@
   </script>
   <script src="./app.js?v=16"></script>
   <script src="./progressive-route.js?v=17"></script>
+  <script src="./route-editor.js?v=18"></script>
 </body>
 </html>
