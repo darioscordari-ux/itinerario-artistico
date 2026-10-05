@@ -109,10 +109,11 @@
   }
 
   function manageMedia(){
-    const d=getExtra(false)||{}, n=Array.isArray(d.images)?d.images.length:0;
-    openModal(`<h2>Contenuti aggiuntivi</h2><div class="note"><b>${n}</b> immagini aggiuntive${d.video?'<br>🎬 Video presente':''}</div><div class="modalFoot"><button class="btn" id="slideRemoveLast" ${n?'':'disabled'}>Rimuovi ultima immagine</button><button class="btn" id="slideRemoveVideo" ${d.video?'':'disabled'}>Rimuovi video</button><button class="btn" id="slideMediaClose">Chiudi</button></div>`);
+    const d=getExtra(false)||{}, imgs=Array.isArray(d.images)?d.images:[];
+    const rows=imgs.length?imgs.map((src,i)=>`<div style="display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid #e5dfd6"><img src="${src}" alt="" style="width:72px;height:52px;object-fit:cover;border-radius:7px"><span>Immagine aggiuntiva ${i+1}</span><button class="btn red" data-remove-extra="${i}">Elimina</button></div>`).join(''):'<div class="note">Nessuna immagine aggiuntiva.</div>';
+    openModal(`<h2>Contenuti aggiuntivi</h2>${rows}<div class="modalFoot"><button class="btn" id="slideRemoveVideo" ${d.video?'':'disabled'}>Rimuovi video</button><button class="btn" id="slideMediaClose">Chiudi</button></div>`);
     $('slideMediaClose').onclick=closeModal;
-    $('slideRemoveLast').onclick=()=>{mutate(x=>{x.images=Array.isArray(x.images)?x.images:[];x.images.pop()});closeModal()};
+    document.querySelectorAll('[data-remove-extra]').forEach(b=>b.onclick=()=>{const i=Number(b.dataset.removeExtra);mutate(x=>{x.images=Array.isArray(x.images)?x.images:[];x.images.splice(i,1)});closeModal()});
     $('slideRemoveVideo').onclick=()=>{mutate(x=>x.video='');closeModal()};
   }
 
@@ -129,9 +130,10 @@
       hero.querySelectorAll('.extraSlideImage').forEach(x=>x.remove());
       hero.classList.remove('gallery2','gallery3','gallery4');
       const primary=hero.querySelector('img:not(.extraSlideImage)');
-      if(primary&&extras.length){
+      if(!primary&&extras.length)hero.querySelector('.placeholder')?.remove();
+      if(extras.length){
         extras.forEach(src=>{const im=document.createElement('img');im.className='extraSlideImage';im.src=src;im.alt='';hero.appendChild(im)});
-        const total=1+extras.length;hero.classList.add('gallery'+Math.min(4,total));
+        const total=(primary?1:0)+extras.length;if(total>1)hero.classList.add('gallery'+Math.min(4,total));
       }
       slide.querySelectorAll('.slideVideoWrap,.slideVideoLink').forEach(x=>x.remove());
       if(d.video){const box=document.createElement('div');box.innerHTML=videoHtml(d.video);const node=box.firstElementChild;if(node)actions.insertAdjacentElement('afterend',node)}
