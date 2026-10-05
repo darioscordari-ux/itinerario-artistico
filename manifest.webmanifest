@@ -1,6 +1,6 @@
 {
-  "name":"Itinerario Artistico",
-  "short_name":"Itinerario",
+  "name":"prof.arte.scordari",
+  "short_name":"prof.arte.scordari",
   "description":"Crea e presenta itinerari artistici con mappa, immagini, distanze e tempi a piedi.",
   "lang":"it",
   "start_url":"./",
