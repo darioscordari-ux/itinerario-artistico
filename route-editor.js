@@ -3,8 +3,8 @@
 
   const PROJECT_STORE='itinerarioArtistico.projects.v4';
   const ROUTE_STORE='itinerarioArtistico.customRoutes.v1';
-  let editing=false, segmentIndex=0, waypointMarkers=[], currentWaypoints=[], currentRoute=null;
-  let originalSnapshot=null, selectedLine=null, selectedLabel=null, addPointMode=false, applyingSaved=false, applyTimer=null;
+  let editing=false, segmentIndex=0, waypointMarkers=[], endpointMarker=null, currentWaypoints=[], currentEnd=null, currentRoute=null;
+  let originalSnapshot=null, selectedLine=null, selectedLabel=null, editMode=null, applyingSaved=false, applyTimer=null;
 
   const $=id=>document.getElementById(id);
 
@@ -108,20 +108,22 @@
     Object.entries(projectRoutes).forEach(([i,r])=>{const idx=Number(i);if(idx>=0&&idx<lines.length)applyRouteToSegment(idx,r)});
     setTimeout(()=>{applyingSaved=false},50);
   }
-  function scheduleApplySaved(){
-    clearTimeout(applyTimer); applyTimer=setTimeout(applySavedRoutes,350);
-  }
+  function scheduleApplySaved(){ clearTimeout(applyTimer); applyTimer=setTimeout(applySavedRoutes,350); }
 
   function status(text,bad=false){
     const el=$('routeEditStatus'); if(!el)return; el.textContent=text||''; el.className='routeEditStatus'+(bad?' bad':'');
   }
   function setButtonsBusy(busy){
-    ['routeAddPoint','routeSave','routeReset','routeSegment'].forEach(id=>{const el=$(id);if(el)el.disabled=busy});
+    ['routeAddPoint','routeSetEnd','routeSave','routeReset','routeSegment'].forEach(id=>{const el=$(id);if(el)el.disabled=busy});
   }
   function waypointIcon(n){
     return L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,15],html:`<div class="routeHandle" title="Trascina questo punto">${n}</div>`});
   }
+  function endpointIcon(){
+    return L.divIcon({className:'',iconSize:[34,34],iconAnchor:[17,17],html:'<div class="routeEndHandle" title="Trascina il punto finale">✂</div>'});
+  }
   function clearWaypointMarkers(){ waypointMarkers.forEach(m=>m.remove()); waypointMarkers=[]; }
+  function clearEndpointMarker(){ if(endpointMarker){endpointMarker.remove();endpointMarker=null;} }
   function renderWaypointMarkers(){
     clearWaypointMarkers();
     currentWaypoints.forEach((p,i)=>{
@@ -129,6 +131,15 @@
       m.__iaRouteEditor=true;
       m.on('dragend',async()=>{const ll=m.getLatLng();currentWaypoints[i]={lat:ll.lat,lng:ll.lng};await recalcPreview()});
       waypointMarkers.push(m);
+    });
+  }
+  function renderEndpointMarker(){
+    clearEndpointMarker();
+    if(!currentEnd)return;
+    endpointMarker=L.marker([currentEnd.lat,currentEnd.lng],{draggable:true,icon:endpointIcon(),zIndexOffset:2100}).addTo(map());
+    endpointMarker.__iaRouteEditor=true;
+    endpointMarker.on('dragend',async()=>{
+      const ll=endpointMarker.getLatLng(); currentEnd={lat:ll.lat,lng:ll.lng}; await recalcPreview();
     });
   }
   function restoreSnapshot(){
@@ -160,37 +171,51 @@
     return true;
   }
   function loadSegment(index){
-    detachLineClick(); clearWaypointMarkers(); restoreSnapshot();
-    segmentIndex=index; originalSnapshot=null; selectedLine=null; selectedLabel=null; addPointMode=false;
+    detachLineClick(); clearWaypointMarkers(); clearEndpointMarker(); restoreSnapshot();
+    segmentIndex=index; originalSnapshot=null; selectedLine=null; selectedLabel=null; editMode=null;
+    $('map')?.classList.remove('routeAddCursor');
     if(!snapshotSegment()){status('Tratto non ancora disponibile. Attendi un istante.',true);return;}
     const saved=savedFor(index);
     currentWaypoints=(saved?.waypoints||[]).map(p=>({lat:+p.lat,lng:+p.lng}));
+    currentEnd=saved?.endPoint?{lat:+saved.endPoint.lat,lng:+saved.endPoint.lng}:null;
     currentRoute=saved||{points:originalSnapshot.points,distance:0,time:0};
     if(saved)applyRouteToSegment(index,saved);
-    renderWaypointMarkers();
-    status(currentWaypoints.length?`${currentWaypoints.length} punto/i di passaggio. Trascinali oppure clicca sulla linea.`:'La linea evidenziata è modificabile: cliccala per creare un punto di passaggio, oppure premi “+ Punto”.');
+    renderWaypointMarkers(); renderEndpointMarker();
+    if(currentEnd) status('La linea termina nel punto ✂. Puoi trascinarlo per accorciare o allungare il tratto.');
+    else if(currentWaypoints.length) status(`${currentWaypoints.length} punto/i di passaggio. Trascinali oppure usa “✂ Ferma linea qui” per cambiare il punto finale.`);
+    else status('Per deviare il percorso usa un punto di passaggio. Per accorciarlo, premi “✂ Ferma linea qui”.');
   }
   async function recalcPreview(){
     const stops=stopMarkers(); if(stops.length<segmentIndex+2)return;
-    const a=stops[segmentIndex].getLatLng(), b=stops[segmentIndex+1].getLatLng();
+    const a=stops[segmentIndex].getLatLng();
+    const stopB=stops[segmentIndex+1].getLatLng();
+    const b=currentEnd?L.latLng(currentEnd.lat,currentEnd.lng):stopB;
     setButtonsBusy(true); status('Calcolo del nuovo percorso…');
     try{
-      const route=await pedestrianRoute([a,...currentWaypoints,b]); currentRoute={...route,waypoints:currentWaypoints.map(p=>({lat:p.lat,lng:p.lng}))};
-      applyRouteToSegment(segmentIndex,currentRoute); renderWaypointMarkers();
+      const route=await pedestrianRoute([a,...currentWaypoints,b]);
+      currentRoute={...route,waypoints:currentWaypoints.map(p=>({lat:p.lat,lng:p.lng})),endPoint:currentEnd?{lat:currentEnd.lat,lng:currentEnd.lng}:null};
+      applyRouteToSegment(segmentIndex,currentRoute); renderWaypointMarkers(); renderEndpointMarker();
       if(selectedLine)selectedLine.setStyle({weight:8,opacity:1});
-      status('Percorso aggiornato. Trascina il punto numerato per rifinirlo, poi premi “Salva percorso”.');
+      status(currentEnd?'Percorso aggiornato: la linea ora si ferma nel punto ✂. Trascinalo se vuoi rifinirlo, poi salva.':'Percorso aggiornato. Puoi aggiungere altri punti oppure impostare un punto finale con ✂.');
     }catch{ status('Non riesco a calcolare il percorso da questi punti. Spostane uno e riprova.',true); }
     finally{setButtonsBusy(false)}
   }
   async function addWaypoint(latlng){
-    if(!latlng)return; currentWaypoints.push({lat:latlng.lat,lng:latlng.lng}); addPointMode=false; $('map')?.classList.remove('routeAddCursor'); await recalcPreview();
+    if(!latlng)return; currentWaypoints.push({lat:latlng.lat,lng:latlng.lng}); editMode=null; $('map')?.classList.remove('routeAddCursor'); await recalcPreview();
   }
-  function mapAddPoint(e){ if(editing&&addPointMode)addWaypoint(e.latlng); }
+  async function setEndpoint(latlng){
+    if(!latlng)return; currentEnd={lat:latlng.lat,lng:latlng.lng}; editMode=null; $('map')?.classList.remove('routeAddCursor'); await recalcPreview();
+  }
+  function mapEditClick(e){
+    if(!editing)return;
+    if(editMode==='waypoint') addWaypoint(e.latlng);
+    else if(editMode==='endpoint') setEndpoint(e.latlng);
+  }
 
   function closeEditor(save){
     if(!editing)return;
     if(!save)restoreSnapshot();
-    detachLineClick(); clearWaypointMarkers(); map()?.off('click',mapAddPoint); editing=false; addPointMode=false;
+    detachLineClick(); clearWaypointMarkers(); clearEndpointMarker(); map()?.off('click',mapEditClick); editing=false; editMode=null;
     $('map')?.classList.remove('routeAddCursor');
     const back=$('modalBack'); if(back){back.classList.remove('routeEditing');back.classList.add('hidden');}
     if($('modal'))$('modal').innerHTML='';
@@ -205,21 +230,22 @@
     const options=Array.from({length:stops.length-1},(_,i)=>`<option value="${i}" ${i===segmentIndex?'selected':''}>Tratto ${i+1} → ${i+2}</option>`).join('');
     $('modal').innerHTML=`<h2>Modifica percorso</h2>
       <div class="field"><label>Tratto da modificare</label><select id="routeSegment">${options}</select></div>
-      <div class="routeEditHelp"><b>La mappa resta attiva.</b> Clicca sulla linea evidenziata per creare un punto di passaggio, poi trascina il punto numerato sulla strada che preferisci.</div>
-      <div class="routeEditActions"><button class="btn" id="routeAddPoint">＋ Punto sulla mappa</button><button class="btn" id="routeReset">Ripristina automatico</button></div>
+      <div class="routeEditHelp"><b>Due modifiche diverse:</b><br>• <b>＋ Punto di passaggio</b> devia la strada ma continua fino alla tappa.<br>• <b>✂ Ferma linea qui</b> cambia proprio il punto in cui la linea termina.</div>
+      <div class="routeEditActions"><button class="btn" id="routeAddPoint">＋ Punto di passaggio</button><button class="btn" id="routeSetEnd">✂ Ferma linea qui</button><button class="btn" id="routeReset">Ripristina automatico</button></div>
       <div id="routeEditStatus" class="routeEditStatus"></div>
       <div class="modalFoot"><button class="btn" id="routeCancel">Annulla</button><button class="btn primary" id="routeSave">Salva percorso</button></div>`;
     const back=$('modalBack'); back.classList.add('routeEditing'); back.classList.remove('hidden');
     $('routeSegment').onchange=e=>loadSegment(Number(e.target.value));
-    $('routeAddPoint').onclick=()=>{addPointMode=true;$('map')?.classList.add('routeAddCursor');status('Ora clicca sulla mappa nel punto da cui vuoi far passare il percorso.');};
-    $('routeReset').onclick=async()=>{currentWaypoints=[];renderWaypointMarkers();await recalcPreview();status('Percorso automatico ripristinato. Premi “Salva percorso” per confermare.');};
+    $('routeAddPoint').onclick=()=>{editMode='waypoint';$('map')?.classList.add('routeAddCursor');status('Clicca sulla mappa nel punto da cui vuoi far passare il percorso. La linea continuerà poi fino alla tappa.');};
+    $('routeSetEnd').onclick=()=>{editMode='endpoint';$('map')?.classList.add('routeAddCursor');status('Clicca sulla mappa nel punto preciso in cui vuoi che la linea si fermi.');};
+    $('routeReset').onclick=async()=>{currentWaypoints=[];currentEnd=null;renderWaypointMarkers();renderEndpointMarker();await recalcPreview();status('Percorso automatico ripristinato fino alla tappa. Premi “Salva percorso” per confermare.');};
     $('routeCancel').onclick=()=>closeEditor(false);
     $('routeSave').onclick=()=>{
-      if(currentWaypoints.length===0)removeSaved(segmentIndex);
-      else if(currentRoute)saveFor(segmentIndex,{...currentRoute,waypoints:currentWaypoints.map(p=>({lat:p.lat,lng:p.lng}))});
+      if(currentWaypoints.length===0&&!currentEnd)removeSaved(segmentIndex);
+      else if(currentRoute)saveFor(segmentIndex,{...currentRoute,waypoints:currentWaypoints.map(p=>({lat:p.lat,lng:p.lng})),endPoint:currentEnd?{lat:currentEnd.lat,lng:currentEnd.lng}:null});
       closeEditor(true);
     };
-    m.on('click',mapAddPoint);
+    m.on('click',mapEditClick);
     loadSegment(segmentIndex);
   }
 
@@ -230,13 +256,14 @@
     const style=document.createElement('style');
     style.textContent=`
       .routeHandle{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid #b42318;color:#b42318;font:800 13px/24px system-ui;text-align:center;box-shadow:0 2px 10px #0006;cursor:grab;box-sizing:border-box}
-      .routeHandle:active{cursor:grabbing}.routeEditHelp{padding:10px 12px;background:#f5f1e9;border-radius:10px;font-size:13px;line-height:1.4;margin:8px 0 12px}
+      .routeEndHandle{width:34px;height:34px;border-radius:9px;background:#1f211e;border:3px solid #fff;color:#fff;font:800 17px/28px system-ui;text-align:center;box-shadow:0 3px 12px #0007;cursor:grab;box-sizing:border-box}
+      .routeHandle:active,.routeEndHandle:active{cursor:grabbing}.routeEditHelp{padding:10px 12px;background:#f5f1e9;border-radius:10px;font-size:13px;line-height:1.4;margin:8px 0 12px}
       .routeEditActions{display:flex;gap:8px;flex-wrap:wrap}.routeEditStatus{min-height:22px;margin-top:10px;font-size:13px;color:#405044}.routeEditStatus.bad{color:#b42318}
       #routeSegment{width:100%;padding:10px;border:1px solid #bbb;border-radius:8px;background:white;font:inherit}
       .modalBack.routeEditing{background:transparent;pointer-events:none;align-items:flex-start;justify-content:flex-end;padding:72px 14px 14px}
-      .modalBack.routeEditing .modal{pointer-events:auto;width:min(370px,92vw);max-height:calc(100vh - 90px);box-shadow:0 12px 35px #0005;border:1px solid #d9d2c8}
-      #map.routeAddCursor,.routeEditing~* #map.routeAddCursor{cursor:crosshair!important}
-      @media(max-width:640px){.modalBack.routeEditing{padding:58px 6px 6px;justify-content:flex-end}.modalBack.routeEditing .modal{width:min(320px,86vw);padding:14px}.modalBack.routeEditing .modal h2{font-size:21px}}
+      .modalBack.routeEditing .modal{pointer-events:auto;width:min(390px,92vw);max-height:calc(100vh - 90px);box-shadow:0 12px 35px #0005;border:1px solid #d9d2c8}
+      #map.routeAddCursor{cursor:crosshair!important}
+      @media(max-width:640px){.modalBack.routeEditing{padding:58px 6px 6px;justify-content:flex-end}.modalBack.routeEditing .modal{width:min(330px,88vw);padding:14px}.modalBack.routeEditing .modal h2{font-size:21px}}
     `;
     document.head.appendChild(style);
   }
