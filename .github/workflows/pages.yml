@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Ricostruisce immagine arco
+        run: |
+          cat arco-romano/img1.txt arco-romano/img2.txt arco-romano/img3.txt | tr -d '\r\n' | base64 -d > arco-romano/arco.jpg
+          test -s arco-romano/arco.jpg
       - uses: actions/configure-pages@v5
         with:
           enablement: true
