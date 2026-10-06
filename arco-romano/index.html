@@ -133,101 +133,26 @@ body {
   border:2px dashed rgba(124,63,36,.08);
   pointer-events:none;
 }
-.drop.hover {
-  outline:3px solid rgba(184,122,73,.26);
-}
-.drop.filled {
-  background:rgba(255,250,242,.95);
-  box-shadow:0 2px 8px rgba(0,0,0,.07);
-}
-.drop.correct {
-  background:rgba(228,244,229,.96);
-  outline:3px solid rgba(47,125,50,.22);
-}
-.controls {
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin:10px 0 12px;
-}
-button {
-  border:0;
-  border-radius:12px;
-  padding:11px 14px;
-  font-weight:700;
-  cursor:pointer;
-  transition:.15s ease;
-}
+.drop.hover { outline:3px solid rgba(184,122,73,.26); }
+.drop.filled { background:rgba(255,250,242,.95); box-shadow:0 2px 8px rgba(0,0,0,.07); }
+.drop.correct { background:rgba(228,244,229,.96); outline:3px solid rgba(47,125,50,.22); }
+.controls { display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px; }
+button { border:0; border-radius:12px; padding:11px 14px; font-weight:700; cursor:pointer; transition:.15s ease; }
 .primary { background:var(--accent); color:#fff; }
 .secondary { background:#eadfce; color:#332a23; }
 .ghost { background:#f8f2e8; color:#5d5044; border:1px solid #ddccb9; }
-.stats {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.stat, .feedback {
-  background:#f8f2ea;
-  border:1px solid #e2d5c6;
-  border-radius:14px;
-  padding:12px 13px;
-}
-.stat .k {
-  font-size:12px;
-  text-transform:uppercase;
-  color:var(--muted);
-  letter-spacing:.04em;
-}
-.stat .v {
-  margin-top:4px;
-  font-size:20px;
-  font-weight:700;
-}
-.feedback {
-  margin-top:10px;
-}
+.stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.stat, .feedback { background:#f8f2ea; border:1px solid #e2d5c6; border-radius:14px; padding:12px 13px; }
+.stat .k { font-size:12px; text-transform:uppercase; color:var(--muted); letter-spacing:.04em; }
+.stat .v { margin-top:4px; font-size:20px; font-weight:700; }
+.feedback { margin-top:10px; }
 .feedback strong { font-size:18px; }
-.feedback p {
-  margin:6px 0 0;
-  color:var(--muted);
-}
-.legend {
-  margin-top:12px;
-  font-size:13px;
-  color:#6f6357;
-  line-height:1.45;
-}
-.toast {
-  position:fixed;
-  left:50%;
-  bottom:18px;
-  transform:translateX(-50%);
-  background:#2e2822;
-  color:#fff;
-  padding:10px 14px;
-  border-radius:999px;
-  font-size:14px;
-  opacity:0;
-  pointer-events:none;
-  transition:.2s ease;
-  z-index:30;
-}
+.feedback p { margin:6px 0 0; color:var(--muted); }
+.legend { margin-top:12px; font-size:13px; color:#6f6357; line-height:1.45; }
+.toast { position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:#2e2822; color:#fff; padding:10px 14px; border-radius:999px; font-size:14px; opacity:0; pointer-events:none; transition:.2s ease; z-index:30; }
 .toast.show { opacity:1; }
-
-@media (min-width: 900px) {
-  .bottomGrid {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    align-items:start;
-  }
-}
-@media (max-width: 700px) {
-  .app { padding:8px; }
-  .card { padding:10px; }
-  .controls button { flex:1 1 calc(50% - 10px); }
-  .stats { grid-template-columns:1fr; }
-}
+@media (min-width:900px){ .bottomGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;} }
+@media (max-width:700px){ .app{padding:8px}.card{padding:10px}.controls button{flex:1 1 calc(50% - 10px)}.stats{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
@@ -236,16 +161,12 @@ button {
     <h1>L’arco romano</h1>
     <p>Le etichette sono subito sopra l’immagine: sul cellulare tocca una parola e poi tocca il riquadro corretto.</p>
   </header>
-
   <section class="card">
     <div class="topHint">📱 Tocca un’etichetta qui sotto e poi tocca il riquadro corrispondente nell’immagine.</div>
-
     <div id="bank" class="bank"></div>
-
     <div class="figureWrap">
       <div class="figure">
-        <img id="archImg" src="" alt="Diagramma tecnico dell'arco romano">
-
+        <img src="arco.jpg?v=102" alt="Diagramma tecnico dell'arco romano">
         <div class="drop" data-answer="Concio di chiave" style="left:41.1%;top:1.4%;width:16.8%;height:9.8%"></div>
         <div class="drop" data-answer="Concio" style="left:3.5%;top:10.8%;width:22.8%;height:9.7%"></div>
         <div class="drop" data-answer="Estradosso" style="left:75.0%;top:10.8%;width:19.2%;height:9.9%"></div>
@@ -258,255 +179,43 @@ button {
         <div class="drop" data-answer="Centina" style="left:42.1%;top:81.6%;width:15.4%;height:5.8%"></div>
       </div>
     </div>
-
     <div class="controls">
       <button id="check" class="primary">Finito</button>
       <button id="reset" class="secondary">Ricomincia</button>
       <button id="shuffle" class="ghost">Mescola etichette</button>
     </div>
-
     <div class="bottomGrid">
       <div class="stats">
-        <div class="stat">
-          <div class="k">Riquadri completati</div>
-          <div class="v" id="filledCount">0 / 10</div>
-        </div>
-        <div class="stat">
-          <div class="k">Etichette rimaste</div>
-          <div class="v" id="remainingCount">10</div>
-        </div>
+        <div class="stat"><div class="k">Riquadri completati</div><div class="v" id="filledCount">0 / 10</div></div>
+        <div class="stat"><div class="k">Etichette rimaste</div><div class="v" id="remainingCount">10</div></div>
       </div>
-
-      <div class="feedback">
-        <strong id="score">Punteggio: —</strong>
-        <p id="message">Completa l’attività e poi premi “Finito”.</p>
-      </div>
+      <div class="feedback"><strong id="score">Punteggio: —</strong><p id="message">Completa l’attività e poi premi “Finito”.</p></div>
     </div>
-
-    <div class="legend">
-      Elementi da associare: <strong>concio, concio di chiave, giunti radiali, intradosso, estradosso, piano d’imposta, piedritto, luce, freccia, centina</strong>.
-    </div>
+    <div class="legend">Elementi da associare: <strong>concio, concio di chiave, giunti radiali, intradosso, estradosso, piano d’imposta, piedritto, luce, freccia, centina</strong>.</div>
   </section>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-Promise.all(["img1.txt","img2.txt","img3.txt"].map(f=>fetch(f,{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error(f);return r.text()})))
-.then(parts=>{document.getElementById("archImg").src="data:image/jpeg;base64,"+parts.join("");})
-.catch(()=>{document.getElementById("archImg").alt="Immagine non disponibile";});
-</script>
-<script>
-const labels = [
-  "Concio",
-  "Concio di chiave",
-  "Giunti radiali",
-  "Intradosso",
-  "Estradosso",
-  "Piano d’imposta",
-  "Piedritto",
-  "Luce",
-  "Freccia",
-  "Centina"
-];
-
-const bank = document.getElementById("bank");
-const drops = [...document.querySelectorAll(".drop")];
-const scoreEl = document.getElementById("score");
-const messageEl = document.getElementById("message");
-const filledCountEl = document.getElementById("filledCount");
-const remainingCountEl = document.getElementById("remainingCount");
-const toast = document.getElementById("toast");
-let selected = null;
-
-function showToast(text) {
-  toast.textContent = text;
-  toast.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove("show"), 1300);
-}
-
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
-function updateCounters() {
-  const filled = drops.filter(d => d.dataset.placed).length;
-  const remaining = bank.querySelectorAll(".tag").length;
-  filledCountEl.textContent = `${filled} / ${drops.length}`;
-  remainingCountEl.textContent = `${remaining}`;
-}
-
-function createTag(text) {
-  const el = document.createElement("div");
-  el.className = "tag";
-  el.textContent = text;
-  el.dataset.value = text;
-  el.draggable = true;
-
-  el.addEventListener("dragstart", e => {
-    e.dataTransfer.setData("text/plain", text);
-    el.classList.add("dragging");
-  });
-  el.addEventListener("dragend", () => el.classList.remove("dragging"));
-
-  el.addEventListener("click", () => {
-    document.querySelectorAll(".tag").forEach(t => t.classList.remove("selected"));
-    if (selected === el) {
-      selected = null;
-      return;
-    }
-    selected = el;
-    el.classList.add("selected");
-    showToast("Ora tocca un riquadro");
-  });
-
-  return el;
-}
-
-function fillBank(items = labels) {
-  bank.innerHTML = "";
-  shuffle(items).forEach(item => bank.appendChild(createTag(item)));
-  updateCounters();
-}
-
-function returnToBank(value) {
-  const alreadyInBank = [...bank.querySelectorAll(".tag")].some(tag => tag.dataset.value === value);
-  if (!alreadyInBank) {
-    bank.appendChild(createTag(value));
-  }
-  updateCounters();
-}
-
-function clearDrop(drop, restore = true) {
-  const prev = drop.dataset.placed || "";
-  if (prev && restore) returnToBank(prev);
-  drop.dataset.placed = "";
-  drop.textContent = "";
-  drop.classList.remove("filled","correct","hover");
-}
-
-function removeLabelFromOtherDrop(value, exceptDrop=null) {
-  drops.forEach(d => {
-    if (d !== exceptDrop && d.dataset.placed === value) {
-      d.dataset.placed = "";
-      d.textContent = "";
-      d.classList.remove("filled","correct","hover");
-    }
-  });
-}
-
-function place(drop, value) {
-  if (!value) return;
-
-  removeLabelFromOtherDrop(value, drop);
-
-  if (drop.dataset.placed) {
-    returnToBank(drop.dataset.placed);
-  }
-
-  const candidate = [...bank.querySelectorAll(".tag")].find(tag => tag.dataset.value === value);
-  if (candidate) candidate.remove();
-
-  drop.dataset.placed = value;
-  drop.textContent = value;
-  drop.classList.add("filled");
-  drop.classList.remove("correct");
-
-  if (selected) {
-    selected.classList.remove("selected");
-    selected = null;
-  }
-
-  messageEl.style.color = "var(--muted)";
-  messageEl.style.fontWeight = "400";
-  messageEl.style.fontSize = "";
-  updateCounters();
-}
-
-drops.forEach(drop => {
-  drop.addEventListener("dragover", e => e.preventDefault());
-  drop.addEventListener("dragenter", () => drop.classList.add("hover"));
-  drop.addEventListener("dragleave", () => drop.classList.remove("hover"));
-  drop.addEventListener("drop", e => {
-    e.preventDefault();
-    drop.classList.remove("hover");
-    place(drop, e.dataTransfer.getData("text/plain"));
-  });
-
-  drop.addEventListener("click", () => {
-    if (selected) {
-      place(drop, selected.dataset.value);
-    } else if (drop.dataset.placed) {
-      clearDrop(drop, true);
-      updateCounters();
-    }
-  });
-});
-
-document.getElementById("check").addEventListener("click", () => {
-  let correct = 0;
-  const wrongValues = [];
-
-  drops.forEach(drop => {
-    drop.classList.remove("correct");
-    const placed = drop.dataset.placed || "";
-
-    if (placed && placed === drop.dataset.answer) {
-      correct++;
-      drop.classList.add("correct");
-    } else if (placed) {
-      wrongValues.push(placed);
-      drop.dataset.placed = "";
-      drop.textContent = "";
-      drop.classList.remove("filled","hover");
-    }
-  });
-
-  wrongValues.forEach(value => {
-    const alreadyInBank = [...bank.querySelectorAll(".tag")].some(tag => tag.dataset.value === value);
-    const alreadyPlaced = drops.some(drop => drop.dataset.placed === value);
-    if (!alreadyInBank && !alreadyPlaced) {
-      bank.appendChild(createTag(value));
-    }
-  });
-
-  updateCounters();
-  scoreEl.textContent = `Punteggio: ${correct} / ${drops.length}`;
-
-  if (correct === drops.length) {
-    messageEl.textContent = "PERFETTO!";
-    messageEl.style.color = "var(--ok)";
-    messageEl.style.fontWeight = "800";
-    messageEl.style.fontSize = "26px";
-  } else {
-    messageEl.textContent = `Corrette: ${correct}. Le risposte sbagliate sono state tolte: riprova.`;
-    messageEl.style.color = "var(--muted)";
-    messageEl.style.fontWeight = "400";
-    messageEl.style.fontSize = "";
-  }
-});
-
-document.getElementById("reset").addEventListener("click", () => {
-  drops.forEach(drop => {
-    drop.dataset.placed = "";
-    drop.textContent = "";
-    drop.classList.remove("filled","correct","hover");
-  });
-  selected = null;
-  fillBank();
-  scoreEl.textContent = "Punteggio: —";
-  messageEl.textContent = "Completa l’attività e poi premi “Finito”.";
-  messageEl.style.color = "var(--muted)";
-  messageEl.style.fontWeight = "400";
-  messageEl.style.fontSize = "";
-});
-
-document.getElementById("shuffle").addEventListener("click", () => {
-  const current = [...bank.querySelectorAll(".tag")].map(t => t.dataset.value);
-  fillBank(current);
-});
-
+const labels=["Concio","Concio di chiave","Giunti radiali","Intradosso","Estradosso","Piano d’imposta","Piedritto","Luce","Freccia","Centina"];
+const bank=document.getElementById("bank");
+const drops=[...document.querySelectorAll(".drop")];
+const scoreEl=document.getElementById("score");
+const messageEl=document.getElementById("message");
+const filledCountEl=document.getElementById("filledCount");
+const remainingCountEl=document.getElementById("remainingCount");
+const toast=document.getElementById("toast");
+let selected=null;
+function showToast(text){toast.textContent=text;toast.classList.add("show");clearTimeout(showToast._t);showToast._t=setTimeout(()=>toast.classList.remove("show"),1300)}
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5)}
+function updateCounters(){const filled=drops.filter(d=>d.dataset.placed).length;const remaining=bank.querySelectorAll(".tag").length;filledCountEl.textContent=`${filled} / ${drops.length}`;remainingCountEl.textContent=`${remaining}`}
+function createTag(text){const el=document.createElement("div");el.className="tag";el.textContent=text;el.dataset.value=text;el.draggable=true;el.addEventListener("dragstart",e=>{e.dataTransfer.setData("text/plain",text);el.classList.add("dragging")});el.addEventListener("dragend",()=>el.classList.remove("dragging"));el.addEventListener("click",()=>{document.querySelectorAll(".tag").forEach(t=>t.classList.remove("selected"));if(selected===el){selected=null;return}selected=el;el.classList.add("selected");showToast("Ora tocca un riquadro")});return el}
+function fillBank(items=labels){bank.innerHTML="";shuffle(items).forEach(item=>bank.appendChild(createTag(item)));updateCounters()}
+function returnToBank(value){const already=[...bank.querySelectorAll(".tag")].some(tag=>tag.dataset.value===value);if(!already)bank.appendChild(createTag(value));updateCounters()}
+function place(drop,value){if(!value)return;drops.forEach(d=>{if(d!==drop&&d.dataset.placed===value){d.dataset.placed="";d.textContent="";d.classList.remove("filled","correct","hover")}});if(drop.dataset.placed)returnToBank(drop.dataset.placed);const candidate=[...bank.querySelectorAll(".tag")].find(tag=>tag.dataset.value===value);if(candidate)candidate.remove();drop.dataset.placed=value;drop.textContent=value;drop.classList.add("filled");drop.classList.remove("correct");if(selected){selected.classList.remove("selected");selected=null}messageEl.style.color="var(--muted)";messageEl.style.fontWeight="400";messageEl.style.fontSize="";updateCounters()}
+drops.forEach(drop=>{drop.addEventListener("dragover",e=>e.preventDefault());drop.addEventListener("dragenter",()=>drop.classList.add("hover"));drop.addEventListener("dragleave",()=>drop.classList.remove("hover"));drop.addEventListener("drop",e=>{e.preventDefault();drop.classList.remove("hover");place(drop,e.dataTransfer.getData("text/plain"))});drop.addEventListener("click",()=>{if(selected)place(drop,selected.dataset.value);else if(drop.dataset.placed){const old=drop.dataset.placed;drop.dataset.placed="";drop.textContent="";drop.classList.remove("filled","correct");returnToBank(old);updateCounters()}})});
+document.getElementById("check").addEventListener("click",()=>{let ok=0;const wrong=[];drops.forEach(drop=>{const value=drop.dataset.placed||"";if(value&&value===drop.dataset.answer){ok++;drop.classList.add("correct")}else if(value){wrong.push(value);drop.dataset.placed="";drop.textContent="";drop.classList.remove("filled","correct")}});wrong.forEach(returnToBank);scoreEl.textContent=`Punteggio: ${ok} / ${drops.length}`;if(ok===drops.length){messageEl.textContent="PERFETTO!";messageEl.style.color="var(--ok)";messageEl.style.fontWeight="900";messageEl.style.fontSize="26px"}else{messageEl.textContent=`Hai ${ok} risposte corrette. Le altre sono state tolte: riprova.`;messageEl.style.color="var(--muted)";messageEl.style.fontWeight="400";messageEl.style.fontSize=""}updateCounters()});
+document.getElementById("reset").addEventListener("click",()=>{drops.forEach(drop=>{drop.dataset.placed="";drop.textContent="";drop.classList.remove("filled","correct","hover")});selected=null;fillBank();scoreEl.textContent="Punteggio: —";messageEl.textContent="Completa l’attività e poi premi “Finito”.";messageEl.style.color="var(--muted)";messageEl.style.fontWeight="400";messageEl.style.fontSize=""});
+document.getElementById("shuffle").addEventListener("click",()=>{const remaining=[...bank.querySelectorAll(".tag")].map(x=>x.dataset.value);fillBank(remaining)});
 fillBank();
 </script>
 </body>
