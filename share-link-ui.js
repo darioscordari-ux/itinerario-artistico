@@ -2,6 +2,8 @@
   'use strict';
 
   const STORE='itinerarioArtistico.projects.v4';
+  const OPEN_KEY='itinerarioArtistico.openShared.v1';
+  const ERROR_KEY='itinerarioArtistico.sharedError.v1';
 
   function currentProject(){
     const title=document.getElementById('projectName')?.textContent?.trim();
@@ -104,6 +106,31 @@
     else exportBtn.insertAdjacentElement('afterend',btn);
   }
 
+  function autoOpenShared(){
+    if(sessionStorage.getItem(ERROR_KEY)==='1'){
+      sessionStorage.removeItem(ERROR_KEY);
+      setTimeout(()=>alert('Il link dell’itinerario non è valido oppure è stato tagliato durante la condivisione.'),50);
+      return;
+    }
+
+    const id=sessionStorage.getItem(OPEN_KEY);
+    if(!id)return;
+
+    try{
+      const projects=JSON.parse(localStorage.getItem(STORE)||'[]');
+      const index=Array.isArray(projects)?projects.findIndex(p=>p?.id===id):-1;
+      const cards=document.querySelectorAll('.projectCard');
+      const openBtn=index>=0?cards[index]?.querySelector('[data-o]'):null;
+      sessionStorage.removeItem(OPEN_KEY);
+      if(openBtn){
+        openBtn.click();
+        setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
+      }
+    }catch{
+      sessionStorage.removeItem(OPEN_KEY);
+    }
+  }
+
   document.addEventListener('click',e=>{
     if(e.target?.closest?.('#settingsBtn'))setTimeout(prepareButton,10);
   });
@@ -120,4 +147,6 @@
     }
     shareLink(project);
   },true);
+
+  autoOpenShared();
 })();
