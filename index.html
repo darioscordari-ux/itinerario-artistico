@@ -63,6 +63,7 @@
       caches.keys().then(keys=>Promise.all(keys.map(k=>caches.delete(k)))).catch(()=>{});
     }
   </script>
+  <script src="./share-link-preload.js?v=1"></script>
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     if (window.L) {
@@ -95,5 +96,6 @@
   <script src="./extra-image-delete.js?v=2"></script>
   <script src="./new-stop-description.js?v=1"></script>
   <script src="./export-share.js?v=3"></script>
+  <script src="./share-link-ui.js?v=1"></script>
 </body>
 </html>
