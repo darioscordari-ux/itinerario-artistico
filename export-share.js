@@ -21,22 +21,20 @@
       .replace(/^-+|-+$/g,'') || 'itinerario';
   }
 
-  function projectPayload(project){
+  function payload(project){
     return JSON.stringify({version:3,project},null,2);
   }
 
-  function makeFile(project,type='application/json'){
-    const filename=safeName(project.title)+'.json';
-    return new File([projectPayload(project)],filename,{type});
+  function filename(project){
+    return safeName(project.title)+'.json';
   }
 
-  function forceDownload(project){
-    const filename=safeName(project.title)+'.json';
-    const blob=new Blob([projectPayload(project)],{type:'application/octet-stream'});
+  function downloadProject(project){
+    const blob=new Blob([payload(project)],{type:'application/octet-stream'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
-    a.download=filename;
+    a.download=filename(project);
     a.rel='noopener';
     a.style.display='none';
     document.body.appendChild(a);
@@ -44,46 +42,53 @@
     setTimeout(()=>{
       a.remove();
       URL.revokeObjectURL(url);
-    },2500);
+    },2000);
   }
 
-  function getProjectOrWarn(){
-    const project=currentProject();
-    if(!project)alert('Non riesco a individuare l’itinerario da esportare.');
-    return project;
+  function shareFiles(project){
+    if(typeof File==='undefined')return [];
+    const name=filename(project);
+    const text=payload(project);
+    return [
+      new File([text],name,{type:'text/plain'}),
+      new File([text],name,{type:'application/json'}),
+      new File([text],name,{type:'application/octet-stream'})
+    ];
   }
 
   async function shareProject(project){
     if(!navigator.share){
-      alert('La condivisione diretta non è supportata da questo browser. Prova ad aprire l’app in Chrome oppure usa “Scarica file”.');
+      alert('La condivisione diretta non è disponibile in questo browser. Usa “Scarica file” oppure apri l’app in Chrome.');
       return;
     }
 
-    const candidates=[makeFile(project,'application/json'),makeFile(project,'text/plain')];
-    let file=null;
-    for(const candidate of candidates){
+    const files=shareFiles(project);
+    let chosen=null;
+    for(const file of files){
       try{
-        if(!navigator.canShare || navigator.canShare({files:[candidate]})){
-          file=candidate;
+        if(!navigator.canShare || navigator.canShare({files:[file]})){
+          chosen=file;
           break;
         }
       }catch{}
     }
 
-    if(!file){
-      alert('Questo browser non consente di condividere direttamente il file. Usa “Scarica file” oppure apri l’app in Chrome.');
-      return;
-    }
-
     try{
-      await navigator.share({
-        files:[file],
-        title:'Itinerario Artistico',
-        text:'Itinerario “'+project.title+'”'
-      });
+      if(chosen){
+        await navigator.share({
+          files:[chosen],
+          title:'Itinerario Artistico',
+          text:'Itinerario “'+project.title+'”'
+        });
+      }else{
+        await navigator.share({
+          title:'Itinerario Artistico',
+          text:'Itinerario “'+project.title+'”'
+        });
+      }
     }catch(err){
       if(err?.name!=='AbortError'){
-        alert('Non è stato possibile aprire la condivisione. Prova ad aprire l’app in Chrome.');
+        alert('Il telefono non ha aperto la condivisione del file. Prova ad aprire l’app in Chrome oppure usa “Scarica file”.');
       }
     }
   }
@@ -92,8 +97,11 @@
     const exportBtn=document.getElementById('exportBtn');
     if(!exportBtn)return;
 
-    exportBtn.textContent='⬇ Scarica file';
-    exportBtn.title='Salva il file JSON dell’itinerario sul dispositivo';
+    if(exportBtn.dataset.shareReady!=='1'){
+      exportBtn.dataset.shareReady='1';
+      exportBtn.textContent='⬇ Scarica file';
+      exportBtn.title='Salva il file JSON dell’itinerario sul dispositivo';
+    }
 
     if(!document.getElementById('shareExportBtn')){
       const shareBtn=document.createElement('button');
@@ -101,10 +109,16 @@
       shareBtn.id='shareExportBtn';
       shareBtn.type='button';
       shareBtn.textContent='↗ Condividi';
-      shareBtn.title='Condividi il file con le app disponibili sul telefono';
+      shareBtn.title='Apri il menu di condivisione del telefono';
       exportBtn.insertAdjacentElement('afterend',shareBtn);
     }
   }
+
+  document.addEventListener('click',e=>{
+    if(e.target?.closest?.('#settingsBtn')){
+      setTimeout(prepareSettingsButtons,0);
+    }
+  });
 
   document.addEventListener('click',e=>{
     const btn=e.target?.closest?.('#exportBtn,#shareExportBtn');
@@ -113,17 +127,13 @@
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    const project=getProjectOrWarn();
-    if(!project)return;
-
-    if(btn.id==='exportBtn'){
-      forceDownload(project);
-    }else{
-      shareProject(project);
+    const project=currentProject();
+    if(!project){
+      alert('Non riesco a individuare l’itinerario da esportare.');
+      return;
     }
-  },true);
 
-  const observer=new MutationObserver(prepareSettingsButtons);
-  observer.observe(document.documentElement,{subtree:true,childList:true});
-  document.addEventListener('click',()=>setTimeout(prepareSettingsButtons,0));
+    if(btn.id==='exportBtn')downloadProject(project);
+    else shareProject(project);
+  },true);
 })();
