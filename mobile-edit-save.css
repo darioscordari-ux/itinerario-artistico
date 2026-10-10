@@ -1,0 +1,37 @@
+@media(max-width:640px){
+  .modalBack:not(.routeEditing){
+    align-items:flex-start;
+    justify-content:center;
+    padding:6px;
+  }
+
+  .modalBack:not(.routeEditing) .modal{
+    width:calc(100vw - 12px);
+    max-height:calc(100dvh - 12px);
+    padding:14px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+  }
+
+  .modalBack:not(.routeEditing) .field textarea{
+    min-height:140px;
+  }
+
+  .modalBack:not(.routeEditing) .modalFoot{
+    position:sticky;
+    bottom:-14px;
+    z-index:30;
+    margin:12px -14px -14px;
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,253,248,.98);
+    border-top:1px solid #d9d2c8;
+    box-shadow:0 -6px 16px rgba(31,33,30,.08);
+  }
+
+  .modalBack:not(.routeEditing) #saveEdit{
+    min-width:110px;
+    font-size:13px;
+    padding:10px 14px;
+  }
+}
