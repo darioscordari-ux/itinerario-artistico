@@ -1,0 +1,1 @@
+Condivisione link: supporto tecnico interno. Il link incorpora testo e tappe; le immagini locali data: vengono escluse per evitare URL eccessivi.
