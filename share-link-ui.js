@@ -3,6 +3,7 @@
 
   const STORE='itinerarioArtistico.projects.v4';
   const OPEN_KEY='itinerarioArtistico.openShared.v1';
+  const PRESENT_KEY='itinerarioArtistico.openSharedPresentation.v1';
   const ERROR_KEY='itinerarioArtistico.sharedError.v1';
 
   function currentProject(){
@@ -46,26 +47,31 @@
     return {project:clone,removedLocalImages};
   }
 
-  function makeLink(project){
+  function makeLink(project,mode='work'){
     const prepared=shareableProject(project);
-    const encoded=toBase64Url(JSON.stringify({version:1,project:prepared.project}));
+    const encoded=toBase64Url(JSON.stringify({
+      version:2,
+      mode:mode==='presentation'?'presentation':'work',
+      project:prepared.project
+    }));
     const base=location.origin+location.pathname;
     return {url:base+'#share='+encoded,removedLocalImages:prepared.removedLocalImages};
   }
 
-  async function copyLink(url){
+  async function copyLink(url,message){
     try{
       await navigator.clipboard.writeText(url);
-      alert('Link copiato. Ora puoi incollarlo in Classroom, Teams, WhatsApp o Gmail.');
+      alert(message||'Link copiato. Ora puoi incollarlo in Classroom, Teams, WhatsApp o Gmail.');
     }catch{
       prompt('Copia questo link:',url);
     }
   }
 
-  async function shareLink(project){
-    const {url,removedLocalImages}=makeLink(project);
+  async function shareLink(project,mode='work'){
+    const isPresentation=mode==='presentation';
+    const {url,removedLocalImages}=makeLink(project,mode);
     if(url.length>60000){
-      alert('Questo itinerario è troppo grande per essere condiviso come link. Usa “Condividi file” oppure “Scarica file”.');
+      alert('Questo itinerario è troppo grande per essere condiviso come link. Usa “Scarica file”.');
       return;
     }
 
@@ -73,11 +79,15 @@
       ? '\n\nNota: '+removedLocalImages+' immagin'+(removedLocalImages===1?'e caricata':'i caricate')+' dal dispositivo non può essere inserita nel link; testo, tappe e immagini online vengono condivisi.'
       : '';
 
+    const text=isPresentation
+      ? 'Apri questa presentazione in Itinerario Artistico.'
+      : 'Apri questo itinerario in Itinerario Artistico.';
+
     if(navigator.share){
       try{
         await navigator.share({
           title:project.title||'Itinerario Artistico',
-          text:'Apri questo itinerario in Itinerario Artistico.'+warning,
+          text:text+warning,
           url
         });
         return;
@@ -87,7 +97,12 @@
     }
 
     if(removedLocalImages)alert(warning.trim());
-    await copyLink(url);
+    await copyLink(
+      url,
+      isPresentation
+        ? 'Link della presentazione copiato. Chi lo apre entrerà direttamente in modalità Presenta.'
+        : 'Link copiato. Ora puoi incollarlo in Classroom, Teams, WhatsApp o Gmail.'
+    );
   }
 
   function prepareButton(){
@@ -99,16 +114,17 @@
     btn.type='button';
     btn.className='btn primary';
     btn.textContent='🔗 Condividi link';
-    btn.title='Condividi un link che apre direttamente questo itinerario';
+    btn.title='Condividi un link che apre normalmente questo itinerario';
 
-    const shareFile=document.getElementById('shareExportBtn');
-    if(shareFile)shareFile.insertAdjacentElement('afterend',btn);
+    const sharePresentation=document.getElementById('shareExportBtn');
+    if(sharePresentation)sharePresentation.insertAdjacentElement('afterend',btn);
     else exportBtn.insertAdjacentElement('afterend',btn);
   }
 
   function autoOpenShared(){
     if(sessionStorage.getItem(ERROR_KEY)==='1'){
       sessionStorage.removeItem(ERROR_KEY);
+      sessionStorage.removeItem(PRESENT_KEY);
       setTimeout(()=>alert('Il link dell’itinerario non è valido oppure è stato tagliato durante la condivisione.'),50);
       return;
     }
@@ -116,20 +132,36 @@
     const id=sessionStorage.getItem(OPEN_KEY);
     if(!id)return;
 
+    const openAsPresentation=sessionStorage.getItem(PRESENT_KEY)==='1';
+
     try{
       const projects=JSON.parse(localStorage.getItem(STORE)||'[]');
       const index=Array.isArray(projects)?projects.findIndex(p=>p?.id===id):-1;
       const cards=document.querySelectorAll('.projectCard');
       const openBtn=index>=0?cards[index]?.querySelector('[data-o]'):null;
       sessionStorage.removeItem(OPEN_KEY);
+      sessionStorage.removeItem(PRESENT_KEY);
       if(openBtn){
         openBtn.click();
-        setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
+        if(openAsPresentation){
+          setTimeout(()=>{
+            const presentBtn=document.getElementById('presentBtn');
+            if(presentBtn&&!document.body.classList.contains('presentation'))presentBtn.click();
+          },420);
+        }else{
+          setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
+        }
       }
     }catch{
       sessionStorage.removeItem(OPEN_KEY);
+      sessionStorage.removeItem(PRESENT_KEY);
     }
   }
+
+  window.__IA_SHARE_LINK={
+    shareWork:project=>shareLink(project,'work'),
+    sharePresentation:project=>shareLink(project,'presentation')
+  };
 
   document.addEventListener('click',e=>{
     if(e.target?.closest?.('#settingsBtn'))setTimeout(prepareButton,10);
@@ -145,7 +177,7 @@
       alert('Non riesco a individuare l’itinerario da condividere.');
       return;
     }
-    shareLink(project);
+    shareLink(project,'work');
   },true);
 
   autoOpenShared();
