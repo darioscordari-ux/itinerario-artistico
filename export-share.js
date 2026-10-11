@@ -45,54 +45,6 @@
     },2000);
   }
 
-  function shareFiles(project){
-    if(typeof File==='undefined')return [];
-    const name=filename(project);
-    const text=payload(project);
-    return [
-      new File([text],name,{type:'text/plain'}),
-      new File([text],name,{type:'application/json'}),
-      new File([text],name,{type:'application/octet-stream'})
-    ];
-  }
-
-  async function shareProject(project){
-    if(!navigator.share){
-      alert('La condivisione diretta non è disponibile in questo browser. Usa “Scarica file” oppure apri l’app in Chrome.');
-      return;
-    }
-
-    const files=shareFiles(project);
-    let chosen=null;
-    for(const file of files){
-      try{
-        if(!navigator.canShare || navigator.canShare({files:[file]})){
-          chosen=file;
-          break;
-        }
-      }catch{}
-    }
-
-    try{
-      if(chosen){
-        await navigator.share({
-          files:[chosen],
-          title:'Itinerario Artistico',
-          text:'Itinerario “'+project.title+'”'
-        });
-      }else{
-        await navigator.share({
-          title:'Itinerario Artistico',
-          text:'Itinerario “'+project.title+'”'
-        });
-      }
-    }catch(err){
-      if(err?.name!=='AbortError'){
-        alert('Il telefono non ha aperto la condivisione del file. Prova ad aprire l’app in Chrome oppure usa “Scarica file”.');
-      }
-    }
-  }
-
   function prepareSettingsButtons(){
     const exportBtn=document.getElementById('exportBtn');
     if(!exportBtn)return;
@@ -103,21 +55,20 @@
       exportBtn.title='Salva il file JSON dell’itinerario sul dispositivo';
     }
 
-    if(!document.getElementById('shareExportBtn')){
-      const shareBtn=document.createElement('button');
-      shareBtn.className='btn primary';
+    let shareBtn=document.getElementById('shareExportBtn');
+    if(!shareBtn){
+      shareBtn=document.createElement('button');
+      shareBtn.className='btn';
       shareBtn.id='shareExportBtn';
       shareBtn.type='button';
-      shareBtn.textContent='↗ Condividi';
-      shareBtn.title='Apri il menu di condivisione del telefono';
       exportBtn.insertAdjacentElement('afterend',shareBtn);
     }
+    shareBtn.textContent='▶ Condividi presentazione';
+    shareBtn.title='Invia un link che apre direttamente questo itinerario in modalità presentazione';
   }
 
   document.addEventListener('click',e=>{
-    if(e.target?.closest?.('#settingsBtn')){
-      setTimeout(prepareSettingsButtons,0);
-    }
+    if(e.target?.closest?.('#settingsBtn'))setTimeout(prepareSettingsButtons,0);
   });
 
   document.addEventListener('click',e=>{
@@ -133,7 +84,16 @@
       return;
     }
 
-    if(btn.id==='exportBtn')downloadProject(project);
-    else shareProject(project);
+    if(btn.id==='exportBtn'){
+      downloadProject(project);
+      return;
+    }
+
+    const sharePresentation=window.__IA_SHARE_LINK?.sharePresentation;
+    if(typeof sharePresentation==='function'){
+      sharePresentation(project);
+    }else{
+      alert('La condivisione della presentazione non è ancora disponibile. Ricarica la pagina e riprova.');
+    }
   },true);
 })();
