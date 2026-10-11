@@ -3,6 +3,7 @@
 
   const STORE='itinerarioArtistico.projects.v4';
   const OPEN_KEY='itinerarioArtistico.openShared.v1';
+  const PRESENT_KEY='itinerarioArtistico.openSharedPresentation.v1';
 
   function fromBase64Url(value){
     const base64=value.replace(/-/g,'+').replace(/_/g,'/');
@@ -27,6 +28,7 @@
     const source=obj?.project||obj;
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
+    const mode=obj?.mode==='presentation'?'presentation':'work';
     const now=Date.now();
     const project={
       ...source,
@@ -34,6 +36,7 @@
       created:now,
       updated:now,
       sharedCopy:true,
+      sharedPresentation:mode==='presentation',
       title:source.title||'Itinerario condiviso'
     };
 
@@ -43,11 +46,14 @@
     projects.push(project);
     localStorage.setItem(STORE,JSON.stringify(projects));
     sessionStorage.setItem(OPEN_KEY,project.id);
+    if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
+    else sessionStorage.removeItem(PRESENT_KEY);
 
     history.replaceState(null,'',location.pathname+location.search);
   }catch(err){
     console.error('Impossibile aprire itinerario condiviso',err);
     sessionStorage.setItem('itinerarioArtistico.sharedError.v1','1');
+    sessionStorage.removeItem(PRESENT_KEY);
     history.replaceState(null,'',location.pathname+location.search);
   }
 })();
