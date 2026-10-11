@@ -12,7 +12,7 @@ body.presentation{background:#171614}
 .presentation .mapPanel{background:#cbc4ba}
 .presentation #map{min-height:100%}
 .presentation .mapHint{display:none}
-.presentation .routeSummary{left:18px;bottom:18px;border:1px solid rgba(255,255,255,.15);background:rgba(23,22,20,.88);box-shadow:0 8px 24px rgba(0,0,0,.24);backdrop-filter:blur(10px)}
+.presentation .routeSummary{left:18px;bottom:48px;border:1px solid rgba(255,255,255,.15);background:rgba(23,22,20,.88);box-shadow:0 8px 24px rgba(0,0,0,.24);backdrop-filter:blur(10px)}
 .presentation .slidePanel{background:rgba(255,253,248,.985);border-left:1px solid rgba(255,255,255,.1)}
 .presentation .slide{padding:clamp(28px,3vw,52px);scrollbar-width:thin;scrollbar-color:#cfc5b8 transparent}
 .presentation .slide .eyebrow{display:inline-flex;align-items:center;min-height:28px;padding:6px 10px;border-radius:999px;background:#f3e8e2;color:#9c2119;font-size:11px;letter-spacing:.14em;box-shadow:inset 0 0 0 1px #ead6cd}
@@ -61,7 +61,7 @@ body.presentation{background:#171614}
   .presentation .slideNav .btn{min-width:34px;padding:6px 8px;font-size:9px}
   .presentation .slideNav #nextBtn{padding-inline:9px}
   .presentation .progress{height:5px}
-  .presentation .routeSummary{left:6px;bottom:6px}
+  .presentation .routeSummary{left:6px;bottom:36px}
 }
 @media(prefers-reduced-motion:reduce){
   .presentation .slide h1,.presentation .slide .meta,.presentation .slide .hero,.presentation .slide .desc,.presentation .slide .descBullets,.presentation .slideVideoWrap{animation:none}
