@@ -2,6 +2,7 @@
   'use strict';
 
   const STORE='itinerarioArtistico.projects.v4';
+  const RICH_STORE='itinerarioArtistico.richText.v1';
 
   function currentProject(){
     const title=document.getElementById('projectName')?.textContent?.trim();
@@ -14,6 +15,17 @@
     }catch{return null;}
   }
 
+  function withRichText(project){
+    if(!project)return project;
+    let rich=null;
+    try{
+      const store=JSON.parse(localStorage.getItem(RICH_STORE)||'{}');
+      rich=store?.[project.id]||project._richText||null;
+    }catch{rich=project._richText||null}
+    if(!rich||!Object.keys(rich).length)return project;
+    return {...project,_richText:rich};
+  }
+
   function safeName(name){
     return (name||'itinerario')
       .trim()
@@ -22,7 +34,7 @@
   }
 
   function payload(project){
-    return JSON.stringify({version:3,project},null,2);
+    return JSON.stringify({version:4,project:withRichText(project)},null,2);
   }
 
   function filename(project){
@@ -91,7 +103,7 @@
 
     const sharePresentation=window.__IA_SHARE_LINK?.sharePresentation;
     if(typeof sharePresentation==='function'){
-      sharePresentation(project);
+      sharePresentation(withRichText(project));
     }else{
       alert('La condivisione della presentazione non è ancora disponibile. Ricarica la pagina e riprova.');
     }
