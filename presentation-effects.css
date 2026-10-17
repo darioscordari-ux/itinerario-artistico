@@ -37,3 +37,32 @@ body.iaWalking #nextBtn,body.iaWalking #prevBtn{pointer-events:none;opacity:.65}
   .presentation .slide.iaSlideLeavingNext,.presentation .slide.iaSlideLeavingPrev,.presentation .slide.iaSlideArriveNext,.presentation .slide.iaSlideArrivePrev{animation:none!important;transform:none!important;filter:none!important;opacity:1!important}
   .iaWalkerAvatar span{animation:none!important}
 }
+
+
+/* Viaggio guidato: map focus al clic su Avanti, scheda solo all'arrivo. */
+.presentation .workspace{
+  grid-template-columns:minmax(0,1.6fr) minmax(0,.9fr);
+  transition:grid-template-columns .42s cubic-bezier(.22,.72,.22,1),gap .42s ease;
+}
+.presentation .mapPanel,.presentation .slidePanel{min-width:0}
+.presentation .slidePanel{
+  transition:opacity .3s ease,transform .42s cubic-bezier(.22,.72,.22,1);
+}
+.presentation.iaMapJourney .workspace{
+  grid-template-columns:minmax(0,1fr) minmax(0,0fr)!important;
+  gap:0;
+}
+.presentation.iaMapJourney .slidePanel{
+  opacity:0;
+  transform:translateX(18px);
+  pointer-events:none;
+}
+@media(max-width:900px){
+  .presentation .workspace{grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr)}
+}
+@media(max-width:640px){
+  .presentation .workspace{grid-template-columns:minmax(0,48fr) minmax(0,52fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  .presentation .workspace,.presentation .slidePanel{transition:none!important}
+}
