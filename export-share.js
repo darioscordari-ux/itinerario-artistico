@@ -15,19 +15,35 @@
       return matches.sort((a,b)=>(b.updated||0)-(a.updated||0))[0];
     }catch{return null;}
   }
+  function stopKey(project,index){
+    const s=project?.stops?.[index];if(!s)return'index:'+index;
+    const lat=Number(s.lat),lon=Number(s.lon);
+    return Number.isFinite(lat)&&Number.isFinite(lon)?lat.toFixed(6)+','+lon.toFixed(6):'index:'+index;
+  }
+  function expandLegacy(project,mode){
+    const out={};
+    for(let i=0;i<Math.max(0,(project?.stops?.length||0)-1);i++)out[stopKey(project,i)]=mode==='transit'?'transit':'walk';
+    return out;
+  }
 
   function enrichedProject(project){
     if(!project)return project;
-    let rich=null,transport='walk';
+    let rich=null,transport=null;
     try{
       const store=JSON.parse(localStorage.getItem(RICH_STORE)||'{}');
       rich=store?.[project.id]||project._richText||null;
     }catch{rich=project._richText||null}
     try{
       const modes=JSON.parse(localStorage.getItem(MODE_STORE)||'{}');
-      transport=modes?.[project.id]||project._transportMode||'walk';
-    }catch{transport=project._transportMode||'walk'}
-    const out={...project,_transportMode:transport==='transit'?'transit':'walk'};
+      const raw=modes?.[project.id];
+      if(raw&&typeof raw==='object'&&!Array.isArray(raw))transport=raw;
+      else if(raw==='walk'||raw==='transit')transport=expandLegacy(project,raw);
+    }catch{}
+    if(!transport&&project._transportModes&&typeof project._transportModes==='object')transport=project._transportModes;
+    if(!transport&&(project._transportMode==='walk'||project._transportMode==='transit'))transport=expandLegacy(project,project._transportMode);
+    const out={...project};
+    if(transport)out._transportModes=transport;
+    delete out._transportMode;
     if(rich&&Object.keys(rich).length)out._richText=rich;
     return out;
   }
@@ -40,7 +56,7 @@
   }
 
   function payload(project){
-    return JSON.stringify({version:5,project:enrichedProject(project)},null,2);
+    return JSON.stringify({version:6,project:enrichedProject(project)},null,2);
   }
 
   function filename(project){
