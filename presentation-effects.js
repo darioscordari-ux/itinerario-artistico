@@ -163,8 +163,68 @@
     });
   }
   function finishMapJourney(){
+    hideArrival();
     document.body.classList.remove('iaMapJourney');
     setTimeout(()=>{try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}},440);
+  }
+
+  // Dopo il viaggio, zoom sulla destinazione e nome del luogo prima della slide.
+  function arrivalStop(next){
+    const info=stepInfo(),project=currentProject();
+    const index=next?info.current:info.current-2;
+    return {index,stop:project?.stops?.[index]};
+  }
+  function arrivalBanner(){
+    const panel=document.querySelector('.mapPanel');
+    if(!panel)return null;
+    let banner=$('iaArrivalBanner');
+    if(!banner){
+      banner=document.createElement('div');
+      banner.id='iaArrivalBanner';
+      banner.className='iaArrivalBanner';
+      banner.setAttribute('role','status');
+      banner.setAttribute('aria-live','polite');
+      const caption=document.createElement('small');
+      caption.textContent='ARRIVO ALLA TAPPA';
+      const title=document.createElement('strong');
+      title.className='iaArrivalTitle';
+      banner.append(caption,title);
+      panel.appendChild(banner);
+    }
+    return banner;
+  }
+  function hideArrival(){
+    $('iaArrivalBanner')?.classList.remove('iaArrivalVisible');
+  }
+  function revealArrival(next){
+    return new Promise(resolve=>{
+      if(!document.body.classList.contains('presentation')){resolve();return}
+      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const map=window.__IA_MAP;
+      const {index,stop}=arrivalStop(next);
+      const route=pathForMove(next);
+      const last=route[route.length-1];
+      const lat=Number(stop?.lat??last?.lat),lon=Number(stop?.lon??last?.lng);
+      if(map&&Number.isFinite(lat)&&Number.isFinite(lon)){
+        try{
+          const zoom=Math.min(map.getMaxZoom(),Math.max(17,Math.min(18,map.getZoom()+2)));
+          if(reduced)map.setView([lat,lon],zoom,{animate:false});
+          else map.flyTo([lat,lon],zoom,{animate:true,duration:.7});
+        }catch{}
+      }
+      setTimeout(()=>{
+        if(!document.body.classList.contains('presentation')){resolve();return}
+        const banner=arrivalBanner();
+        if(banner){
+          banner.querySelector('.iaArrivalTitle').textContent=
+            String(stop?.title||stop?.name||'Tappa '+(index+1));
+          banner.classList.remove('iaArrivalVisible');
+          void banner.offsetWidth;
+          banner.classList.add('iaArrivalVisible');
+        }
+        setTimeout(resolve,reduced?300:950);
+      },reduced?0:720);
+    });
   }
 
   function slideTransition(btn,next){
@@ -205,6 +265,7 @@
 
     startMapJourney()
       .then(()=>document.body.classList.contains('presentation')?animateTravel(next):undefined)
+      .then(()=>document.body.classList.contains('presentation')?revealArrival(next):undefined)
       .catch(()=>{})
       .finally(()=>slideTransition(btn,next));
   },true);
