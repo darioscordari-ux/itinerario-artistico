@@ -1,7 +1,16 @@
 (()=>{
   'use strict';
   const $=id=>document.getElementById(id);
+  const PROJECT_STORE='itinerarioArtistico.projects.v4';
+  const MODE_STORE='itinerarioArtistico.transportModes.v1';
   let bypass=false,busy=false;
+
+  function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
+  function currentProject(){
+    const title=$('projectName')?.textContent?.trim();if(!title)return null;
+    return read(PROJECT_STORE,[]).filter(p=>p?.title===title).sort((a,b)=>(b.updated||0)-(a.updated||0))[0]||null;
+  }
+  function transportMode(){const p=currentProject();return p&&read(MODE_STORE,{})?.[p.id]==='transit'?'transit':'walk'}
 
   function stepInfo(){
     const m=($('stepText')?.textContent||'').match(/(\d+)\s*\/\s*(\d+)/);
@@ -47,12 +56,13 @@
     return next?pts:pts.reverse();
   }
 
-  function walkingIcon(){
+  function travelIcon(mode){
+    const transit=mode==='transit';
     return L.divIcon({
-      className:'iaWalkerLeaflet',
+      className:'iaWalkerLeaflet '+(transit?'iaBusLeaflet':''),
       iconSize:[44,44],
       iconAnchor:[22,34],
-      html:'<div class="iaWalkerAvatar" aria-label="Spostamento a piedi"><span>🚶</span></div>'
+      html:`<div class="iaWalkerAvatar ${transit?'iaBusAvatar':''}" aria-label="${transit?'Spostamento con mezzo pubblico':'Spostamento a piedi'}"><span>${transit?'🚌':'🚶'}</span></div>`
     });
   }
 
@@ -83,10 +93,11 @@
 
   function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
 
-  function animateWalker(next){
+  function animateTravel(next){
     return new Promise(resolve=>{
       const map=window.__IA_MAP;
       const points=pathForMove(next);
+      const mode=transportMode();
       const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
       if(!map||points.length<2||reduced){resolve();return}
 
@@ -95,10 +106,13 @@
 
       const {cum,total}=cumulativePath(points,map);
       if(!Number.isFinite(total)||total<=0){resolve();return}
-      const duration=Math.max(1200,Math.min(2600,1250+total*.9));
+      const duration=mode==='transit'
+        ?Math.max(900,Math.min(1800,900+total*.35))
+        :Math.max(1200,Math.min(2600,1250+total*.9));
 
       document.body.classList.add('iaWalking');
-      const marker=L.marker(points[0],{icon:walkingIcon(),interactive:false,zIndexOffset:5000}).addTo(map);
+      if(mode==='transit')document.body.classList.add('iaRiding');
+      const marker=L.marker(points[0],{icon:travelIcon(mode),interactive:false,zIndexOffset:5000}).addTo(map);
       marker.__iaWalker=true;
 
       setTimeout(()=>{
@@ -112,7 +126,7 @@
           marker.getElement()?.classList.add('iaWalkerArrived');
           setTimeout(()=>{
             try{marker.remove()}catch{}
-            document.body.classList.remove('iaWalking');
+            document.body.classList.remove('iaWalking','iaRiding');
             resolve();
           },230);
         }
@@ -149,7 +163,7 @@
     busy=true;
     const next=btn.id==='nextBtn';
 
-    animateWalker(next)
+    animateTravel(next)
       .catch(()=>{})
       .finally(()=>slideTransition(btn,next));
   },true);
