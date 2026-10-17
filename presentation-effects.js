@@ -149,19 +149,45 @@
     });
   }
 
+
+  // In modalità Presenta, la mappa diventa protagonista solo durante il viaggio.
+  // Nessun avanzamento automatico: un clic su Avanti/Indietro avvia una sola sequenza.
+  function startMapJourney(){
+    document.body.classList.add('iaMapJourney');
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    return new Promise(resolve=>{
+      setTimeout(()=>{
+        try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}
+        resolve();
+      },reduced?20:440);
+    });
+  }
+  function finishMapJourney(){
+    document.body.classList.remove('iaMapJourney');
+    setTimeout(()=>{try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}},440);
+  }
+
   function slideTransition(btn,next){
     const slide=$('slide');
-    if(!slide){busy=false;return}
+    if(!slide||!document.body.classList.contains('presentation')){
+      finishMapJourney();
+      busy=false;
+      return;
+    }
     clearClasses(slide);
     slide.classList.add(next?'iaSlideLeavingNext':'iaSlideLeavingPrev');
 
     setTimeout(()=>{
+      if(!document.body.classList.contains('presentation')){
+        finishMapJourney();clearClasses(slide);busy=false;return;
+      }
       bypass=true;
       btn.click();
       requestAnimationFrame(()=>{
         clearClasses(slide);
+        finishMapJourney();
         slide.classList.add(next?'iaSlideArriveNext':'iaSlideArrivePrev');
-        setTimeout(()=>{clearClasses(slide);busy=false},430);
+        setTimeout(()=>{clearClasses(slide);busy=false},490);
       });
     },155);
   }
@@ -177,7 +203,8 @@
     busy=true;
     const next=btn.id==='nextBtn';
 
-    animateTravel(next)
+    startMapJourney()
+      .then(()=>document.body.classList.contains('presentation')?animateTravel(next):undefined)
       .catch(()=>{})
       .finally(()=>slideTransition(btn,next));
   },true);
