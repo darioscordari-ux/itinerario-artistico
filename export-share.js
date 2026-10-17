@@ -3,6 +3,7 @@
 
   const STORE='itinerarioArtistico.projects.v4';
   const RICH_STORE='itinerarioArtistico.richText.v1';
+  const MODE_STORE='itinerarioArtistico.transportModes.v1';
 
   function currentProject(){
     const title=document.getElementById('projectName')?.textContent?.trim();
@@ -15,15 +16,20 @@
     }catch{return null;}
   }
 
-  function withRichText(project){
+  function enrichedProject(project){
     if(!project)return project;
-    let rich=null;
+    let rich=null,transport='walk';
     try{
       const store=JSON.parse(localStorage.getItem(RICH_STORE)||'{}');
       rich=store?.[project.id]||project._richText||null;
     }catch{rich=project._richText||null}
-    if(!rich||!Object.keys(rich).length)return project;
-    return {...project,_richText:rich};
+    try{
+      const modes=JSON.parse(localStorage.getItem(MODE_STORE)||'{}');
+      transport=modes?.[project.id]||project._transportMode||'walk';
+    }catch{transport=project._transportMode||'walk'}
+    const out={...project,_transportMode:transport==='transit'?'transit':'walk'};
+    if(rich&&Object.keys(rich).length)out._richText=rich;
+    return out;
   }
 
   function safeName(name){
@@ -34,7 +40,7 @@
   }
 
   function payload(project){
-    return JSON.stringify({version:4,project:withRichText(project)},null,2);
+    return JSON.stringify({version:5,project:enrichedProject(project)},null,2);
   }
 
   function filename(project){
@@ -103,7 +109,7 @@
 
     const sharePresentation=window.__IA_SHARE_LINK?.sharePresentation;
     if(typeof sharePresentation==='function'){
-      sharePresentation(withRichText(project));
+      sharePresentation(enrichedProject(project));
     }else{
       alert('La condivisione della presentazione non è ancora disponibile. Ricarica la pagina e riprova.');
     }
