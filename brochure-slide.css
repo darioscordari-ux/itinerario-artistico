@@ -1,3 +1,9 @@
+/* I fregi dell'opuscolo non devono comparire nella modalità di modifica. */
+body:not(.presentation) .iaBrochureHeader,
+body:not(.presentation) .iaBrochureOverline,
+body:not(.presentation) .iaBrochureTextHeading,
+body:not(.presentation) .iaBrochureFooter{display:none!important}
+
 /* Guida artistica: impaginazione editoriale per la SOLA modalità Presenta.
    Nessun dato viene alterato: si riutilizzano titoli, media e testi delle tappe. */
 .presentation .slidePanel{
