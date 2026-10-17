@@ -3,6 +3,7 @@
   const $=id=>document.getElementById(id);
   const PROJECT_STORE='itinerarioArtistico.projects.v4';
   const MODE_STORE='itinerarioArtistico.transportModes.v1';
+  const EXTRA_STORE='itinerarioArtistico.slideExtras.v1';
   let bypass=false,busy=false;
 
   function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
@@ -164,6 +165,7 @@
   }
   function finishMapJourney(){
     hideArrival();
+    hideDestinationPhoto();
     document.body.classList.remove('iaMapJourney');
     setTimeout(()=>{try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}},440);
   }
@@ -195,6 +197,63 @@
   }
   function hideArrival(){
     $('iaArrivalBanner')?.classList.remove('iaArrivalVisible');
+  }
+  // Dissolvenza dalla mappa alla foto della tappa, prima della scheda.
+  // Prima immagine principale, poi eventuali immagini della galleria.
+  function arrivalImages(next){
+    const project=currentProject();
+    const {index,stop}=arrivalStop(next);
+    if(!project||!stop||index<0)return[];
+    const gallery=read(EXTRA_STORE,{})?.[project.id]?.[String(index)]?.images;
+    const sources=[stop.image,...(Array.isArray(gallery)?gallery:[])];
+    return [...new Set(sources.filter(src=>typeof src==='string' && /^(https?:\/\/|data:image\/)/i.test(src.trim())))];
+  }
+  function preloadArrivalImage(src){
+    return new Promise(resolve=>{
+      const img=new Image();
+      let settled=false;
+      const finish=ok=>{
+        if(settled)return;
+        settled=true;clearTimeout(timer);
+        img.onload=null;img.onerror=null;
+        resolve(ok?img:null);
+      };
+      const timer=setTimeout(()=>finish(false),1600);
+      img.onload=()=>finish(true);
+      img.onerror=()=>finish(false);
+      img.decoding='async';
+      img.src=src;
+      if(img.complete && img.naturalWidth>0)finish(true);
+    });
+  }
+  function hideDestinationPhoto(){
+    document.querySelectorAll('.iaDestinationPhoto').forEach(node=>{
+      node.classList.remove('iaDestinationPhotoVisible');
+      setTimeout(()=>node.remove(),470);
+    });
+  }
+  async function revealDestinationPhoto(next){
+    const panel=document.querySelector('.mapPanel');
+    if(!panel||!document.body.classList.contains('presentation'))return;
+    const sources=arrivalImages(next);
+    if(!sources.length)return;
+    for(const src of sources){
+      const img=await preloadArrivalImage(src);
+      if(!document.body.classList.contains('presentation'))return;
+      if(!img)continue;
+      hideDestinationPhoto();
+      const photo=document.createElement('div');
+      photo.className='iaDestinationPhoto';
+      photo.setAttribute('aria-hidden','true');
+      img.alt='';
+      photo.appendChild(img);
+      panel.appendChild(photo);
+      requestAnimationFrame(()=>photo.classList.add('iaDestinationPhotoVisible'));
+      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      await new Promise(resolve=>setTimeout(resolve,reduced?280:1180));
+      return;
+    }
+    // Foto non disponibile: si procede normalmente alla slide.
   }
   function revealArrival(next){
     return new Promise(resolve=>{
@@ -272,6 +331,7 @@
     startMapJourney()
       .then(()=>document.body.classList.contains('presentation')?animateTravel(next):undefined)
       .then(()=>document.body.classList.contains('presentation')?revealArrival(next):undefined)
+      .then(()=>document.body.classList.contains('presentation')?revealDestinationPhoto(next):undefined)
       .catch(()=>{})
       .finally(()=>slideTransition(btn,next));
   },true);
