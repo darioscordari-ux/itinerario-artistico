@@ -256,7 +256,13 @@
     const btn=e.target?.closest?.('#nextBtn,#prevBtn');
     if(!btn||!document.body.classList.contains('presentation'))return;
     if(bypass){bypass=false;return}
-    if(busy||!canMove(btn))return;
+    // Blocca i doppi tocchi mentre il viaggio/arrivo è in corso.
+    if(busy){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return;
+    }
+    if(!canMove(btn))return;
 
     e.preventDefault();
     e.stopImmediatePropagation();
