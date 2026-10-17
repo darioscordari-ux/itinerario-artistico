@@ -10,12 +10,27 @@
     const title=$('projectName')?.textContent?.trim();if(!title)return null;
     return read(PROJECT_STORE,[]).filter(p=>p?.title===title).sort((a,b)=>(b.updated||0)-(a.updated||0))[0]||null;
   }
-  function transportMode(){const p=currentProject();return p&&read(MODE_STORE,{})?.[p.id]==='transit'?'transit':'walk'}
+  function stopKey(project,index){
+    const s=project?.stops?.[index];if(!s)return'index:'+index;
+    const lat=Number(s.lat),lon=Number(s.lon);
+    return Number.isFinite(lat)&&Number.isFinite(lon)?lat.toFixed(6)+','+lon.toFixed(6):'index:'+index;
+  }
+  function transportModeFor(index){
+    const p=currentProject();if(!p)return'walk';
+    const api=window.__IA_TRANSPORT;
+    if(api?.modeForIndex)return api.modeForIndex(p,index)||'walk';
+    const raw=read(MODE_STORE,{})?.[p.id];
+    if(raw==='transit')return'transit';
+    if(raw&&typeof raw==='object')return raw[stopKey(p,index)]==='transit'?'transit':'walk';
+    if(p._transportModes&&typeof p._transportModes==='object')return p._transportModes[stopKey(p,index)]==='transit'?'transit':'walk';
+    return p._transportMode==='transit'?'transit':'walk';
+  }
 
   function stepInfo(){
     const m=($('stepText')?.textContent||'').match(/(\d+)\s*\/\s*(\d+)/);
     return m?{current:Number(m[1]),total:Number(m[2])}:{current:1,total:1};
   }
+  function segmentIndex(next){const s=stepInfo();return next?s.current-1:s.current-2}
   function canMove(btn){
     const s=stepInfo();
     return btn.id==='nextBtn'?s.current<s.total:s.current>1;
@@ -47,9 +62,8 @@
   }
 
   function pathForMove(next){
-    const s=stepInfo();
     const lines=routeLines();
-    const index=next?s.current-1:s.current-2;
+    const index=segmentIndex(next);
     const line=lines[index];
     if(!line)return[];
     const pts=flattenLatLngs(line.getLatLngs?.()||[]);
@@ -97,7 +111,7 @@
     return new Promise(resolve=>{
       const map=window.__IA_MAP;
       const points=pathForMove(next);
-      const mode=transportMode();
+      const mode=transportModeFor(segmentIndex(next));
       const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
       if(!map||points.length<2||reduced){resolve();return}
 
