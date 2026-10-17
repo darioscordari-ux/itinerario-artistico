@@ -15,17 +15,20 @@
 .iaWalkerAvatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,253,248,.97);border:2px solid rgba(169,37,28,.8);box-shadow:0 7px 18px rgba(0,0,0,.28);transform-origin:50% 82%;position:relative}
 .iaWalkerAvatar::after{content:"";position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);width:18px;height:6px;border-radius:50%;background:rgba(0,0,0,.22);filter:blur(2px)}
 .iaWalkerAvatar span{display:block;font-size:27px;line-height:1;animation:iaWalkBob .32s ease-in-out infinite alternate;transform-origin:50% 100%}
+.iaBusAvatar{border-color:rgba(37,99,235,.9);background:rgba(247,251,255,.98)}
+.iaBusAvatar span{font-size:25px;animation:iaBusRide .42s ease-in-out infinite alternate}
 .iaWalkerArrived .iaWalkerAvatar{animation:iaArrivePop .22s ease both}
 body.iaWalking #nextBtn,body.iaWalking #prevBtn{pointer-events:none;opacity:.65}
 
 @keyframes iaWalkBob{from{transform:translateY(1px) rotate(-2deg)}to{transform:translateY(-3px) rotate(2deg)}}
+@keyframes iaBusRide{from{transform:translateY(0) rotate(-1deg)}to{transform:translateY(-2px) rotate(1deg)}}
 @keyframes iaArrivePop{0%{transform:scale(1)}55%{transform:scale(1.16)}100%{transform:scale(1)}}
 @keyframes iaArriveNext{from{opacity:0;transform:translateX(28px) scale(.992);filter:blur(1px)}to{opacity:1;transform:none;filter:none}}
 @keyframes iaArrivePrev{from{opacity:0;transform:translateX(-28px) scale(.992);filter:blur(1px)}to{opacity:1;transform:none;filter:none}}
 @media(max-width:640px){
   .presentation .slide.iaSlideLeavingNext{transform:translateX(-14px) scale(.995)}
   .presentation .slide.iaSlideLeavingPrev{transform:translateX(14px) scale(.995)}
-  .iaWalkerAvatar{width:34px;height:34px}.iaWalkerAvatar span{font-size:23px}
+  .iaWalkerAvatar{width:34px;height:34px}.iaWalkerAvatar span{font-size:23px}.iaBusAvatar span{font-size:21px}
   @keyframes iaArriveNext{from{opacity:0;transform:translateX(16px) scale(.995)}to{opacity:1;transform:none}}
   @keyframes iaArrivePrev{from{opacity:0;transform:translateX(-16px) scale(.995)}to{opacity:1;transform:none}}
 }
