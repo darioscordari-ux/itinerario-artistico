@@ -1,0 +1,150 @@
+/* Guida artistica: impaginazione editoriale per la SOLA modalità Presenta.
+   Nessun dato viene alterato: si riutilizzano titoli, media e testi delle tappe. */
+.presentation .slidePanel{
+  background:#f8f4eb;
+  border:1px solid rgba(232,221,201,.86);
+  box-shadow:0 22px 60px rgba(0,0,0,.28);
+}
+.presentation .slide.iaBrochurePage{
+  background-color:#faf7ef;
+  background-image:linear-gradient(90deg,rgba(148,96,54,.03),transparent 12%),linear-gradient(0deg,rgba(255,255,255,.42),transparent 28%);
+  padding:clamp(24px,2.6vw,43px) clamp(23px,3vw,49px) 32px;
+  color:#292722;
+}
+.presentation .iaBrochureHeader{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:0 0 14px;margin-bottom:24px;
+  border-bottom:1px solid #d7cabb;
+}
+.presentation .iaBrochureBrand{display:flex;align-items:center;gap:10px;min-width:0}
+.presentation .iaBrochureMonogram{
+  flex:0 0 auto;display:grid;place-items:center;width:28px;height:28px;
+  border:1px solid #ad8c6a;border-radius:50%;
+  color:#814337;font:italic 20px/.9 Georgia,serif;
+}
+.presentation .iaBrochureEdition{
+  color:#765644;font:750 10px/1.3 system-ui,sans-serif;
+  letter-spacing:.18em;white-space:nowrap;
+}
+.presentation .iaBrochureIssue{
+  text-align:right;color:#9c8065;font:700 10px/1.3 system-ui,sans-serif;
+  text-transform:uppercase;letter-spacing:.13em;overflow-wrap:anywhere;
+}
+.presentation .slide.iaBrochurePage .eyebrow{
+  display:inline-block;background:transparent;box-shadow:none;border-radius:0;
+  padding:0 0 5px;min-height:0;margin:0;
+  color:#8e4133;font:800 10px/1.3 system-ui,sans-serif;
+  letter-spacing:.2em;
+}
+.presentation .iaBrochureOverline{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:0 0 8px;padding-top:2px;
+  gap:10px;font:700 10px/1.4 system-ui,sans-serif;
+  color:#a48b70;letter-spacing:.14em;
+}
+.presentation .iaBrochureFolio{color:#a83d2e;white-space:nowrap;letter-spacing:.1em}
+.presentation .slide.iaBrochurePage h1{
+  font-family:"Iowan Old Style","Baskerville","Palatino Linotype",Georgia,serif;
+  font-weight:500;font-size:clamp(30px,3.25vw,52px);
+  letter-spacing:-.035em;line-height:1.04;
+  margin:8px 0 10px;color:#2d2924;
+}
+.presentation .slide.iaBrochurePage .meta{
+  font:500 clamp(11px,1.02vw,14px)/1.55 system-ui,sans-serif;
+  color:#7c6b5d;letter-spacing:.025em;
+  padding-bottom:16px;border-bottom:1px solid rgba(174,140,112,.27);
+}
+.presentation .slide.iaBrochurePage .hero{
+  width:100%;max-width:100%;aspect-ratio:16/10;
+  margin:22px auto 12px;
+  background:#eee9e0;
+  border:6px solid #fffdf8;border-radius:4px;
+  box-shadow:0 14px 28px rgba(56,44,33,.17),0 1px 5px rgba(56,44,33,.12);
+}
+.presentation .slide.iaBrochurePage .hero:not(.gallery2):not(.gallery3):not(.gallery4)>img{
+  object-fit:contain;background:#eee9e0;
+}
+.presentation .slide.iaBrochurePage .hero.gallery2>img,
+.presentation .slide.iaBrochurePage .hero.gallery3>img,
+.presentation .slide.iaBrochurePage .hero.gallery4>img{object-fit:cover}
+.presentation .slide.iaBrochurePage .credit{
+  text-align:right;margin:0 3px 9px;max-width:none;
+  color:#9b8a7a;font-size:10px;font-style:italic;
+}
+.presentation .iaBrochureTextHeading{
+  display:flex;gap:12px;align-items:center;margin-top:20px;
+  color:#9b4737;
+}
+.presentation .iaBrochureTextLabel{
+  flex:0 0 auto;font:800 10px/1.4 system-ui,sans-serif;
+  letter-spacing:.19em;
+}
+.presentation .iaBrochureTextLabel::before{content:"IL LUOGO"}
+.presentation .slide.iaBrochurePage:has(.descBullets) .iaBrochureTextLabel::before{content:"DA OSSERVARE"}
+.presentation .iaBrochureTextRule{flex:1;border-top:1px solid #d7c8b8}
+.presentation .slide.iaBrochurePage .desc{
+  font:400 clamp(15px,1.22vw,18px)/1.74 Georgia,serif;
+  margin:13px 0 22px;max-width:none;color:#38342f;overflow-wrap:anywhere;
+}
+.presentation .slide.iaBrochurePage .descBullets{
+  font:400 clamp(15px,1.22vw,18px)/1.65 Georgia,serif;
+  gap:.5em;color:#38342f;
+}
+.presentation .slide.iaBrochurePage .descBullets li::marker{color:#9f5c43}
+.presentation .iaBrochureFooter{
+  margin-top:27px;padding:14px 0 0;border-top:1px solid #d4c4b4;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:10px;
+}
+.presentation .iaBrochureTravel{min-width:0;flex:1;display:grid;gap:5px}
+.presentation .iaBrochureTravel small{
+  color:#927865;font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.18em;
+}
+.presentation .iaBrochureTravel strong{
+  color:#524638;font:650 clamp(11px,1.1vw,14px)/1.4 system-ui,sans-serif;
+  overflow-wrap:anywhere;
+}
+.presentation .iaBrochurePageNumber{display:flex;align-items:baseline;gap:5px;color:#9a7d66}
+.presentation .iaBrochurePageNumber span{font:800 9px system-ui,sans-serif;letter-spacing:.16em}
+.presentation .iaBrochurePageNumber strong{font:400 36px/.9 Georgia,serif;color:#96493d}
+.presentation .slidePanel .slideNav{
+  background:linear-gradient(180deg,rgba(250,247,239,.98),rgba(242,233,219,.98));
+}
+.presentation .slidePanel .slideNav .btn.primary{
+  background:#843b2d;border-color:#843b2d;color:#fff;
+}
+.presentation .slidePanel .progress i{background:#96493d}
+@media(max-width:1000px){
+  .presentation .slide.iaBrochurePage{padding:22px 21px 26px}
+  .presentation .iaBrochureHeader{margin-bottom:15px;padding-bottom:10px}
+  .presentation .iaBrochureEdition{letter-spacing:.1em;font-size:9px}
+  .presentation .iaBrochureIssue{font-size:9px}
+  .presentation .slide.iaBrochurePage .hero{margin:15px auto 10px;aspect-ratio:4/3;border-width:4px}
+  .presentation .iaBrochureTextHeading{margin-top:14px}
+}
+@media(max-width:640px){
+  .presentation .slide.iaBrochurePage{padding:16px 12px 22px}
+  .presentation .iaBrochureHeader{gap:5px;margin-bottom:12px;padding-bottom:8px}
+  .presentation .iaBrochureMonogram{width:21px;height:21px;font-size:15px}
+  .presentation .iaBrochureEdition{font-size:7px;letter-spacing:.06em;white-space:normal}
+  .presentation .iaBrochureIssue{font-size:7px;letter-spacing:.05em}
+  .presentation .iaBrochureOverline{font-size:7px;gap:5px}
+  .presentation .slide.iaBrochurePage .eyebrow{font-size:8px;letter-spacing:.1em}
+  .presentation .slide.iaBrochurePage h1{font-size:clamp(19px,5.5vw,27px);line-height:1.08;margin:6px 0}
+  .presentation .slide.iaBrochurePage .meta{font-size:10px;line-height:1.4;padding-bottom:9px}
+  .presentation .slide.iaBrochurePage .hero{aspect-ratio:4/3;margin:10px auto 9px;border-width:3px}
+  .presentation .slide.iaBrochurePage .credit{font-size:8px}
+  .presentation .iaBrochureTextHeading{margin-top:12px}
+  .presentation .iaBrochureTextLabel{font-size:8px;letter-spacing:.11em}
+  .presentation .slide.iaBrochurePage .desc,.presentation .slide.iaBrochurePage .descBullets{
+    font-size:13px;line-height:1.56;margin:10px 0 16px;
+  }
+  .presentation .iaBrochureFooter{margin-top:14px;padding-top:10px}
+  .presentation .iaBrochureTravel small{font-size:7px;letter-spacing:.09em}
+  .presentation .iaBrochureTravel strong{font-size:10px;line-height:1.3}
+  .presentation .iaBrochurePageNumber span{font-size:7px}
+  .presentation .iaBrochurePageNumber strong{font-size:24px}
+}
+@media(prefers-reduced-motion:reduce){
+  .presentation .slide.iaBrochurePage .iaBrochureHeader,
+  .presentation .slide.iaBrochurePage .iaBrochureFooter{animation:none!important}
+}
