@@ -5,6 +5,8 @@
   const MODE_STORE='itinerarioArtistico.transportModes.v1';
   const EXTRA_STORE='itinerarioArtistico.slideExtras.v1';
   let bypass=false,busy=false;
+  const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const motionReduced=()=>!!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
 
   function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
   function currentProject(){
@@ -155,12 +157,11 @@
   // Nessun avanzamento automatico: un clic su Avanti/Indietro avvia una sola sequenza.
   function startMapJourney(){
     document.body.classList.add('iaMapJourney');
-    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     return new Promise(resolve=>{
       setTimeout(()=>{
         try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}
         resolve();
-      },reduced?20:440);
+      },motionReduced()?20:520);
     });
   }
   function finishMapJourney(){
@@ -249,8 +250,7 @@
       photo.appendChild(img);
       panel.appendChild(photo);
       requestAnimationFrame(()=>photo.classList.add('iaDestinationPhotoVisible'));
-      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      await new Promise(resolve=>setTimeout(resolve,reduced?280:1180));
+      await pause(motionReduced()?220:1040);
       return;
     }
     // Foto non disponibile: si procede normalmente alla slide.
@@ -258,7 +258,7 @@
   function revealArrival(next){
     return new Promise(resolve=>{
       if(!document.body.classList.contains('presentation')){resolve();return}
-      const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const reduced=motionReduced();
       const map=window.__IA_MAP;
       const {index,stop}=arrivalStop(next);
       const route=pathForMove(next);
@@ -266,9 +266,9 @@
       const lat=Number(stop?.lat??last?.lat),lon=Number(stop?.lon??last?.lng);
       if(map&&Number.isFinite(lat)&&Number.isFinite(lon)){
         try{
-          const zoom=Math.min(map.getMaxZoom(),Math.max(17,Math.min(18,map.getZoom()+2)));
+          const zoom=Math.min(map.getMaxZoom(),Math.max(16,Math.min(18,map.getZoom()+1)));
           if(reduced)map.setView([lat,lon],zoom,{animate:false});
-          else map.flyTo([lat,lon],zoom,{animate:true,duration:.7});
+          else map.flyTo([lat,lon],zoom,{animate:true,duration:.66});
         }catch{}
       }
       setTimeout(()=>{
@@ -281,34 +281,80 @@
           void banner.offsetWidth;
           banner.classList.add('iaArrivalVisible');
         }
-        setTimeout(resolve,reduced?300:950);
-      },reduced?0:720);
+        setTimeout(resolve,reduced?240:650);
+      },reduced?0:480);
     });
   }
 
-  function slideTransition(btn,next){
+  // Ponte fotografico: la stessa immagine passa dalla mappa alla slide.
+  // Il ponte è puramente visivo: non sostituisce né modifica la foto della tappa.
+  function photoBridge(){
+    const photo=document.querySelector('.iaDestinationPhoto.iaDestinationPhotoVisible');
+    const source=photo?.querySelector('img');
+    if(!photo||!source||motionReduced())return null;
+    const bounds=photo.getBoundingClientRect();
+    if(bounds.width<30||bounds.height<30)return null;
+    const bridge=document.createElement('div');
+    bridge.className='iaPhotoBridge';
+    bridge.style.left=bounds.left+'px';
+    bridge.style.top=bounds.top+'px';
+    bridge.style.width=bounds.width+'px';
+    bridge.style.height=bounds.height+'px';
+    const img=source.cloneNode(false);
+    img.removeAttribute('style');
+    bridge.appendChild(img);
+    document.body.appendChild(bridge);
+    return {node:bridge,bounds};
+  }
+
+  async function landPhotoBridge(bridge,slide){
+    if(!bridge)return;
+    const el=bridge.node;
+    try{
+      // La mappa torna alle dimensioni normali prima di misurare la foto finale.
+      await pause(480);
+      if(!document.body.classList.contains('presentation'))return;
+      const destination=slide.querySelector('.hero > img')||slide.querySelector('.hero');
+      if(!destination)return;
+      const target=destination.getBoundingClientRect(),start=bridge.bounds;
+      if(!target.width||!target.height||!start.width||!start.height)return;
+      const dx=target.left-start.left,dy=target.top-start.top;
+      const sx=target.width/start.width,sy=target.height/start.height;
+      const anim=el.animate?.([
+        {transform:'translate3d(0,0,0) scale(1,1)',borderRadius:'16px',opacity:1},
+        {transform:`translate3d(${dx}px,${dy}px,0) scale(${sx},${sy})`,borderRadius:'22px',opacity:.98}
+      ],{duration:670,easing:'cubic-bezier(.22,.8,.22,1)',fill:'forwards'});
+      if(anim)await anim.finished.catch(()=>{});
+      // Una dissolvenza finale lascia visibile la vera immagine della slide.
+      const fade=el.animate?.([{opacity:.98},{opacity:0}],{duration:180,fill:'forwards',easing:'ease-out'});
+      if(fade)await fade.finished.catch(()=>{});
+    }finally{
+      el.remove();
+    }
+  }
+
+  async function slideTransition(btn,next){
     const slide=$('slide');
     if(!slide||!document.body.classList.contains('presentation')){
-      finishMapJourney();
-      busy=false;
-      return;
+      finishMapJourney();busy=false;return;
     }
+    const bridge=photoBridge();
     clearClasses(slide);
-    slide.classList.add(next?'iaSlideLeavingNext':'iaSlideLeavingPrev');
-
-    setTimeout(()=>{
-      if(!document.body.classList.contains('presentation')){
-        finishMapJourney();clearClasses(slide);busy=false;return;
-      }
+    try{
+      // Aggiorna il contenuto mentre la fotografia della mappa resta davanti.
       bypass=true;
       btn.click();
-      requestAnimationFrame(()=>{
-        clearClasses(slide);
-        finishMapJourney();
-        slide.classList.add(next?'iaSlideArriveNext':'iaSlideArrivePrev');
-        setTimeout(()=>{clearClasses(slide);busy=false},490);
-      });
-    },155);
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+      finishMapJourney();
+      slide.classList.add(next?'iaSlideArriveNext':'iaSlideArrivePrev');
+      if(bridge)await landPhotoBridge(bridge,slide);
+      else await pause(motionReduced()?40:530);
+    }finally{
+      bridge?.node.remove();
+      finishMapJourney();
+      clearClasses(slide);
+      busy=false;
+    }
   }
 
   document.addEventListener('click',e=>{
@@ -333,7 +379,7 @@
       .then(()=>document.body.classList.contains('presentation')?revealArrival(next):undefined)
       .then(()=>document.body.classList.contains('presentation')?revealDestinationPhoto(next):undefined)
       .catch(()=>{})
-      .finally(()=>slideTransition(btn,next));
+      .finally(()=>slideTransition(btn,next).catch(()=>{busy=false;finishMapJourney()}));
   },true);
 
   document.addEventListener('click',e=>{
