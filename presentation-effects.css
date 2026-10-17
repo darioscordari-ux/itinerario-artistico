@@ -85,3 +85,21 @@ body.iaWalking #nextBtn,body.iaWalking #prevBtn{pointer-events:none;opacity:.65}
 .presentation .iaArrivalBanner.iaArrivalVisible{opacity:1;transform:translate(-50%,0) scale(1)}
 @media(max-width:640px){.iaArrivalBanner{top:10%;padding:10px 15px}.iaArrivalBanner strong{font-size:20px}}
 @media(prefers-reduced-motion:reduce){.iaArrivalBanner{transition:none}}
+
+/* Fotografia del luogo: dalla mappa ingrandita alla slide, con dissolvenza morbida. */
+.presentation .iaDestinationPhoto{
+  position:absolute;inset:0;z-index:1050;overflow:hidden;
+  display:grid;place-items:center;pointer-events:none;
+  opacity:0;background:radial-gradient(ellipse at 50% 35%,#40392f,#171615 82%);
+  transition:opacity .42s ease;
+}
+.presentation .iaDestinationPhoto img{
+  display:block;width:100%;height:100%;object-fit:contain;
+  transform:scale(1.045);opacity:.96;
+  transition:transform 1.25s cubic-bezier(.16,.72,.25,1),opacity .55s ease;
+}
+.presentation .iaDestinationPhoto.iaDestinationPhotoVisible{opacity:1}
+.presentation .iaDestinationPhoto.iaDestinationPhotoVisible img{transform:scale(1);opacity:1}
+@media(prefers-reduced-motion:reduce){
+  .presentation .iaDestinationPhoto,.presentation .iaDestinationPhoto img{transition:none!important;transform:none!important}
+}
