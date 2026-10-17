@@ -4,7 +4,7 @@
   const MODE_STORE='itinerarioArtistico.transportModes.v1';
   const $=id=>document.getElementById(id);
   const transitCache=new Map();
-  let applying=false,applyToken=0,applyTimer=null;
+  let applying=false,applyToken=0,applyTimer=null,lastRouteSignature='';
 
   function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
   function write(key,value){localStorage.setItem(key,JSON.stringify(value))}
@@ -63,6 +63,7 @@
     map.eachLayer(l=>{if(l instanceof L.Polyline&&!(l instanceof L.Polygon)&&!l.__iaRouteEditor&&flatten(l.getLatLngs?.()||[]).length>1)out.push(l)});
     return out.sort((a,b)=>(a._leaflet_id||0)-(b._leaflet_id||0));
   }
+  function routeSignature(){return routeLines().map(l=>l._leaflet_id||0).join(',')}
   function routeLabels(){
     const map=window.__IA_MAP;if(!map||!window.L)return[];const out=[];
     map.eachLayer(l=>{if(l instanceof L.Marker&&l.getElement?.()?.classList?.contains('routeLabel'))out.push(l)});
@@ -92,16 +93,21 @@
     };
     return line.__iaWalkBackup;
   }
-  function restoreWalkSegment(line,lab,index){
+  function restoreWalkSegment(line,lab){
     const b=line.__iaWalkBackup;if(!b){line.__iaTransport='walk';return}
     line.setLatLngs(b.points);line.setStyle(b.style||{});line.__iaTransport='walk';
-    if(lab&&b.label){lab.setLatLng(b.label.latlng);lab.setIcon(L.divIcon({className:'routeLabel',html:`🚶 ${b.label.html}`}))}
+    if(lab&&b.label){
+      lab.setLatLng(b.label.latlng);
+      const html=`🚶 ${b.label.html}`;
+      if(lab.getElement()?.innerHTML!==html)lab.setIcon(L.divIcon({className:'routeLabel',html}));
+    }
   }
 
   async function applyModes(){
     if(applying||$('app')?.classList.contains('hidden'))return false;
     const p=currentProject(),map=window.__IA_MAP;if(!p||!map||!Array.isArray(p.stops)||p.stops.length<2)return false;
     const lines=routeLines(),labels=routeLabels();if(lines.length<p.stops.length-1)return false;
+    lastRouteSignature=lines.map(l=>l._leaflet_id||0).join(',');
     const token=++applyToken;applying=true;
     try{
       for(let i=0;i<p.stops.length-1;i++){
@@ -113,9 +119,13 @@
           let seg;try{seg=await roadRoute(a,b)}catch{seg=fallbackTransit(a,b)}
           if(token!==applyToken)return false;
           line.setLatLngs(seg.points);line.setStyle({color:'#2563eb',weight:5,opacity:.92,dashArray:null});line.__iaTransport='transit';
-          if(lab){const mid=seg.points[Math.floor(seg.points.length/2)]||seg.points[0];lab.setLatLng(mid);lab.setIcon(L.divIcon({className:'routeLabel',html:`🚌 ${i+1}→${i+2} · ${fmtDist(seg.distance)} · ~${fmtTime(seg.time)}`}))}
+          if(lab){
+            const mid=seg.points[Math.floor(seg.points.length/2)]||seg.points[0];lab.setLatLng(mid);
+            const html=`🚌 ${i+1}→${i+2} · ${fmtDist(seg.distance)} · ~${fmtTime(seg.time)}`;
+            if(lab.getElement()?.innerHTML!==html)lab.setIcon(L.divIcon({className:'routeLabel',html}));
+          }
         }else{
-          restoreWalkSegment(line,lab,i);
+          restoreWalkSegment(line,lab);
         }
       }
       document.body.dataset.transportMode=modeForIndex(p,currentIndex())||'walk';
@@ -169,7 +179,10 @@
     if(e.target?.closest?.('#iaOrderSave'))setTimeout(waitAndApply,300);
   },true);
 
-  const mapNode=$('map');if(mapNode)new MutationObserver(()=>waitAndApply()).observe(mapNode,{childList:true,subtree:true});
+  const mapNode=$('map');if(mapNode)new MutationObserver(()=>{
+    if(applying)return;
+    setTimeout(()=>{const sig=routeSignature();if(sig!==lastRouteSignature)waitAndApply()},80);
+  }).observe(mapNode,{childList:true,subtree:true});
   window.__IA_TRANSPORT={modeForIndex,currentProject,currentIndex,applyModes,saveModeForIndex,stopKey};
   window.addEventListener('load',()=>{ensureButton();waitAndApply();updateButton()});
   setTimeout(ensureButton,120);
