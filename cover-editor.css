@@ -20,3 +20,6 @@
 .iaCoverEditorPreviewText h3{font:500 clamp(28px,3vw,46px)/1.04 Georgia,serif;letter-spacing:-.03em;overflow-wrap:anywhere;margin:0}
 .iaCoverEditorPreviewText p{font:15px/1.5 Georgia,serif;color:#625446;margin:0;overflow-wrap:anywhere}
 @media(max-width:750px){.iaCoverEditorOverlay{padding:8px}.iaCoverEditorPanel{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto}.iaCoverEditorPreview{min-height:270px;grid-template-columns:42% 58%;grid-template-rows:1fr}.iaCoverEditorPreviewText{padding:14px;gap:7px}.iaCoverEditorPreviewText h3{font-size:24px}.iaCoverEditorPreviewText p{font-size:12px}.iaCoverEditorForm{gap:10px;padding:16px}.iaCoverEditorHeading h2{font-size:25px}}
+
+.iaCoverField select{width:100%;border:1px solid #cfbfad;background:#fffdf9;border-radius:9px;padding:10px 12px;color:#29251f;font:400 15px/1.4 system-ui,sans-serif}
+.iaCoverField[hidden]{display:none!important}
