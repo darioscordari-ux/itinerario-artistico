@@ -1,0 +1,22 @@
+.toolbar #iaEditCoverBtn{border-color:#bda08d;color:#823b2d;background:#fff7ec}
+.presentation .toolbar #iaEditCoverBtn{display:none!important}
+.iaCoverEditorOverlay{position:fixed;inset:0;z-index:6000;padding:20px;display:grid;place-items:center;background:rgba(24,20,17,.79);backdrop-filter:blur(5px)}
+.iaCoverEditorPanel{width:min(100%,1040px);max-height:94dvh;min-height:0;overflow:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:0;background:#fbf7ef;border-radius:20px;box-shadow:0 24px 80px #0006;color:#2e2923}
+.iaCoverEditorForm{min-width:0;padding:clamp(18px,3vw,36px);display:flex;flex-direction:column;gap:15px}
+.iaCoverEditorHeading h2{font:500 clamp(26px,3vw,38px)/1.1 Georgia,serif;margin:0 0 8px}
+.iaCoverEditorHeading p{font-size:13px;color:#796c5d;line-height:1.45;margin:0}
+.iaCoverField{display:grid;gap:5px;font-size:12px;font-weight:700;color:#6b5040}
+.iaCoverField input,.iaCoverField textarea{width:100%;border:1px solid #cfbfad;background:#fffdf9;border-radius:9px;padding:10px 12px;color:#29251f;font:400 15px/1.4 system-ui,sans-serif}
+.iaCoverEditorImageControls{display:flex;flex-wrap:wrap;gap:8px}
+.iaCoverEditorImageControls button,.iaCoverEditorActions button{cursor:pointer;border:1px solid #c8b5a2;border-radius:10px;background:#fffdf8;color:#624432;padding:10px 13px;font-weight:700;font-size:12px}
+.iaCoverEditorInfo{font-size:11px;line-height:1.35;color:#826e5b;margin:0}
+.iaCoverEditorActions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:auto}
+.iaCoverEditorActions .iaCoverEditorSave{background:#893e2e;color:white;border-color:#893e2e}
+.iaCoverEditorPreview{display:grid;grid-template-rows:1.15fr 1fr;min-height:480px;background:#f0e8da;overflow:hidden}
+.iaCoverEditorPreviewPhoto{position:relative;min-height:0;display:grid;place-items:center;background:#836c54;color:white}
+.iaCoverEditorPreviewPhoto img{height:100%;width:100%;position:absolute;inset:0;object-fit:cover}
+.iaCoverEditorPreviewText{display:flex;flex-direction:column;justify-content:center;gap:12px;min-width:0;padding:26px;background:#e9dfd0}
+.iaCoverEditorPreviewText small{font-size:10px;font-weight:800;letter-spacing:.14em;color:#8e4333;overflow-wrap:anywhere}
+.iaCoverEditorPreviewText h3{font:500 clamp(28px,3vw,46px)/1.04 Georgia,serif;letter-spacing:-.03em;overflow-wrap:anywhere;margin:0}
+.iaCoverEditorPreviewText p{font:15px/1.5 Georgia,serif;color:#625446;margin:0;overflow-wrap:anywhere}
+@media(max-width:750px){.iaCoverEditorOverlay{padding:8px}.iaCoverEditorPanel{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto}.iaCoverEditorPreview{min-height:270px;grid-template-columns:42% 58%;grid-template-rows:1fr}.iaCoverEditorPreviewText{padding:14px;gap:7px}.iaCoverEditorPreviewText h3{font-size:24px}.iaCoverEditorPreviewText p{font-size:12px}.iaCoverEditorForm{gap:10px;padding:16px}.iaCoverEditorHeading h2{font-size:25px}}
