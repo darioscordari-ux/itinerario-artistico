@@ -1,0 +1,46 @@
+/* Temi editoriali dell'opuscolo, non della mappa */
+.presentation .slide.iaBrochurePage{
+ background:var(--ia-paper,#faf7ef)!important;color:var(--ia-ink,#302923)!important;
+}
+.presentation .slide.iaBrochurePage h1,
+.presentation .slide.iaBrochurePage .desc,
+.presentation .slide.iaBrochurePage .descBullets,
+.presentation .slide.iaBrochurePage .meta{color:var(--ia-ink,#302923)!important}
+.presentation .slide.iaBrochurePage .eyebrow,
+.presentation .slide.iaBrochurePage .iaBrochureFolio,
+.presentation .slide.iaBrochurePage .iaBrochureTextLabel,
+.presentation .slide.iaBrochurePage .iaBrochurePageNumber strong{color:var(--ia-accent,#893e2e)!important}
+.presentation .slide.iaBrochurePage .iaBrochureHeader,
+.presentation .slide.iaBrochurePage .iaBrochureFooter,
+.presentation .slide.iaBrochurePage .meta{border-color:color-mix(in srgb,var(--ia-ink) 22%,transparent)!important}
+.presentation .slidePanel:has(.slide[data-ia-theme="notte"]){background:#262b30}
+.presentation .slide[data-ia-theme="notte"] .iaBrochureEdition,
+.presentation .slide[data-ia-theme="notte"] .iaBrochureIssue,
+.presentation .slide[data-ia-theme="notte"] .iaBrochureTravel strong,
+.presentation .slide[data-ia-theme="notte"] .iaBrochureTravel small{color:#e0cab2}
+.presentation .slide[data-ia-theme="notte"] .hero{background:#3d4247}
+.presentation .slide[data-ia-layout="fotografico"]>.hero{width:100%!important;float:none!important;aspect-ratio:16/9!important;max-height:55vh!important}
+.presentation .slide[data-ia-layout="fotografico"]>.iaBrochureFooter{clear:both}
+.presentation .slide[data-ia-layout="essenziale"]>.hero{width:100%!important;float:none!important;aspect-ratio:16/10!important;max-height:35vh!important;border:0!important;box-shadow:none!important}
+.presentation .slide[data-ia-layout="essenziale"]>.iaBrochureHeader{margin-bottom:12px}
+.presentation .slide[data-ia-layout="essenziale"]>.iaBrochureTextHeading{margin-top:13px}
+.presentation .slide[data-ia-layout="editoriale"]>.hero:not(.gallery2):not(.gallery3):not(.gallery4){float:left!important;width:min(43%,310px)!important;max-height:355px!important;aspect-ratio:4/5!important;margin:17px 23px 15px 0!important}
+.presentation .slide[data-ia-layout="editoriale"]>.iaBrochureFooter{clear:both}
+@media(max-width:850px){.presentation .slide[data-ia-layout="editoriale"]>.hero{float:none!important;width:100%!important;aspect-ratio:16/10!important;max-height:32vh!important}}
+body.presentation #iaStyleButton{display:none!important}
+.iaStyleDialog{position:fixed;inset:0;z-index:7000;background:#171717bd;display:grid;place-items:center;padding:14px}
+.iaStylePanel{width:min(690px,100%);max-height:92dvh;overflow:auto;background:#fbf8f1;border-radius:20px;padding:clamp(16px,3vw,30px);color:#282623;box-shadow:0 24px 70px #0006}
+.iaStylePanel h2{font:500 32px/1.1 Georgia,serif;margin:0 0 8px}.iaStylePanel p{font:13px/1.5 system-ui,sans-serif;color:#6d6055}
+.iaStyleGallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:11px;margin:20px 0}
+.iaStyleSample{display:flex;flex-direction:column;gap:5px;text-align:left;padding:7px;border:2px solid transparent;background:#fff;border-radius:12px;cursor:pointer;min-width:0}
+.iaStyleSample.selected{border-color:#a14736;box-shadow:0 0 0 2px #a1473630}
+.iaStyleSample strong{font-size:12px}.iaStyleSample small{font-size:10px;line-height:1.3;color:#756c64}
+.iaStyleSamplePaper{height:104px;width:100%;display:flex;flex-direction:column;gap:7px;background:var(--sample-paper);padding:12px;color:var(--sample-ink);border-radius:5px;box-shadow:inset 0 0 0 1px #0001}
+.iaStyleSampleTop{width:65%;height:6px;background:var(--sample-accent)}
+.iaStyleSamplePicture{width:100%;height:40px;background:linear-gradient(120deg,var(--sample-accent),var(--sample-ink));opacity:.72}
+.iaStyleSampleLines{height:17px;width:85%;background:repeating-linear-gradient(to bottom,var(--sample-ink) 0 2px,transparent 2px 7px);opacity:.4}
+.iaStyleLayoutLabel{display:grid;gap:8px;font-weight:700;font-size:13px}
+.iaStyleLayoutLabel select{padding:11px;border:1px solid #cdbdab;border-radius:9px;background:white;width:100%;font:14px system-ui,sans-serif}
+.iaStyleActions{display:flex;justify-content:flex-end;gap:11px;margin-top:21px}.iaStyleActions button{border-radius:9px;padding:11px 18px;border:1px solid #b8a99a;background:white;cursor:pointer;font-weight:700}
+.iaStyleActions .iaStyleSave{background:#843e30;color:white;border-color:#843e30}
+#iaStyleButton{background:#fff1e5;border-color:#d2b69c;color:#853b2e}
