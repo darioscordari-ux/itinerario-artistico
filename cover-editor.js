@@ -30,6 +30,14 @@ function openEditor(){
  const name=field('Titolo della copertina','input',p.coverTitle||p.title,120);
  const subtitle=field('Sottotitolo','input',p.coverSubtitle||'ALLA SCOPERTA DEL TERRITORIO',150);
  const intro=field('Testo introduttivo','textarea',p.coverDescription||p.desc,900);
+ const modeLabel=el('label','iaCoverField');modeLabel.append(el('span','','Lavoro'));
+ const mode=el('select');['Da solo','In coppia'].forEach((t,i)=>{const opt=el('option','',t);opt.value=String(i+1);mode.append(opt)});
+ mode.value=p.authors?.length===2?'2':'1';modeLabel.append(mode);form.append(modeLabel);
+ const author1=field('Studente 1','input',p.authors?.[0]||'',100);
+ const author2Label=el('label','iaCoverField');author2Label.append(el('span','','Studente 2'));
+ const author2=el('input');author2.maxLength=100;author2.value=p.authors?.[1]||'';author2Label.append(author2);form.append(author2Label);
+ const className=field('Classe','input',p.schoolClass||'',50);
+ const showSecond=()=>{author2Label.hidden=mode.value!=='2'};mode.addEventListener('change',showSecond);showSecond();
  const row=el('div','iaCoverEditorImageControls');
  const pick=el('button','', 'Scegli una fotografia');pick.type='button';
  const reset=el('button','', 'Usa la foto della prima tappa');reset.type='button';
@@ -93,7 +101,9 @@ function openEditor(){
        coverTitle:name.value.trim(),
        coverSubtitle:subtitle.value.trim(),
        coverDescription:intro.value.trim(),
-       coverImage:image
+       coverImage:image,
+       authors:[author1.value.trim(),...(mode.value==='2'?[author2.value.trim()]:[])].filter(Boolean),
+       schoolClass:className.value.trim()
      });
      if(!ok){info.textContent='Apri prima un itinerario e riprova.';return}
      document.removeEventListener('keydown',onKey,true);
