@@ -45,9 +45,7 @@ function editor(){
  function escapeKey(e){if(e.key==='Escape'){e.stopImmediatePropagation();close()}}
  document.addEventListener('keydown',escapeKey,true);background.onclick=e=>{if(e.target===background)close()};
  cancel.onclick=close;save.onclick=()=>{
-  const title=$('projectName')?.textContent?.trim();
-  try{const ps=JSON.parse(localStorage.getItem(STORE)||'[]');const target=ps.filter(x=>x?.title===title).sort((a,b)=>(b.updated||0)-(a.updated||0))[0];if(!target)throw Error('progetto');
-   target.presentationTheme=chosenTheme;target.presentationLayout=chosenLayout;target.updated=Date.now();localStorage.setItem(STORE,JSON.stringify(ps));apply();close();
+  try{const ok=window.__IA_UPDATE_PRESENTATION_STYLE?.(chosenTheme,chosenLayout);if(!ok)throw Error('progetto');apply();close();
   }catch{note.textContent='Impossibile salvare: verifica lo spazio di archiviazione disponibile.'}
  };
  update();
