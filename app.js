@@ -53,7 +53,7 @@ function renderSlide(){const ss=stops(),s=ss[current];if(!s){$('slide').innerHTM
 function focusCurrent(){const s=stops()[current];if(s)map.flyTo([s.lat,s.lon],Math.max(map.getZoom(),16),{duration:.55})}
 $('prevBtn').onclick=()=>{if(current>0){current--;renderSlide();focusCurrent()}};$('nextBtn').onclick=()=>{if(current<stops().length-1){current++;renderSlide();focusCurrent()}};
 $('homeBtn').onclick=renderLibrary;$('backBtn').onclick=()=>{if(document.body.classList.contains('presentation')){document.body.classList.remove('presentation');setTimeout(()=>map.invalidateSize(),80)}else renderLibrary()};
-$('showAllBtn').onclick=fitProject;$('presentBtn').onclick=enterPresentation;function enterPresentation(){document.body.classList.add('presentation');setTimeout(()=>map.invalidateSize(),80);fitProject()}
+$('showAllBtn').onclick=fitProject;$('presentBtn').onclick=enterPresentation;function enterPresentation(){current=0;renderSlide();refreshMarkerIcons();updateRouteSummary();document.body.classList.add('presentation');setTimeout(()=>map.invalidateSize(),80);fitProject()}
 document.addEventListener('keydown',e=>{if(!document.body.classList.contains('presentation'))return;if(e.key==='Escape')document.body.classList.remove('presentation');if(e.key==='ArrowRight')$('nextBtn').click();if(e.key==='ArrowLeft')$('prevBtn').click()});
 
 $('photoPicker').onchange=async e=>{const f=e.target.files[0];if(!f||!stops()[current])return;stops()[current].image=await fileData(f);stops()[current].credit='';stops()[current].source='';saveActive();renderSlide();e.target.value=''};function fileData(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
