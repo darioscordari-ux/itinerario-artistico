@@ -1,0 +1,28 @@
+/* Impaginazione automatica, limitata alla presentazione:
+   sceglie fra fotografica, equilibrata, lettura e galleria. */
+.presentation .slide.iaBrochurePage.iaAutoPhoto>.hero{aspect-ratio:16/9;max-height:45vh}
+.presentation .slide.iaBrochurePage.iaAutoBalanced>.hero{aspect-ratio:16/9;max-height:34vh}
+.presentation .slide.iaBrochurePage.iaAutoReading>.hero:not(.gallery2):not(.gallery3):not(.gallery4){
+  float:left;clear:left;width:min(44%,310px);aspect-ratio:4/5;
+  max-height:350px;margin:17px 24px 16px 0;
+}
+.presentation .slide.iaBrochurePage.iaAutoReading>.iaBrochureTextHeading{
+  display:block;margin-top:19px;padding-top:8px;
+}
+.presentation .slide.iaBrochurePage.iaAutoReading>.iaBrochureTextHeading .iaBrochureTextRule{display:none}
+.presentation .slide.iaBrochurePage.iaAutoReading>.desc{margin-top:12px;line-height:1.66}
+.presentation .slide.iaBrochurePage.iaAutoReading>.credit{clear:none;text-align:left}
+.presentation .slide.iaBrochurePage.iaAutoReading>.iaBrochureFooter{clear:both}
+.presentation .slide.iaBrochurePage.iaAutoGallery>.hero{aspect-ratio:16/10;max-height:43vh}
+.presentation .slide.iaBrochurePage.iaAutoGallery>.desc{font-size:clamp(14px,1.15vw,17px)}
+.presentation .slide.iaBrochurePage.iaAutoCompact.iaAutoReading>.hero{
+  float:none;width:100%;max-height:32vh;aspect-ratio:16/10;margin:13px auto 9px;
+}
+.presentation .slide.iaBrochurePage.iaAutoCompact.iaAutoReading>.iaBrochureTextHeading{display:flex}
+.presentation .slide.iaBrochurePage.iaAutoCompact.iaAutoReading>.iaBrochureTextRule{display:block}
+.presentation .slide.iaBrochurePage.iaAutoCompact.iaAutoGallery>.hero,
+.presentation .slide.iaBrochurePage.iaAutoCompact.iaAutoBalanced>.hero{max-height:34vh}
+.presentation .slide.iaBrochurePage>.photoActions{display:none}
+@media print{
+ .presentation .slide.iaBrochurePage.iaAutoReading>.hero{float:none;width:100%;max-height:none}
+}
