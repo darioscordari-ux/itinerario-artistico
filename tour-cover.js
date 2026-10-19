@@ -37,9 +37,9 @@ function showCover(){
     '<div class="iaCoverPhotoShade"></div><div class="iaCoverSeal">GUIDA<br>ARTISTICA</div></div>'+
     '<div class="iaCoverContent">'+
       '<div class="iaCoverTopline"><span>ITINERARIO ARTISTICO</span><span>EDIZIONE DIGITALE</span></div>'+
-      '<p class="iaCoverKicker">ALLA SCOPERTA DEL TERRITORIO</p>'+
-      '<h1>'+esc(p.title||'Itinerario artistico')+'</h1>'+
-      (p.desc?'<p class="iaCoverDesc">'+esc(p.desc)+'</p>':'')+
+      '<p class="iaCoverKicker">'+esc(p.coverSubtitle||'ALLA SCOPERTA DEL TERRITORIO')+'</p>'+
+      '<h1>'+esc(p.coverTitle||p.title||'Itinerario artistico')+'</h1>'+
+      ((p.coverDescription||p.desc)?'<p class="iaCoverDesc">'+esc(p.coverDescription||p.desc)+'</p>':'')+
       '<div class="iaCoverFacts">'+
         (city?'<span>⌖ '+esc(city)+'</span>':'')+
         '<span>◈ '+count+' '+(count===1?'tappa':'tappe')+'</span>'+
