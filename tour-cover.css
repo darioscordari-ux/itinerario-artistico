@@ -57,3 +57,7 @@
   .iaTourCover,.iaCoverPhoto>img{animation:none!important}
   .iaCoverClosing{transition:none}
 }
+
+.iaCoverAuthors{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px;margin:0 0 25px;color:#6a5243;font:600 13px/1.4 system-ui,sans-serif}
+.iaCoverAuthors strong{color:#994837;font-size:10px;letter-spacing:.11em}
+.iaCoverAuthors span{padding-left:13px;border-left:1px solid #d2bdab;font-size:11px;letter-spacing:.07em}
