@@ -69,22 +69,31 @@
     const prepared=shareableProject(project);
     const data={version:2,mode:mode==='presentation'?'presentation':'work',project:prepared.project};
     const base=location.origin+location.pathname;
-    try{
-      const response=await fetch('https://api.jsonstorage.net/v1/json',{
-        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
-      });
-      if(!response.ok)throw Error('Il servizio di archiviazione ha risposto '+response.status);
-      const saved=await response.json();
-      const uri=new URL(saved.uri);
-      if(uri.origin!=='https://api.jsonstorage.net'||!uri.pathname.startsWith('/v1/json/'))throw Error('Risposta inattesa');
-      const key=uri.pathname.slice('/v1/json/'.length);
-      if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
-      return {url:base+'?s='+encodeURIComponent(key),removedLocalImages:prepared.removedLocalImages,short:true};
-    }catch(error){
-      console.warn('Servizio link brevi non disponibile: uso collegamento locale',error);
-      const url=await localLink(data,base);
-      return {url,removedLocalImages:prepared.removedLocalImages,short:false};
+    // Store the presentation online: WhatsApp gets only a short document ID.
+    const services=['https://jsonblob.com/api/jsonBlob','https://superjsonblob.com/api/jsonBlob'];
+    for(const endpoint of services){
+      try{
+        const response=await fetch(endpoint,{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify(data)
+        });
+        if(!response.ok)throw Error('HTTP '+response.status);
+        const raw=response.headers.get('Location')||response.headers.get('x-jsonblob')||'';
+        let id=raw.split('/').filter(Boolean).pop()||'';
+        if(!/^[a-zA-Z0-9-]{12,80}$/.test(id))throw Error('Identificativo non valido');
+        // Check that the saved content is really retrievable before sharing.
+        const verify=await fetch(endpoint+'/'+encodeURIComponent(id),{cache:'no-store'});
+        if(!verify.ok)throw Error('Lettura di verifica fallita: '+verify.status);
+        const stored=await verify.json();
+        if(!stored?.project||!Array.isArray(stored.project.stops)||stored.mode!==data.mode)throw Error('Dati salvati non validi');
+        const provider=endpoint.includes('superjsonblob')?'sj':'jb';
+        return {url:base+'?s='+provider+'.'+encodeURIComponent(id),removedLocalImages:prepared.removedLocalImages,short:true};
+      }catch(error){console.warn('Servizio condivisione non disponibile: '+endpoint,error);}
     }
+    // Last resort only: an offline, possibly long link rather than a broken URL.
+    const url=await localLink(data,base);
+    return {url,removedLocalImages:prepared.removedLocalImages,short:false};
   }
 
   async function copyLink(url,message){
