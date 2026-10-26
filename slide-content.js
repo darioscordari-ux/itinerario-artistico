@@ -25,7 +25,7 @@
     const p=currentProject(); if(!p)return null;
     const idx=String(currentIndex()), store=loadExtras();
     if(create){store[p.id]=store[p.id]||{};store[p.id][idx]=store[p.id][idx]||{images:[],video:'',textMode:'paragraph',bullets:[]};return {store,data:store[p.id][idx],pid:p.id,idx};}
-    return store?.[p.id]?.[idx]||{images:p.stops?.[Number(idx)]?.extraImages||[]};
+    return store?.[p.id]?.[idx]||null;
   }
   function mutate(fn){const x=getExtra(true);if(!x)return;fn(x.data);saveExtras(x.store);schedule(true)}
 

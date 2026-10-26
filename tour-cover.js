@@ -40,6 +40,7 @@ function showCover(){
       '<p class="iaCoverKicker">'+esc(p.coverSubtitle||'ALLA SCOPERTA DEL TERRITORIO')+'</p>'+
       '<h1>'+esc(p.coverTitle||p.title||'Itinerario artistico')+'</h1>'+
       ((p.coverDescription||p.desc)?'<p class="iaCoverDesc">'+esc(p.coverDescription||p.desc)+'</p>':'')+
+      (p.coverCredit?'<p class="credit">Foto: <a href="'+esc(p.coverCredit.source)+'" target="_blank" rel="noopener">'+esc(p.coverCredit.author)+'</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></p>':'')+
       '<div class="iaCoverFacts">'+
         (city?'<span>⌖ '+esc(city)+'</span>':'')+
         '<span>◈ '+count+' '+(count===1?'tappa':'tappe')+'</span>'+
@@ -47,7 +48,6 @@ function showCover(){
       ((p.authors?.length||p.schoolClass)?'<div class="iaCoverAuthors">'+(p.authors?.length?'<strong>REALIZZATO DA</strong> '+esc(p.authors.join(' · ')):'')+(p.schoolClass?'<span>CLASSE '+esc(p.schoolClass)+'</span>':'')+'</div>':'')+
       '<div class="iaCoverActions"><button type="button" id="iaCoverStart">Inizia il percorso <span aria-hidden="true">→</span></button>'+
       '<button type="button" id="iaCoverExit">Torna alla modifica</button></div>'+
-      (p.coverCredit?'<p class="credit">Foto: '+esc(p.coverCredit)+(p.coverSource?' · <a href="'+esc(p.coverSource)+'" target="_blank" rel="noopener">fonte</a>':'')+'</p>':'')+
       '<div class="iaCoverBottom">UN VIAGGIO TRA ARTE, LUOGHI E STORIE <span>01 — INTRODUZIONE</span></div>'+
     '</div>';
   document.body.appendChild(cover);
