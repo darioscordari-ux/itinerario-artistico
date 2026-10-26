@@ -50,6 +50,21 @@
     return {project:clone,removedLocalImages};
   }
 
+  async function localLink(data,base){
+    const raw=new TextEncoder().encode(JSON.stringify(data));
+    let bytes=raw,marker='#share=';
+    if(typeof CompressionStream==='function'){
+      try{
+        const stream=new Blob([raw]).stream().pipeThrough(new CompressionStream('gzip'));
+        const compressed=new Uint8Array(await new Response(stream).arrayBuffer());
+        if(compressed.length<raw.length){bytes=compressed;marker='#sharez=';}
+      }catch(error){console.warn('Compressione non disponibile',error);}
+    }
+    let binary='';
+    for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));
+    return base+marker+btoa(binary).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'');
+  }
+
   async function makeLink(project,mode='work'){
     const prepared=shareableProject(project);
     const data={version:2,mode:mode==='presentation'?'presentation':'work',project:prepared.project};
@@ -66,9 +81,9 @@
       if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
       return {url:base+'?s='+encodeURIComponent(key),removedLocalImages:prepared.removedLocalImages,short:true};
     }catch(error){
-      console.error('Creazione collegamento breve fallita',error);
-      throw new Error('Non riesco a creare il link breve: '+(error?.message||'errore di rete')+'. Riprova e verifica la connessione. Il link lungo non viene più generato.');
-
+      console.warn('Servizio link brevi non disponibile: uso collegamento locale',error);
+      const url=await localLink(data,base);
+      return {url,removedLocalImages:prepared.removedLocalImages,short:false};
     }
   }
 
@@ -94,7 +109,7 @@
     const field=document.createElement('textarea');field.readOnly=true;field.value=url;field.setAttribute('aria-label','Link da condividere');field.style.cssText='width:100%;height:90px;word-break:break-all';
     const status=document.createElement('p');status.setAttribute('role','status');
     if(removedLocalImages)status.textContent=removedLocalImages+' immagini locali non incluse nel link. Le immagini online sono incluse.';
-    if(!short)status.textContent+=' Link breve non disponibile: il collegamento tradizionale potrebbe essere troppo lungo per WhatsApp.';
+    if(!short)status.textContent+=' Servizio link brevi non disponibile: è stato creato un link alternativo. Se l’app di messaggistica lo tronca, usa il file JSON.';
     const foot=document.createElement('div');foot.className='modalFoot';
     function button(label,fn){const el=document.createElement('button');el.type='button';el.className='btn';el.textContent=label;el.onclick=fn;foot.appendChild(el);return el;}
     button('Chiudi',()=>back.classList.add('hidden'));
