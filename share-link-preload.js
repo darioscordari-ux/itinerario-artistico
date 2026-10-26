@@ -30,6 +30,17 @@
 
     const mode=obj?.mode==='presentation'?'presentation':'work';
     if(mode==='presentation')document.documentElement.classList.add('iaSharedCoverPending');
+    let cached=null;
+    try{cached=JSON.parse(sessionStorage.getItem('itinerarioArtistico.sharedSession.v1')||'null')}catch{}
+    if(cached?.encoded===encoded){
+      let saved=[];try{saved=JSON.parse(localStorage.getItem(STORE)||'[]')}catch{}
+      if(Array.isArray(saved)&&saved.some(p=>p.id===cached.id)){
+        sessionStorage.setItem(OPEN_KEY,cached.id);
+        if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
+        else sessionStorage.removeItem(PRESENT_KEY);
+        return;
+      }
+    }
     const now=Date.now();
     const project={
       ...source,
@@ -58,7 +69,7 @@
     if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
     else sessionStorage.removeItem(PRESENT_KEY);
 
-    history.replaceState(null,'',location.pathname+location.search);
+    sessionStorage.setItem('itinerarioArtistico.sharedSession.v1',JSON.stringify({encoded,id:project.id}));
   }catch(err){
     document.documentElement.classList.remove('iaSharedCoverPending');
     console.error('Impossibile aprire itinerario condiviso',err);

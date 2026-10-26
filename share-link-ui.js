@@ -58,7 +58,7 @@
       project:prepared.project
     }));
     const base=location.origin+location.pathname;
-    return {url:base+'#share='+encoded,removedLocalImages:prepared.removedLocalImages};
+    return {url:base+'?v=share5#share='+encoded,removedLocalImages:prepared.removedLocalImages};
   }
 
   async function copyLink(url,message){
