@@ -219,7 +219,7 @@
         img.onload=null;img.onerror=null;
         resolve(ok?img:null);
       };
-      const timer=setTimeout(()=>finish(false),1600);
+      const timer=setTimeout(()=>finish(false),5000);
       img.onload=()=>finish(true);
       img.onerror=()=>finish(false);
       img.decoding='async';
@@ -238,8 +238,10 @@
     if(!panel||!document.body.classList.contains('presentation'))return;
     const sources=arrivalImages(next);
     if(!sources.length)return;
-    for(const src of sources){
-      const img=await preloadArrivalImage(src);
+    // Load the whole gallery together so the second photo is ready in time.
+    const pending=sources.map(src=>preloadArrivalImage(src));
+    for(const ready of pending){
+      const img=await ready;
       if(!document.body.classList.contains('presentation'))return;
       if(!img)continue;
       hideDestinationPhoto();
@@ -250,8 +252,8 @@
       photo.appendChild(img);
       panel.appendChild(photo);
       requestAnimationFrame(()=>photo.classList.add('iaDestinationPhotoVisible'));
-      await pause(motionReduced()?220:1040);
-      return;
+      // Give each photo time on screen before the next dissolve.
+      await pause(motionReduced()?1800:2400);
     }
     // Foto non disponibile: si procede normalmente alla slide.
   }
@@ -314,7 +316,8 @@
       // La mappa torna alle dimensioni normali prima di misurare la foto finale.
       await pause(480);
       if(!document.body.classList.contains('presentation'))return;
-      const destination=slide.querySelector('.hero > img')||slide.querySelector('.hero');
+      const source=el.querySelector('img')?.src;
+      const destination=[...slide.querySelectorAll('.hero > img')].find(img=>img.src===source)||slide.querySelector('.hero > img')||slide.querySelector('.hero');
       if(!destination)return;
       const target=destination.getBoundingClientRect(),start=bridge.bounds;
       if(!target.width||!target.height||!start.width||!start.height)return;
