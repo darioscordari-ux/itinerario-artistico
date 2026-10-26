@@ -33,9 +33,15 @@
     if(!hash.startsWith('#share=')&&!hash.startsWith('#sharez=')&&!key)return;
     let encoded,obj;
     if(key){
-      if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
+      let resource;
+      const modern=/^(jb|sj)\.([a-zA-Z0-9-]{12,80})$/.exec(key);
+      if(modern){
+        resource=(modern[1]==='jb'?'https://jsonblob.com/api/jsonBlob/':'https://superjsonblob.com/api/jsonBlob/')+encodeURIComponent(modern[2]);
+      }else if(/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key)){
+        resource='https://api.jsonstorage.net/v1/json/'+key;
+      }else throw Error('Identificativo non valido');
       document.documentElement.classList.add('iaSharedCoverPending');
-      const response=await fetch('https://api.jsonstorage.net/v1/json/'+key,{cache:'no-store'});
+      const response=await fetch(resource,{cache:'no-store'});
       if(!response.ok)throw Error('Presentazione non disponibile');
       obj=await response.json();
       encoded='s:'+key;
