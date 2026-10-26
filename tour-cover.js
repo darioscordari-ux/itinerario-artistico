@@ -47,6 +47,7 @@ function showCover(){
       ((p.authors?.length||p.schoolClass)?'<div class="iaCoverAuthors">'+(p.authors?.length?'<strong>REALIZZATO DA</strong> '+esc(p.authors.join(' · ')):'')+(p.schoolClass?'<span>CLASSE '+esc(p.schoolClass)+'</span>':'')+'</div>':'')+
       '<div class="iaCoverActions"><button type="button" id="iaCoverStart">Inizia il percorso <span aria-hidden="true">→</span></button>'+
       '<button type="button" id="iaCoverExit">Torna alla modifica</button></div>'+
+      (p.coverCredit?'<p class="credit">Foto: '+esc(p.coverCredit)+(p.coverSource?' · <a href="'+esc(p.coverSource)+'" target="_blank" rel="noopener">fonte</a>':'')+'</p>':'')+
       '<div class="iaCoverBottom">UN VIAGGIO TRA ARTE, LUOGHI E STORIE <span>01 — INTRODUZIONE</span></div>'+
     '</div>';
   document.body.appendChild(cover);
