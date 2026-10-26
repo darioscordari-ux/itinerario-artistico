@@ -174,7 +174,7 @@
   // Dopo il viaggio, zoom sulla destinazione e nome del luogo prima della slide.
   function arrivalStop(next){
     const info=stepInfo(),project=currentProject();
-    const index=next?info.current:info.current-2;
+    const index=next===null?info.current-1:next?info.current:info.current-2;
     return {index,stop:project?.stops?.[index]};
   }
   function arrivalBanner(){
@@ -359,6 +359,33 @@
       busy=false;
     }
   }
+
+  // The cover opens the current first slide without advancing the route.
+  window.__IA_PRESENT_FIRST_STOP=async closeCover=>{
+    if(busy)return;
+    busy=true;
+    let bridge=null;
+    const slide=$('slide');
+    try{
+      await startMapJourney();
+      closeCover();
+      await pause(motionReduced()?0:430);
+      if(!document.body.classList.contains('presentation'))return;
+      await revealDestinationPhoto(null);
+      if(!document.body.classList.contains('presentation'))return;
+      bridge=photoBridge();
+      finishMapJourney();
+      if(slide){
+        slide.classList.add('iaSlideArriveNext');
+        if(bridge)await landPhotoBridge(bridge,slide);
+      }
+    }finally{
+      bridge?.node.remove();
+      finishMapJourney();
+      if(slide)clearClasses(slide);
+      busy=false;
+    }
+  };
 
   document.addEventListener('click',e=>{
     const btn=e.target?.closest?.('#nextBtn,#prevBtn');

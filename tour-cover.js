@@ -19,6 +19,12 @@ function closeCover(){
   setTimeout(()=>cover.remove(),420);
   setTimeout(()=>{try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}},420);
 }
+function startCover(){
+  if(typeof window.__IA_PRESENT_FIRST_STOP==='function'){
+    const button=$('iaCoverStart');if(button)button.disabled=true;
+    window.__IA_PRESENT_FIRST_STOP(closeCover).catch(()=>closeCover());
+  }else closeCover();
+}
 function showCover(){
   if(showing||$('iaTourCover')||!document.body.classList.contains('presentation'))return;
   const p=currentProject();
@@ -53,7 +59,7 @@ function showCover(){
   document.body.appendChild(cover);
   showing=true;
   document.body.classList.add('iaShowCover');
-  $('iaCoverStart').addEventListener('click',closeCover);
+  $('iaCoverStart').addEventListener('click',startCover);
   $('iaCoverExit').addEventListener('click',()=>{
     closeCover();
     document.body.classList.remove('presentation');
@@ -75,9 +81,10 @@ document.addEventListener('keydown',e=>{
     e.preventDefault();e.stopImmediatePropagation();
     $('iaCoverExit')?.click();
   }else if(e.key==='Enter' && e.target===document.body){
-    e.preventDefault();e.stopImmediatePropagation();closeCover();
+    e.preventDefault();e.stopImmediatePropagation();startCover();
   }else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
     e.preventDefault();e.stopImmediatePropagation();
   }
 },true);
 })();
+

@@ -53,7 +53,26 @@ if(!localStorage.getItem('itinerarioArtistico.brindisiPhotos.v1')){
   localStorage.setItem('itinerarioArtistico.brindisiPhotos.v1','1');
  }
 }
-function photoCreditsHtml(photos){return '<div class="credit">'+photos.map((p,i)=>'Foto '+(i+1)+': <a href="'+esc(p.source)+'" target="_blank" rel="noopener">'+esc(p.author)+'</a> · '+(p.license==='CC BY-SA 4.0'?'<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>':esc(p.license))).join('<br>')+'</div>'}
+// Refresh selected default photographs once; retain custom uploads and reordered stops.
+if(!localStorage.getItem('itinerarioArtistico.brindisiPhotos.v2')){
+ const p=projects.find(p=>p.id===brindisiSeed.id);
+ if(p){
+  const key='itinerarioArtistico.slideExtras.v1';let extras={};try{extras=JSON.parse(localStorage.getItem(key)||'{}')}catch{}
+  const replacements=[{"title": "Castello Svevo · esterno", "slot": 0, "photo": {"url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e7/Castello_Svevo_a_Brindisi.jpg/960px-Castello_Svevo_a_Brindisi.jpg", "source": "https://commons.wikimedia.org/wiki/File:Castello_Svevo_a_Brindisi.jpg", "author": "Scivalex", "license": "CC BY-SA 4.0"}}, {"title": "Colonne Romane e lungomare", "slot": 0, "photo": {"url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Brindisi_-_colonne_romane_di_Brindisi_-_202109012259_6.jpeg/960px-Brindisi_-_colonne_romane_di_Brindisi_-_202109012259_6.jpeg", "source": "https://commons.wikimedia.org/wiki/File:Brindisi_-_colonne_romane_di_Brindisi_-_202109012259_6.jpeg", "author": "Stefn79 ph", "license": "CC BY-SA 4.0"}}, {"title": "Castello Alfonsino · Forte a Mare", "slot": 1, "photo": {"url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Castello_alfonsino_darsena.jpg/960px-Castello_alfonsino_darsena.jpg", "source": "https://commons.wikimedia.org/wiki/File:Castello_alfonsino_darsena.jpg", "author": "Saggittarius A", "license": "CC BY 4.0"}}];
+  replacements.forEach(r=>{
+   const i=p.stops.findIndex(s=>s.title===r.title);if(i<0)return;
+   const s=p.stops[i],old=brindisiPhotos.find(x=>x.title===r.title)?.photos[r.slot];
+   if(!old)return;
+   let replaced=false;
+   if(r.slot===0&&s.image===old.url){s.image=r.photo.url;s.credit=r.photo.author+' · '+r.photo.license;replaced=true;}
+   if(r.slot===1){const images=extras[p.id]?.[i]?.images;const j=images?.indexOf(old.url);if(j>=0){images[j]=r.photo.url;replaced=true;}}
+   if(replaced){s.photoCredits=s.photoCredits||[];s.photoCredits[r.slot]=r.photo;}
+  });
+  localStorage.setItem(key,JSON.stringify(extras));saveProjects();
+  localStorage.setItem('itinerarioArtistico.brindisiPhotos.v2','1');
+ }
+}
+function photoCreditsHtml(photos){return '<div class="credit">'+photos.map((p,i)=>'Foto '+(i+1)+': <a href="'+esc(p.source)+'" target="_blank" rel="noopener">'+esc(p.author)+'</a> · '+(p.license==='CC BY-SA 4.0'?'<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>':p.license==='CC BY 4.0'?'<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>':esc(p.license))).join('<br>')+'</div>'}
 
 let activeId=null,current=0,map,markers=[],routeLayers=[],routeLabels=[],segments=[],clickAdd=false,deferredPrompt;
 function saveProjects(){localStorage.setItem(STORE,JSON.stringify(projects))} function active(){return projects.find(p=>p.id===activeId)} function stops(){return active()?.stops||[]}
@@ -138,4 +157,5 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPro
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 renderLibrary();
 })();
+
 
