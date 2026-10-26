@@ -2,7 +2,9 @@
 'use strict';
 const KEY='itinerarioArtistico.projects.v4',EXTRA='itinerarioArtistico.slideExtras.v1';
 function current(){const t=document.getElementById('projectName')?.textContent?.trim();try{return JSON.parse(localStorage.getItem(KEY)||'[]').filter(x=>x.title===t).sort((a,b)=>(b.updated||0)-(a.updated||0))[0]}catch{return null}}
-function pack(p){const c=JSON.parse(JSON.stringify(p));try{const e=JSON.parse(localStorage.getItem(EXTRA)||'{}');c._slideExtras=e[p.id]||p._slideExtras||{}}catch{}return c}
+function pack(p){const c=JSON.parse(JSON.stringify(p));try{const e=JSON.parse(localStorage.getItem(EXTRA)||'{}');c._slideExtras=e[p.id]||p._slideExtras||{}}catch{}
+ try{const modes=JSON.parse(localStorage.getItem('itinerarioArtistico.transportModes.v1')||'{}');c._transportModes=modes[p.id]??p._transportModes??p._transportMode??'walk'}catch{c._transportModes=p._transportModes??p._transportMode??'walk'}
+ return c}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function build(p){
  const origin='https://darioscordari-ux.github.io/itinerario-artistico/';
