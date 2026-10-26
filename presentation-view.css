@@ -1,0 +1,30 @@
+.iaViewControl,.iaMapOnlyNav{display:none}
+body.presentation.iaMapJourney #paneSplitter{display:none!important}
+body.presentation .iaViewControl{display:flex;gap:3px;padding:3px;background:#ffffff12;border:1px solid #ffffff30;border-radius:12px;align-items:center}
+.iaViewControl button,.iaMapOnlyNav button{font:600 13px system-ui;cursor:pointer;border:0;border-radius:8px;padding:9px 12px;background:transparent;color:#fff;min-height:40px}
+.iaViewControl button[aria-pressed="true"]{background:#f7edda;color:#24211b;box-shadow:0 2px 8px #0003}
+.iaViewControl button:focus-visible,.iaMapOnlyNav button:focus-visible{outline:3px solid #e0ad68;outline-offset:2px}
+body.presentation .toolbar{align-items:center}
+body.presentation[data-presentation-view="map"] .workspace.resizableWorkspace,
+body.presentation[data-presentation-view="slides"] .workspace.resizableWorkspace{grid-template-columns:minmax(0,1fr)!important;gap:8px!important}
+body.presentation[data-presentation-view="map"] .workspace{grid-template-rows:minmax(0,1fr) auto!important}
+body.presentation[data-presentation-view="slides"] .workspace{grid-template-rows:minmax(0,1fr)!important}
+body.presentation[data-presentation-view="map"] .slidePanel,
+body.presentation[data-presentation-view="slides"] .mapPanel,
+body.presentation:not([data-presentation-view="both"]) #paneSplitter{display:none!important}
+body.presentation[data-presentation-view="slides"] .slidePanel{opacity:1!important;transform:none!important;pointer-events:auto!important;grid-column:1!important}
+body.presentation[data-presentation-view="map"] .mapPanel{grid-column:1!important;min-height:0!important}
+body.presentation[data-presentation-view="map"] #map{min-height:0!important}
+body.presentation[data-presentation-view="map"] .iaMapOnlyNav{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:12px;background:#211f1b;padding:4px 12px;color:#fff}
+.iaMapOnlyNav button{background:#ffffff15}
+.iaMapOnlyNav button:disabled{opacity:.4;cursor:default}
+body.presentation:not([data-presentation-view="both"]) .iaDestinationPhoto,
+body.presentation:not([data-presentation-view="both"]) .iaPhotoBridge,
+body.presentation:not([data-presentation-view="both"]) .iaArrivalBanner{display:none!important}
+@media(max-width:640px){
+ body.presentation .topbar{flex-wrap:wrap}
+ body.presentation .toolbar{width:100%;gap:5px}
+ body.presentation .iaViewControl{flex:1;justify-content:center}
+ .iaViewControl button{font-size:11px;padding:7px 8px}
+ .iaMapOnlyNav button{font-size:12px}
+}

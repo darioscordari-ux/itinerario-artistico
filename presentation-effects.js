@@ -6,6 +6,7 @@
   const EXTRA_STORE='itinerarioArtistico.slideExtras.v1';
   let bypass=false,busy=false;
   const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  const combinedView=()=>!window.__IA_PRESENTATION_VIEW||window.__IA_PRESENTATION_VIEW()==='both';
   const motionReduced=()=>!!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
 
   function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
@@ -235,14 +236,14 @@
   }
   async function revealDestinationPhoto(next){
     const panel=document.querySelector('.mapPanel');
-    if(!panel||!document.body.classList.contains('presentation'))return;
+    if(!panel||!document.body.classList.contains('presentation')||!combinedView())return;
     const sources=arrivalImages(next);
     if(!sources.length)return;
     // Load the whole gallery together so the second photo is ready in time.
     const pending=sources.map(src=>preloadArrivalImage(src));
     for(const ready of pending){
       const img=await ready;
-      if(!document.body.classList.contains('presentation'))return;
+      if(!document.body.classList.contains('presentation')||!combinedView())return;
       if(!img)continue;
       hideDestinationPhoto();
       const photo=document.createElement('div');
@@ -363,6 +364,7 @@
   // The cover opens the current first slide without advancing the route.
   window.__IA_PRESENT_FIRST_STOP=async closeCover=>{
     if(busy)return;
+    if(!combinedView()){closeCover();return;}
     busy=true;
     let bridge=null;
     const slide=$('slide');
@@ -397,7 +399,7 @@
       e.stopImmediatePropagation();
       return;
     }
-    if(!canMove(btn))return;
+    if(!combinedView()||!canMove(btn))return;
 
     e.preventDefault();
     e.stopImmediatePropagation();
