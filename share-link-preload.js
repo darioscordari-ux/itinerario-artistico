@@ -29,6 +29,7 @@
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
     const mode=obj?.mode==='presentation'?'presentation':'work';
+    if(mode==='presentation')document.documentElement.classList.add('iaSharedCoverPending');
     const now=Date.now();
     const project={
       ...source,
@@ -59,6 +60,7 @@
 
     history.replaceState(null,'',location.pathname+location.search);
   }catch(err){
+    document.documentElement.classList.remove('iaSharedCoverPending');
     console.error('Impossibile aprire itinerario condiviso',err);
     sessionStorage.setItem('itinerarioArtistico.sharedError.v1','1');
     sessionStorage.removeItem(PRESENT_KEY);

@@ -108,6 +108,7 @@
 
   function autoOpenShared(){
     if(sessionStorage.getItem(ERROR_KEY)==='1'){
+      document.documentElement.classList.remove('iaSharedCoverPending');
       sessionStorage.removeItem(ERROR_KEY);
       sessionStorage.removeItem(PRESENT_KEY);
       setTimeout(()=>alert('Il link dell’itinerario non è valido oppure è stato tagliato durante la condivisione.'),50);
@@ -115,7 +116,7 @@
     }
 
     const id=sessionStorage.getItem(OPEN_KEY);
-    if(!id)return;
+    if(!id){document.documentElement.classList.remove('iaSharedCoverPending');return;}
 
     const openAsPresentation=sessionStorage.getItem(PRESENT_KEY)==='1';
 
@@ -124,20 +125,21 @@
       const index=Array.isArray(projects)?projects.findIndex(p=>p?.id===id):-1;
       const cards=document.querySelectorAll('.projectCard');
       const openBtn=index>=0?cards[index]?.querySelector('[data-o]'):null;
+      if(!openBtn)document.documentElement.classList.remove('iaSharedCoverPending');
       if(openBtn){
         sessionStorage.removeItem(OPEN_KEY);
         sessionStorage.removeItem(PRESENT_KEY);
         openBtn.click();
         if(openAsPresentation){
-          setTimeout(()=>{
-            const presentBtn=document.getElementById('presentBtn');
-            if(presentBtn&&!document.body.classList.contains('presentation'))presentBtn.click();
-          },420);
+          const presentBtn=document.getElementById('presentBtn');
+          if(presentBtn&&!document.body.classList.contains('presentation'))presentBtn.click();
+          window.__IA_SHOW_COVER?.();
         }else{
           setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
         }
       }
     }catch{
+      document.documentElement.classList.remove('iaSharedCoverPending');
       sessionStorage.removeItem(OPEN_KEY);
       sessionStorage.removeItem(PRESENT_KEY);
     }

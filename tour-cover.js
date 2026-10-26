@@ -57,6 +57,7 @@ function showCover(){
       '<div class="iaCoverBottom">UN VIAGGIO TRA ARTE, LUOGHI E STORIE <span>01 — INTRODUZIONE</span></div>'+
     '</div>';
   document.body.appendChild(cover);
+  document.documentElement.classList.remove('iaSharedCoverPending');
   showing=true;
   document.body.classList.add('iaShowCover');
   $('iaCoverStart').addEventListener('click',startCover);
@@ -67,7 +68,9 @@ function showCover(){
   });
   $('iaCoverStart').focus({preventScroll:true});
 }
+window.__IA_SHOW_COVER=showCover;
 let prev=document.body.classList.contains('presentation');
+if(prev)requestAnimationFrame(showCover);
 const observer=new MutationObserver(()=>{
   const now=document.body.classList.contains('presentation');
   if(now&&!prev && !suppress)requestAnimationFrame(showCover);
