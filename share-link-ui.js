@@ -62,7 +62,7 @@
     }
     let binary='';
     for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));
-    return base+marker+btoa(binary).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'');
+    return base+marker+btoa(binary).split('+').join('-').split('/').join('_').replace(/=+$/,'');
   }
 
   async function makeLink(project,mode='work'){
