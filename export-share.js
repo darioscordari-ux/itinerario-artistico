@@ -42,6 +42,7 @@
     if(!transport&&project._transportModes&&typeof project._transportModes==='object')transport=project._transportModes;
     if(!transport&&(project._transportMode==='walk'||project._transportMode==='transit'))transport=expandLegacy(project,project._transportMode);
     const out={...project};
+    try{const extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}');out._slideExtras=extras[project.id]||project._slideExtras||{};}catch{out._slideExtras=project._slideExtras||{}}
     if(transport)out._transportModes=transport;
     delete out._transportMode;
     if(rich&&Object.keys(rich).length)out._richText=rich;

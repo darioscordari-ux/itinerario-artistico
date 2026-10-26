@@ -43,6 +43,14 @@
     let projects=[];
     try{projects=JSON.parse(localStorage.getItem(STORE)||'[]')}catch{}
     if(!Array.isArray(projects))projects=[];
+    // Avoid ambiguous title-based lookups in existing presentation modules.
+    const baseTitle=project.title;let suffix=1;
+    while(projects.some(p=>p.title===project.title))project.title=baseTitle+' · condiviso '+suffix++;
+    if(source._slideExtras&&typeof source._slideExtras==='object'){
+      let extras={};try{extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}')}catch{}
+      extras[project.id]=source._slideExtras;
+      localStorage.setItem('itinerarioArtistico.slideExtras.v1',JSON.stringify(extras));
+    }
     projects.push(project);
     localStorage.setItem(STORE,JSON.stringify(projects));
     sessionStorage.setItem(OPEN_KEY,project.id);
@@ -54,6 +62,8 @@
     console.error('Impossibile aprire itinerario condiviso',err);
     sessionStorage.setItem('itinerarioArtistico.sharedError.v1','1');
     sessionStorage.removeItem(PRESENT_KEY);
+    sessionStorage.removeItem(OPEN_KEY);
     history.replaceState(null,'',location.pathname+location.search);
   }
 })();
+

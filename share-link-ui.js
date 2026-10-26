@@ -40,6 +40,9 @@
       }
       return next;
     });
+    try{const extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}');clone._slideExtras=JSON.parse(JSON.stringify(extras[project.id]||clone._slideExtras||{}));}catch{}
+    Object.values(clone._slideExtras||{}).forEach(extra=>{if(Array.isArray(extra.images))extra.images=extra.images.filter(src=>{if(typeof src==='string'&&src.startsWith('data:')){removedLocalImages++;return false;}return true;});});
+    if(typeof clone.coverImage==='string'&&clone.coverImage.startsWith('data:')){clone.coverImage='';removedLocalImages++;}
     delete clone.id;
     delete clone.created;
     delete clone.updated;
@@ -67,42 +70,24 @@
     }
   }
 
-  async function shareLink(project,mode='work'){
+  function shareLink(project,mode='work'){
     const isPresentation=mode==='presentation';
     const {url,removedLocalImages}=makeLink(project,mode);
-    if(url.length>60000){
-      alert('Questo itinerario è troppo grande per essere condiviso come link. Usa “Scarica file”.');
-      return;
-    }
-
-    const warning=removedLocalImages
-      ? '\n\nNota: '+removedLocalImages+' immagin'+(removedLocalImages===1?'e caricata':'i caricate')+' dal dispositivo non può essere inserita nel link; testo, tappe e immagini online vengono condivisi.'
-      : '';
-
-    const text=isPresentation
-      ? 'Apri questa presentazione in Itinerario Artistico.'
-      : 'Apri questo itinerario in Itinerario Artistico.';
-
-    if(navigator.share){
-      try{
-        await navigator.share({
-          title:project.title||'Itinerario Artistico',
-          text:text+warning,
-          url
-        });
-        return;
-      }catch(err){
-        if(err?.name==='AbortError')return;
-      }
-    }
-
-    if(removedLocalImages)alert(warning.trim());
-    await copyLink(
-      url,
-      isPresentation
-        ? 'Link della presentazione copiato. Chi lo apre entrerà direttamente in modalità Presenta.'
-        : 'Link copiato. Ora puoi incollarlo in Classroom, Teams, WhatsApp o Gmail.'
-    );
+    const back=document.getElementById('modalBack'),modal=document.getElementById('modal');
+    if(!back||!modal)return;
+    modal.replaceChildren();
+    const title=document.createElement('h2');title.textContent=isPresentation?'Condividi solo presentazione':'Condividi itinerario';
+    const info=document.createElement('p');info.textContent=isPresentation?'Chi apre il link vede copertina, tappe e immagini, senza comandi di modifica.':'Chi apre il link riceve una copia modificabile.';
+    const field=document.createElement('textarea');field.readOnly=true;field.value=url;field.setAttribute('aria-label','Link da condividere');field.style.cssText='width:100%;height:90px;word-break:break-all';
+    const status=document.createElement('p');status.setAttribute('role','status');
+    if(removedLocalImages)status.textContent=removedLocalImages+' immagini locali non incluse nel link. Le immagini online sono incluse.';
+    const foot=document.createElement('div');foot.className='modalFoot';
+    function button(label,fn){const el=document.createElement('button');el.type='button';el.className='btn';el.textContent=label;el.onclick=fn;foot.appendChild(el);return el;}
+    button('Chiudi',()=>back.classList.add('hidden'));
+    button('Copia link',async()=>{try{await navigator.clipboard.writeText(url);status.textContent='Link copiato. Puoi incollarlo in WhatsApp, Classroom o email.';}catch{field.focus();field.select();status.textContent='Link selezionato: usa Copia dal menu del dispositivo.';}}).classList.add('primary');
+    if(navigator.share)button('Condividi…',async()=>{try{await navigator.share({title:project.title||'Itinerario',url});}catch(e){if(e?.name!=='AbortError')status.textContent='Usa Copia link per condividere questa presentazione.';}});
+    const test=document.createElement('a');test.className='btn';test.textContent='Prova il link';test.href=url;test.target='_blank';test.rel='noopener';foot.appendChild(test);
+    modal.append(title,info,field,status,foot);back.classList.remove('hidden');
   }
 
   function prepareButton(){
@@ -139,9 +124,9 @@
       const index=Array.isArray(projects)?projects.findIndex(p=>p?.id===id):-1;
       const cards=document.querySelectorAll('.projectCard');
       const openBtn=index>=0?cards[index]?.querySelector('[data-o]'):null;
-      sessionStorage.removeItem(OPEN_KEY);
-      sessionStorage.removeItem(PRESENT_KEY);
       if(openBtn){
+        sessionStorage.removeItem(OPEN_KEY);
+        sessionStorage.removeItem(PRESENT_KEY);
         openBtn.click();
         if(openAsPresentation){
           setTimeout(()=>{
@@ -158,6 +143,13 @@
     }
   }
 
+  const viewerStyle=document.createElement('style');
+  viewerStyle.textContent='body.sharedViewer .photoActions,body.sharedViewer #iaCoverExit,body.sharedViewer #paneSplitter{display:none!important}body.sharedViewer .hero img{cursor:default!important}';
+  document.head.appendChild(viewerStyle);
+  document.addEventListener('click',e=>{
+    if(!document.body.classList.contains('sharedViewer'))return;
+    if(e.target.closest('.photoActions,#iaCoverExit,#editStopBtn,#addStopBtn,#deleteSelectedStopBtn,#settingsBtn,.hero img')){e.preventDefault();e.stopImmediatePropagation();}
+  },true);
   window.__IA_SHARE_LINK={
     shareWork:project=>shareLink(project,'work'),
     sharePresentation:project=>shareLink(project,'presentation')
@@ -180,5 +172,6 @@
     shareLink(project,'work');
   },true);
 
-  autoOpenShared();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoOpenShared,{once:true});else autoOpenShared();
 })();
+
