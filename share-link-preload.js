@@ -17,14 +17,23 @@
     return Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   }
 
-  try{
+  window.__IA_SHARED_READY=(async()=>{try{
     const hash=location.hash||'';
-    if(!hash.startsWith('#share='))return;
-
-    const encoded=hash.slice(7);
-    if(!encoded)return;
-
-    const obj=JSON.parse(fromBase64Url(encoded));
+    const key=new URLSearchParams(location.search).get('s');
+    if(!hash.startsWith('#share=')&&!key)return;
+    let encoded,obj;
+    if(key){
+      if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
+      document.documentElement.classList.add('iaSharedCoverPending');
+      const response=await fetch('https://api.jsonstorage.net/v1/json/'+key,{cache:'no-store'});
+      if(!response.ok)throw Error('Presentazione non disponibile');
+      obj=await response.json();
+      encoded='s:'+key;
+    }else{
+      encoded=hash.slice(7);
+      if(!encoded)return;
+      obj=JSON.parse(fromBase64Url(encoded));
+    }
     const source=obj?.project||obj;
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
@@ -77,6 +86,5 @@
     sessionStorage.removeItem(PRESENT_KEY);
     sessionStorage.removeItem(OPEN_KEY);
     history.replaceState(null,'',location.pathname+location.search);
-  }
+  }})();
 })();
-
