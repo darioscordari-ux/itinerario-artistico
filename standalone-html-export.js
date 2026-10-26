@@ -9,7 +9,7 @@ function build(p){
  const data=JSON.stringify(payload);
  const bytes=new TextEncoder().encode(data);
  let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));
- const encoded=btoa(binary).replace(/\\+/g,'-').replace(/\\//g,'_').replace(/=+$/,'');
+ const encoded=btoa(binary).split('+').join('-').split('/').join('_').replace(/=+$/,'');
  const appUrl='https://darioscordari-ux.github.io/itinerario-artistico/#share='+encoded;
  const safeTitle=escapeHtml(p.title||'Itinerario');
  return '<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+safeTitle+'</title>'+
