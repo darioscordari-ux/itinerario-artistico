@@ -13,6 +13,16 @@
     return new TextDecoder().decode(bytes);
   }
 
+  async function fromCompressedBase64Url(value){
+    const base64=value.replace(/-/g,'+').replace(/_/g,'/');
+    const pad='='.repeat((4-base64.length%4)%4);
+    const binary=atob(base64+pad);
+    const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));
+    if(typeof DecompressionStream!=='function')throw Error('Browser non compatibile con collegamenti compressi');
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return new TextDecoder().decode(await new Response(stream).arrayBuffer());
+  }
+
   function uid(){
     return Date.now().toString(36)+Math.random().toString(36).slice(2,7);
   }
@@ -20,7 +30,7 @@
   window.__IA_SHARED_READY=(async()=>{try{
     const hash=location.hash||'';
     const key=new URLSearchParams(location.search).get('s');
-    if(!hash.startsWith('#share=')&&!key)return;
+    if(!hash.startsWith('#share=')&&!hash.startsWith('#sharez=')&&!key)return;
     let encoded,obj;
     if(key){
       if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
@@ -30,9 +40,10 @@
       obj=await response.json();
       encoded='s:'+key;
     }else{
-      encoded=hash.slice(7);
+      const compressed=hash.startsWith('#sharez=');
+      encoded=hash.slice(compressed?8:7);
       if(!encoded)return;
-      obj=JSON.parse(fromBase64Url(encoded));
+      obj=JSON.parse(compressed?await fromCompressedBase64Url(encoded):fromBase64Url(encoded));
     }
     const source=obj?.project||obj;
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
