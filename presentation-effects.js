@@ -69,7 +69,16 @@
     const lines=routeLines();
     const index=segmentIndex(next);
     const line=lines[index];
-    if(!line)return[];
+    if(!line){
+      // A standalone HTML may open before remote route calculation completes.
+      // Animate the same walking/bus marker along the direct segment instead.
+      const p=currentProject();
+      const a=p?.stops?.[index],b=p?.stops?.[index+1];
+      if(!a||!b)return [];
+      const coords=[a,b].map(stop=>L.latLng(Number(stop.lat),Number(stop.lon)));
+      if(coords.some(point=>!Number.isFinite(point.lat)||!Number.isFinite(point.lng)))return [];
+      return next?coords:coords.reverse();
+    }
     const pts=flattenLatLngs(line.getLatLngs?.()||[]);
     return next?pts:pts.reverse();
   }
