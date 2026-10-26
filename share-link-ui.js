@@ -50,15 +50,26 @@
     return {project:clone,removedLocalImages};
   }
 
-  function makeLink(project,mode='work'){
+  async function makeLink(project,mode='work'){
     const prepared=shareableProject(project);
-    const encoded=toBase64Url(JSON.stringify({
-      version:2,
-      mode:mode==='presentation'?'presentation':'work',
-      project:prepared.project
-    }));
+    const data={version:2,mode:mode==='presentation'?'presentation':'work',project:prepared.project};
     const base=location.origin+location.pathname;
-    return {url:base+'?v=share5#share='+encoded,removedLocalImages:prepared.removedLocalImages};
+    try{
+      const response=await fetch('https://api.jsonstorage.net/v1/json',{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)
+      });
+      if(!response.ok)throw Error('HTTP '+response.status);
+      const saved=await response.json();
+      const uri=new URL(saved.uri);
+      if(uri.origin!=='https://api.jsonstorage.net'||!uri.pathname.startsWith('/v1/json/'))throw Error('Risposta inattesa');
+      const key=uri.pathname.slice('/v1/json/'.length);
+      if(!/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key))throw Error('Identificativo non valido');
+      return {url:base+'?s='+encodeURIComponent(key),removedLocalImages:prepared.removedLocalImages,short:true};
+    }catch(error){
+      console.warn('Condivisione breve non disponibile',error);
+      const encoded=toBase64Url(JSON.stringify(data));
+      return {url:base+'?v=share5#share='+encoded,removedLocalImages:prepared.removedLocalImages,short:false};
+    }
   }
 
   async function copyLink(url,message){
@@ -70,9 +81,9 @@
     }
   }
 
-  function shareLink(project,mode='work'){
+  async function shareLink(project,mode='work'){
     const isPresentation=mode==='presentation';
-    const {url,removedLocalImages}=makeLink(project,mode);
+    const {url,removedLocalImages,short}=await makeLink(project,mode);
     const back=document.getElementById('modalBack'),modal=document.getElementById('modal');
     if(!back||!modal)return;
     modal.replaceChildren();
@@ -81,6 +92,7 @@
     const field=document.createElement('textarea');field.readOnly=true;field.value=url;field.setAttribute('aria-label','Link da condividere');field.style.cssText='width:100%;height:90px;word-break:break-all';
     const status=document.createElement('p');status.setAttribute('role','status');
     if(removedLocalImages)status.textContent=removedLocalImages+' immagini locali non incluse nel link. Le immagini online sono incluse.';
+    if(!short)status.textContent+=' Link breve non disponibile: il collegamento tradizionale potrebbe essere troppo lungo per WhatsApp.';
     const foot=document.createElement('div');foot.className='modalFoot';
     function button(label,fn){const el=document.createElement('button');el.type='button';el.className='btn';el.textContent=label;el.onclick=fn;foot.appendChild(el);return el;}
     button('Chiudi',()=>back.classList.add('hidden'));
@@ -174,6 +186,7 @@
     shareLink(project,'work');
   },true);
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',autoOpenShared,{once:true});else autoOpenShared();
+  function ready(){Promise.resolve(window.__IA_SHARED_READY).then(autoOpenShared).catch(autoOpenShared);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready,{once:true});else ready();
 })();
 
