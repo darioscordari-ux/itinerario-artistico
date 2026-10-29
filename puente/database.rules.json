@@ -1,0 +1,24 @@
+{
+  "rules": {
+    "sessions": {
+      "$room": {
+        ".read": "auth != null",
+        "meta": {
+          ".write": "auth != null && ((!data.exists() && newData.child('owner').val() == auth.uid) || (data.child('owner').val() == auth.uid && newData.child('owner').val() == auth.uid))",
+          ".validate": "newData.hasChildren(['owner','round','open']) && newData.child('owner').isString() && newData.child('owner').val().length <= 128 && newData.child('round').isString() && (newData.child('round').val() == '1' || newData.child('round').val() == '2' || newData.child('round').val() == '3' || newData.child('round').val() == '4') && newData.child('open').isBoolean()",
+          "featured": {
+            ".validate": "!newData.exists() || (newData.hasChildren(['key','team','id']) && newData.child('key').isString() && newData.child('key').val().length <= 80 && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('id').isString() && newData.child('id').val().length <= 64)"
+          }
+        },
+        "answers": {
+          "$round": {
+            "$uid": {
+              ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($room).child('meta').child('open').val() == true && root.child('sessions').child($room).child('meta').child('round').val() == $round",
+              ".validate": "newData.hasChildren(['team','items']) && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('items').hasChildren(['0','1','2']) && newData.child('items').child('0').isString() && newData.child('items').child('0').val().length <= 75 && newData.child('items').child('1').isString() && newData.child('items').child('1').val().length <= 75 && newData.child('items').child('2').isString() && newData.child('items').child('2').val().length <= 75"
+            }
+          }
+        }
+      }
+    }
+  }
+}
