@@ -2622,6 +2622,7 @@ const assetImageCache=new Map();
 let assetRequest=0;
 
 let cloud=false,db=null,user=null,room='',role='',isTeacher=false,isScreen=false,lastFeaturedSig='',session={meta:{round:'1',open:true,owner:'demo'},answers:{}},unsubscribe=null,subscribedRoom='';
+let questionData={},myQuestion=null,questionUnsubscribe=null,surprisePreview=null,editingCuriosities=false;
 const $=id=>document.getElementById(id),clean=s=>String(s??'').replace(/[<>]/g,'').trim(),rand=()=>Math.random().toString(36).slice(2,8).toUpperCase(),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const normalizeKey=s=>clean(s).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').replace(/[^a-z0-9ñçü\s-]/g,' ').replace(/\s+/g,' ').trim();
 const aliasToKey={};assetKeys.forEach(key=>[key,...(ASSET_DB[key].aliases||[])].forEach(alias=>{aliasToKey[normalizeKey(alias)]=key}));
@@ -2638,12 +2639,24 @@ async function init(){
 }
 function wire(){
  if(!room)return;
- if(cloud){if(unsubscribe)unsubscribe();let ref=db.ref('sessions/'+room);const listener=snap=>{let x=snap.val();if(x){session={meta:x.meta||{round:'1',open:true},answers:x.answers||{}};render()}};ref.on('value',listener);unsubscribe=()=>ref.off('value',listener)}
- else{session=readLocal();render()}
+ if(unsubscribe){unsubscribe();unsubscribe=null}
+ if(questionUnsubscribe){questionUnsubscribe();questionUnsubscribe=null}
+ questionData={};myQuestion=null;editingCuriosities=false;surprisePreview=null;
+ if(cloud){
+  const ref=db.ref('sessions/'+room);
+  const listener=snap=>{const x=snap.val();if(x){session={meta:x.meta||{round:'1',open:true},answers:x.answers||{}};render()}};
+  ref.on('value',listener);unsubscribe=()=>ref.off('value',listener);
+  if(isTeacher){
+   const qref=db.ref('questionBoxes/'+room);
+   const qlistener=snap=>{questionData=snap.val()||{};if(session.meta.phase==='questions')renderQuestionTeacher()};
+   const err=e=>{console.error('Domande non accessibili: controlla le regole Firebase',e);$('questionAdminCount').textContent='Accesso alle domande non riuscito: pubblica le nuove regole Firebase.'};
+   qref.on('value',qlistener,err);questionUnsubscribe=()=>qref.off('value',qlistener);
+  }
+ }else{session=readLocal();questionData=session.questions||{};render()}
 }
 async function startTeacher(){
  if(cloud&&!user){alert('La connessione non è pronta. Riprova.');return}
- isTeacher=true;isScreen=false;role='';room=rand();lastFeaturedSig='';session={meta:{round:'1',open:true,owner:user?.uid||'demo'},answers:{}};
+ isTeacher=true;isScreen=false;role='';room=rand();lastFeaturedSig='';session={meta:{round:'1',open:true,owner:user?.uid||'demo'},answers:{}};questionData={};myQuestion=null;
  try{if(cloud)await db.ref('sessions/'+room+'/meta').set(session.meta);else saveLocal();try{history.replaceState(null,'',location.pathname+'?view=control&room='+room)}catch(e){}wire();show('controller');applyView();render()}catch(e){alert('Non riesco ad aprire la stanza: '+e.message)}
 }
 function applyView(){document.body.classList.toggle('screen-layout',isScreen)}
@@ -2666,27 +2679,32 @@ async function resumeController(code){
  }catch(e){alert(e.message);show('home')}
 }
 async function enterRoom(){room=clean($('roomInput').value).toUpperCase().replace(/[^A-Z0-9]/g,'');if(room.length!==6){$('joinError').textContent='Inserisci il codice di 6 caratteri.';return}if(!cloud){$('joinError').textContent='Per partecipare da cellulari diversi, il docente deve prima attivare la modalità live. La demo funziona nello stesso browser.';if(!localStorage.getItem(storageKey()))return}else{let x=await db.ref('sessions/'+room+'/meta').get();if(!x.exists()){$('joinError').textContent='Stanza non trovata. Verifica il codice.';return}}isTeacher=false;isScreen=false;applyView();wire();show('role')}
-function chooseRole(v){role=v;show('student');render()}
+function chooseRole(v){role=v;myQuestion=null;editingCuriosities=false;show('student');render();loadOwnCuriosities()}
 function getRoundData(){const n=Number(session.meta.round)||1;const displayN=Math.min(n,3);const theme=THEMES[displayN-1];const entries=Object.entries(session.answers?.[String(displayN)]||{}).map(([uid,a])=>({...a,uid}));return {n,displayN,theme,entries,it:entries.filter(a=>a.team==='it'),es:entries.filter(a=>a.team==='es')}}
 function render(){
  if(!room)return;const {n,displayN,theme:t,entries,it:a,es:b}=getRoundData();
  // LIM
- $('teacherRound').textContent=n>3?'INCONTRO COMPLETATO':'MANCHE '+n+' / 3';$('teacherTitle').textContent=n>3?'Il nostro ponte è completo 🎉':t.title;$('teacherSubtitle').textContent=n>3?'Queste sono le parole dell’ultima manche.':t.sub;
+ $('teacherRound').textContent=session.meta.phase==='questions'?'¡PREGÚNTALES!':n>3?'INCONTRO COMPLETATO':'MANCHE '+n+' / 3';$('teacherTitle').textContent=n>3?'Il nostro ponte è completo 🎉':t.title;$('teacherSubtitle').textContent=n>3?'Queste sono le parole dell’ultima manche.':t.sub;
  const animeArt=['./anime-see.svg','./anime-food.svg','./anime-school.svg'][displayN-1];$('teacherAnime').src=animeArt;document.querySelectorAll('.anime-team').forEach(img=>{if(img.getAttribute('src')!==animeArt)img.setAttribute('src',animeArt)});
  $('itQuestion').textContent=t.it;$('esQuestion').textContent=t.es;$('teacherState').textContent=n>3?'FINITO':session.meta.open?'APERTO':'CHIUSO';$('liveDot').classList.toggle('live',cloud);$('liveText').textContent=cloud?'LIVE':'DEMO';$('roomCode').textContent=room;
  $('teacherCount').textContent=entries.length+' studenti hanno risposto';$('itCount').textContent=a.length+' partecipanti';$('esCount').textContent=b.length+' participantes';renderWords('itWords',a);renderWords('esWords',b);
  $('joinUrl').textContent=joinLink();try{$('qr').src=window.PUENTE_QR(joinLink())}catch(e){console.warn('QR non disponibile',e);$('qr').alt='Utilizza il link o il codice stanza'}$('cloudState').textContent=cloud?'Risposte sincronizzate':'Solo demo locale';
  // Regia mobile
- $('controlRound').textContent=n>3?'CONCLUSO':'MANCHE '+n+' / 3';$('controlRoom').textContent=room;$('controlRoomHelp').textContent=room;$('controlTitle').textContent=n>3?'Incontro completato':t.title;
+ $('controlRound').textContent=session.meta.phase==='questions'?'DOMANDE · REGIA':n>3?'CONCLUSO':'MANCHE '+n+' / 3';$('controlRoom').textContent=room;$('controlRoomHelp').textContent=room;$('controlTitle').textContent=n>3?'Incontro completato':t.title;
  $('controlQuestion').textContent=n>3?'Puoi rivedere le parole finali e mostrare le immagini.':t.it+' / '+t.es;
- $('controlStatus').textContent=n>3?'CONCLUSO':session.meta.open?'RISPOSTE APERTE':'RISPOSTE CHIUSE';$('controlCount').textContent=entries.length+' studenti';$('controlNext').disabled=n>3;$('controlNext').textContent=n>=3?'Concludi incontro ✓':'Termina manche e passa alla prossima →';$('controlToggle').disabled=n>3;$('controlToggle').textContent=session.meta.open?'Chiudi risposte':'Riapri risposte';
+ $('controlStatus').textContent=n>3?'CONCLUSO':session.meta.open?'RISPOSTE APERTE':'RISPOSTE CHIUSE';$('controlCount').textContent=entries.length+' studenti';$('controlNext').disabled=n>3;$('controlNext').textContent=n>=3?'Avvia ¡Pregúntales! →':'Termina manche e passa alla prossima →';$('controlToggle').disabled=n>3;$('controlToggle').textContent=session.meta.open?'Chiudi risposte':'Riapri risposte';
  $('controlItCount').textContent='· '+a.length;$('controlEsCount').textContent='· '+b.length;
  renderControlWords('controlWordsIt',a,'it');renderControlWords('controlWordsEs',b,'es');$('controlDemo').hidden=cloud;
  $('controlSyncState').textContent=cloud?'Collegamento attivo. Le azioni aggiornano subito la LIM.':'Demo: regia e LIM comunicano solo in schede dello stesso browser.';
  const f=session.meta.featured;$('spotlightInfo').textContent=f?.key?'Sulla LIM: '+(ASSET_DB[getCatalogKey(f.key)||f.key]?.title||f.key):'Tocca una parola per mostrarne l’immagine sulla LIM.';
- if(isScreen&&document.querySelector('#screen.active'))syncFeatured();
+ if(isScreen&&document.querySelector('#screen.active')&&session.meta.phase!=='questions')syncFeatured();
  // Studenti
  if(role&&!isTeacher&&!isScreen){$('studentRound').textContent=n>3?'CONCLUSO':'MANCHE '+n+' / 3';$('studentTeam').textContent=role==='it'?'🇮🇹 Italia':'🇪🇸 España';$('studentTitle').textContent=n>3?'Grazie!':t.title;$('studentPrompt').textContent=role==='it'?t.it:t.es;const mine=entries.find(x=>x.uid===(user?.uid||'demo-'+role));const locked=n>3||!session.meta.open;$('studentWaiting').classList.toggle('invisible',!locked);$('studentForm').classList.toggle('invisible',locked||!!mine);$('studentDone').classList.toggle('invisible',locked||!mine);if(mine){[1,2,3].forEach(k=>{const el=$('answer'+k);if(document.activeElement!==el)el.value=mine.items[k-1]||''})}}
+ const inQuestions=session.meta.phase==='questions';
+ $('controlCloudUI').hidden=inQuestions;$('questionControl').hidden=!inQuestions;
+ $('screenCloudUI').hidden=inQuestions;$('questionStage').hidden=!inQuestions;
+ $('studentCloudUI').hidden=inQuestions;$('studentQuestionUI').hidden=!inQuestions;
+ if(inQuestions){if(isTeacher)renderQuestionTeacher();if(isScreen)renderQuestionScreen();if(role&&!isTeacher&&!isScreen)renderQuestionStudent();if(isScreen&&$('assetModal').classList.contains('open'))closeAsset()}
 }
 function getWords(people){
  // Ogni studente contribuisce al massimo una volta al conteggio di ciascuna parola.
@@ -2760,7 +2778,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('assetModal').cla
 async function submitAnswers(){let items=[1,2,3].map(k=>clean($('answer'+k).value));if(items.some(x=>!x)){$('answerError').textContent='Inserisci tutte e tre le risposte.';return}if(!session.meta.open||Number(session.meta.round)>3)return;let n=session.meta.round;let uid=user?.uid||'demo-'+role;let value={team:role,items,updated:Date.now()};try{if(cloud)await db.ref('sessions/'+room+'/answers/'+n+'/'+uid).set(value);else{session.answers[n] ||= {};session.answers[n][uid]=value;saveLocal()}$('answerError').textContent='';render()}catch(e){$('answerError').textContent='Invio non riuscito: '+e.message}}
 function editAnswers(){$('studentForm').classList.remove('invisible');$('studentDone').classList.add('invisible')}
 async function updateMeta(changes){if(!isTeacher)return;let m={...session.meta,...changes};try{if(cloud)await db.ref('sessions/'+room+'/meta').set(m);else{session.meta=m;saveLocal()}}catch(e){alert('Operazione non riuscita: '+e.message)}}
-function nextRound(){if(Number(session.meta.round)>3)return;updateMeta({round:String(Number(session.meta.round)+1),open:true,featured:null})}
+function nextRound(){if(session.meta.phase==='questions'||Number(session.meta.round)>3)return;const n=Number(session.meta.round);if(n===3){updateMeta({round:'4',phase:'questions',open:true,featured:null,questionSpotlight:null});return}updateMeta({round:String(n+1),open:true,featured:null})}
 function toggleStatus(){updateMeta({open:!session.meta.open})}
 function copyJoin(){copyText(joinLink())}
 function addDemo(){if(cloud){alert('La simulazione è disponibile soltanto nella modalità demo locale.');return}let n=session.meta.round;if(+n>3)return;session.answers[n] ||= {};const examples=[[['Duomo','Santa Croce','Anfiteatro romano'],['Castillo','Plaza Mayor','Catedral']],[['Pasticciotto','Rustico','Frisella'],['Tortilla','Paella','Churros']],[['Compagni','Gite','Laboratori'],['Horarios','Recreo','Asignaturas']]];let e=examples[Number(n)-1];session.answers[n]['sim-it-'+Date.now()]={team:'it',items:e[0]};session.answers[n]['sim-es-'+Date.now()]={team:'es',items:e[1]};saveLocal()}
