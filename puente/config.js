@@ -1,9 +1,10 @@
-// Configurazione della sessione live: collegare un progetto Firebase per attivare la sincronizzazione tra dispositivi.
-// Le chiavi Web Firebase sono identificativi pubblici: la sicurezza dipende dalle regole del database.
+// Configurazione Firebase Web dell'app PUENTE.
 window.PUENTE_FIREBASE = {
-  apiKey: '',
-  authDomain: '',
-  databaseURL: '',
-  projectId: '',
-  appId: ''
+  apiKey: 'AIzaSyBd44Efz2vJ3F_16kysRudk_vCDHpGsMxM',
+  authDomain: 'puente-31c27.firebaseapp.com',
+  databaseURL: 'https://puente-31c27-default-rtdb.europe-west1.firebasedatabase.app/',
+  projectId: 'puente-31c27',
+  storageBucket: 'puente-31c27.firebasestorage.app',
+  messagingSenderId: '812428183356',
+  appId: '1:812428183356:web:5661d510ac62003bfd0039'
 };
