@@ -8,6 +8,12 @@
           ".validate": "newData.hasChildren(['owner','round','open']) && newData.child('owner').isString() && newData.child('owner').val().length <= 128 && newData.child('round').isString() && (newData.child('round').val() == '1' || newData.child('round').val() == '2' || newData.child('round').val() == '3' || newData.child('round').val() == '4') && newData.child('open').isBoolean()",
           "featured": {
             ".validate": "!newData.exists() || (newData.hasChildren(['key','team','id']) && newData.child('key').isString() && newData.child('key').val().length <= 80 && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('id').isString() && newData.child('id').val().length <= 64)"
+          },
+          "phase": {
+            ".validate": "!newData.exists() || (newData.isString() && (newData.val() == 'cloud' || newData.val() == 'questions'))"
+          },
+          "questionSpotlight": {
+            ".validate": "!newData.exists() || (newData.hasChildren(['id','team','text']) && newData.child('id').isString() && newData.child('id').val().length <= 160 && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('text').isString() && newData.child('text').val().length <= 200)"
           }
         },
         "answers": {
@@ -16,6 +22,31 @@
               ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($room).child('meta').child('open').val() == true && root.child('sessions').child($room).child('meta').child('round').val() == $round",
               ".validate": "newData.hasChildren(['team','items']) && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('items').hasChildren(['0','1','2']) && newData.child('items').child('0').isString() && newData.child('items').child('0').val().length <= 75 && newData.child('items').child('1').isString() && newData.child('items').child('1').val().length <= 75 && newData.child('items').child('2').isString() && newData.child('items').child('2').val().length <= 75"
             }
+          }
+        }
+      }
+    },
+    "questionBoxes": {
+      "$room": {
+        ".read": "auth != null && root.child('sessions').child($room).child('meta').child('owner').val() == auth.uid",
+        "$uid": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($room).child('meta').child('phase').val() == 'questions' && root.child('sessions').child($room).child('meta').child('open').val() == true && (!data.exists() || newData.child('team').val() == data.child('team').val())",
+          ".validate": "newData.hasChildren(['team','q1','q2','q3']) && newData.childrenCount == 4 && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('q1').isString() && newData.child('q1').val().length >= 5 && newData.child('q1').val().length <= 200 && newData.child('q2').isString() && newData.child('q2').val().length <= 200 && newData.child('q3').isString() && newData.child('q3').val().length <= 200",
+          "team": {
+            ".validate": "newData.isString() && (newData.val() == 'it' || newData.val() == 'es')"
+          },
+          "q1": {
+            ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 200"
+          },
+          "q2": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "q3": {
+            ".validate": "newData.isString() && newData.val().length <= 200"
+          },
+          "$other": {
+            ".validate": false
           }
         }
       }
