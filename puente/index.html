@@ -129,8 +129,55 @@ body.screen-layout .screen-bottom{margin:2px 0 4px}
   body.screen-layout .words{min-height:170px;max-height:none}
 }
 
+
+/* Domande: nuovo stile young editorial con personaggi illustrati anime. */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap');
+body .question{
+ position:relative;isolation:isolate;
+ background:linear-gradient(107deg,#e6dfff,#dbf8f0 56%,#ffe5d4);
+ border:2px solid #fff;color:#20304d;overflow:hidden;
+ padding:20px 130px 20px 28px;
+ box-shadow:0 11px 32px #32416612;
+}
+.question:before{content:'✦';position:absolute;right:160px;top:9px;color:#9772d7;font-size:2rem;opacity:.6}
+.question .eyebrow{font-family:'Outfit',sans-serif;letter-spacing:.18em;color:#7359b2!important}
+.question h2{font:900 clamp(2.2rem,4.1vw,4.3rem)/1.04 'Outfit',sans-serif;letter-spacing:-.055em;color:#251d5b}
+.question p{font-family:'Outfit',sans-serif;color:#514569;font-weight:600}
+.anime-hero{position:absolute;right:19px;top:50%;transform:translateY(-50%) rotate(5deg);width:105px;height:105px;object-fit:cover;border-radius:26px;box-shadow:0 7px 22px #30274726;border:4px solid #fff}
+.question-card .team-title{padding:10px 12px;display:flex;gap:10px;justify-content:flex-start;font-family:'Outfit',sans-serif;font-weight:900}
+.question-card .team-title>span:nth-child(2){flex:1;min-width:0}
+.anime-team{width:52px;height:52px;flex:none;border-radius:16px;transform:rotate(-5deg);border:3px solid #fff;box-shadow:0 5px 14px #37435b20}
+.question-card.spagna .anime-team{transform:rotate(5deg)}
+.team-prompt{position:relative;padding:19px 21px 22px;border-radius:19px;min-height:125px;overflow:hidden;border-width:2px}
+.team-prompt:before{content:'“';position:absolute;right:13px;top:-18px;font:900 100px 'Fredoka',sans-serif;opacity:.14}
+.italia .team-prompt{background:linear-gradient(140deg,#bbf6e2,#eafff5 70%);border-color:#85dbbe}
+.spagna .team-prompt{background:linear-gradient(140deg,#ffd2b0,#fff1d9 70%);border-color:#ffa873}
+.italia .prompt-kicker{color:#087d6b}
+.spagna .prompt-kicker{color:#ae4b23}
+.prompt-kicker{font:800 .77rem 'Outfit',sans-serif;letter-spacing:.15em}
+.question-card .team-prompt p.mini,body.screen-layout .question-card .team-prompt p.mini{
+ font:700 clamp(1.2rem,2vw,1.8rem)/1.27 'Fredoka','Outfit',sans-serif;
+ letter-spacing:-.02em;color:#233246;
+}
+.anime-preview{width:55px;height:55px;object-fit:cover;border-radius:14px;vertical-align:middle;margin-right:10px;box-shadow:0 4px 12px #26344722}
+.word.no-photo,.control-word.no-photo{cursor:default}
+.word.no-photo:hover,.control-word.no-photo:hover{transform:none!important;box-shadow:0 6px 14px rgba(30,32,58,.075)}
+body.screen-layout .question{padding:12px 135px 13px 24px}
+body.screen-layout .question h2{font-size:clamp(2.05rem,3.4vw,3.7rem)}
+body.screen-layout .question .anime-hero{width:100px;height:100px}
+body.screen-layout .team-prompt{min-height:140px}
+body.screen-layout .question-card .team-prompt p.mini{font-size:clamp(1.27rem,2vw,1.9rem)}
+@media(max-width:700px){
+ body .question,body.screen-layout .question{padding:16px 78px 16px 17px}
+ .anime-hero,body.screen-layout .question .anime-hero{right:9px;width:64px;height:64px;border-radius:16px}
+ .question:before{display:none}
+ .question-card .team-title{font-size:.9rem;gap:8px}
+ .anime-team{width:42px;height:42px}
+ .team-prompt{padding:14px}
+}
+
 </style></head><body><div class="shell"><header class="header"><div class="brand"><span class="logo">↔</span> PUENTE<span style="color:var(--purple)">.</span></div><span class="chip">LECCE <span style="color:var(--purple)">×</span> ESPAÑA</span></header>
-<section id="home" class="page active"><div class="hero"><div><div class="eyebrow">Incontro interculturale · 45–55 minuti</div><h1>Due culture.<br><span class="highlight-it">Una classe.</span><br><span class="highlight-es">Tre sfide.</span></h1><p class="lede">Un'esperienza collettiva tra studenti italiani e spagnoli. Tutti partecipano contemporaneamente dal proprio cellulare, mentre le idee prendono forma sullo schermo.</p><div class="actions"><button class="btn primary" onclick="startTeacher()">Avvia regia dal cellulare →</button><button class="btn white" onclick="show('screenJoin')">Apri la LIM</button><button class="btn white" onclick="show('join')">Entra come studente</button></div><p class="note" id="modeNotice"></p></div><div class="visual"><div class="bubble">🥐 Pasticciotto!</div><div class="bubble">🏰 Monumentos</div><div class="bubble">🎒 Escuela</div><div class="emblem">🤝</div></div></div><div class="panel"><div class="mini">LE TRE MANCHE</div><div class="questions" style="margin-bottom:0"><div><h3>01 / Da vedere 👀</h3><p>Tre luoghi imperdibili: Lecce ↔ città spagnola</p></div><div><h3>02 / Da assaggiare 🍴</h3><p>Tre specialità da scoprire: Salento ↔ Spagna</p></div><div><h3>03 / La scuola 🎒</h3><p>Cosa raccontiamo della nostra scuola e quali differenze scopriamo</p></div></div></div><div class="panel gallery-demo"><div class="gallery-intro"><div><span class="eyebrow">NOVITÀ · PAROLE CHE DIVENTANO IMMAGINI</span><h3>Una parola. Un mondo da scoprire.</h3><p class="note">Tocca una delle parole qui sotto per vedere come apparirà sulla LIM.</p></div><span class="chip">ANTEPRIMA INTERATTIVA</span></div><div id="assetGallery" class="gallery-words"></div></div></section>
+<section id="home" class="page active"><div class="hero"><div><div class="eyebrow">Incontro interculturale · 45–55 minuti</div><h1>Due culture.<br><span class="highlight-it">Una classe.</span><br><span class="highlight-es">Tre sfide.</span></h1><p class="lede">Un'esperienza collettiva tra studenti italiani e spagnoli. Tutti partecipano contemporaneamente dal proprio cellulare, mentre le idee prendono forma sullo schermo.</p><div class="actions"><button class="btn primary" onclick="startTeacher()">Avvia regia dal cellulare →</button><button class="btn white" onclick="show('screenJoin')">Apri la LIM</button><button class="btn white" onclick="show('join')">Entra come studente</button></div><p class="note" id="modeNotice"></p></div><div class="visual"><div class="bubble">🥐 Pasticciotto!</div><div class="bubble">🏰 Monumentos</div><div class="bubble">🎒 Escuela</div><div class="emblem">🤝</div></div></div><div class="panel"><div class="mini">LE TRE MANCHE</div><div class="questions" style="margin-bottom:0"><div><h3><img class="anime-preview" src="./anime-see.svg" alt="">01 / Da vedere</h3><p>Tre luoghi imperdibili: Lecce ↔ città spagnola</p></div><div><h3><img class="anime-preview" src="./anime-food.svg" alt="">02 / Da assaggiare</h3><p>Tre specialità da scoprire: Salento ↔ Spagna</p></div><div><h3><img class="anime-preview" src="./anime-school.svg" alt="">03 / La scuola</h3><p>Cosa raccontiamo della nostra scuola e quali differenze scopriamo</p></div></div></div><div class="panel gallery-demo"><div class="gallery-intro"><div><span class="eyebrow">NOVITÀ · PAROLE CHE DIVENTANO IMMAGINI</span><h3>Una parola. Un mondo da scoprire.</h3><p class="note">Tocca una delle parole qui sotto per vedere come apparirà sulla LIM.</p></div><span class="chip">ANTEPRIMA INTERATTIVA</span></div><div id="assetGallery" class="gallery-words"></div></div></section>
 
 <section id="screenJoin" class="page"><div class="setup panel"><span class="roundbadge">VISTA LIM · SOLO PROIEZIONE</span><h2 style="margin-top:16px">Collega il PC alla LIM</h2><p>Avvia prima la regia dal tuo cellulare, quindi digita qui il codice a sei caratteri. Il tabellone si sincronizzerà automaticamente.</p><div class="field"><label for="screenRoomInput">Codice della stanza</label><input id="screenRoomInput" maxlength="6" autocomplete="off" placeholder="Es. LEC7XA" style="text-transform:uppercase;letter-spacing:.18em;font-weight:800"/></div><button class="btn primary" style="width:100%" onclick="connectScreen()">Apri tabellone LIM →</button><p class="error" id="screenError"></p><p class="note">La LIM è una vista pubblica senza comandi per cambiare le manche. Tutto si gestisce dalla regia sul telefono.</p></div></section>
 <section id="controller" class="page"><div class="controller-main"><div class="controller-head"><span class="roundbadge" id="controlRound">MANCHE 1 / 3</span><span class="code" id="controlRoom">------</span></div><h1 class="controller-title">Regia docente</h1><p class="note">Da qui controlli quello che appare sulla LIM. Il PC serve solo per proiettare.</p><div class="control-hero"><span class="mini">MANCHE IN CORSO</span><h2 id="controlTitle">Da vedere 👀</h2><p id="controlQuestion">Studenti italiani e spagnoli rispondono in simultanea.</p><div class="control-status"><span class="chip" id="controlStatus">APERTO</span><span class="chip" id="controlCount">0 studenti</span></div></div><div class="control-primary"><button class="btn primary" id="controlNext" onclick="nextRound()">Termina manche e passa alla prossima →</button><button class="btn white" id="controlToggle" onclick="toggleStatus()">Chiudi risposte</button></div><div class="control-links"><div><span class="mini">SUL PC DELLA LIM</span><p>Apri PUENTE, scegli «Apri la LIM» e inserisci <strong id="controlRoomHelp">------</strong>.</p><button class="btn white smallbtn" onclick="openScreenTab()">Anteprima LIM ↗</button><button class="btn white smallbtn" onclick="copyScreenLink()">Copia link LIM</button></div><div><span class="mini">PER GLI STUDENTI</span><p>Scansionano il QR visibile sulla LIM oppure usano il link di partecipazione.</p><button class="btn white smallbtn" onclick="copyJoin()">Copia link studenti</button></div></div><div class="control-clouds"><div class="control-cloud"><h3>🇮🇹 Risposte italiane <span id="controlItCount" class="mini"></span></h3><div class="control-words" id="controlWordsIt"></div></div><div class="control-cloud"><h3>🇪🇸 Respuestas españolas <span id="controlEsCount" class="mini"></span></h3><div class="control-words" id="controlWordsEs"></div></div></div><div class="spotlight-bar"><p id="spotlightInfo" class="note">Tocca una parola qui sopra per mostrare la sua immagine sulla LIM.</p><button class="btn white smallbtn" onclick="hideSpotlight()">Chiudi immagine sulla LIM ✕</button></div><button class="btn white smallbtn" id="controlDemo" onclick="addDemo()">+ Simula risposte (solo demo)</button><p class="note" id="controlSyncState"></p></div></section>
@@ -138,7 +185,7 @@ body.screen-layout .screen-bottom{margin:2px 0 4px}
 <section id="join" class="page"><div class="setup panel"><span class="roundbadge">PARTECIPA / PARTICIPA</span><h2 style="margin-top:16px">Entra nell'incontro</h2><p class="note">Inserisci il codice mostrato sulla LIM o scansiona il QR.</p><div class="field"><label>Codice della stanza / Código de sala</label><input id="roomInput" maxlength="6" placeholder="ES. LEC7XA" style="text-transform:uppercase;letter-spacing:.18em;font-weight:800"/></div><button class="btn primary" style="width:100%" onclick="enterRoom()">Continua →</button><p id="joinError" class="error"></p></div></section>
 <section id="role" class="page"><div class="student panel"><span class="roundbadge">BENVENUTO / BIENVENIDO</span><h2 style="margin-top:16px">Da quale gruppo vieni?</h2><p class="note">Scegli il gruppo una sola volta: le risposte appariranno nella colonna corretta.</p><div class="role-options"><button class="role" onclick="chooseRole('it')"><span class="flag">🇮🇹</span>Italiani</button><button class="role" onclick="chooseRole('es')"><span class="flag">🇪🇸</span>Españoles</button></div></div></section>
 <section id="student" class="page"><div class="student panel"><div class="topline"><span class="roundbadge" id="studentRound">MANCHE 1 / 3</span><span class="chip" id="studentTeam">🇮🇹 Italia</span></div><h2 id="studentTitle">Da vedere 👀</h2><div class="prompts"><div class="prompt" id="studentPrompt"></div><p class="note" style="margin:0">Scrivi 3 risposte brevi. Puoi usare la tua lingua.</p></div><div id="studentForm"><div class="three"><div class="field" style="margin:0"><input id="answer1" maxlength="75" placeholder="1. Prima risposta"/></div><div class="field" style="margin:0"><input id="answer2" maxlength="75" placeholder="2. Seconda risposta"/></div><div class="field" style="margin:0"><input id="answer3" maxlength="75" placeholder="3. Terza risposta"/></div></div><button class="btn primary" style="width:100%;margin-top:18px" onclick="submitAnswers()">Invia le 3 risposte ↗</button><p class="error" id="answerError"></p></div><div id="studentDone" class="ending invisible"><div style="font-size:3rem">✨</div><h2>Risposte inviate!</h2><p>Guarda la LIM: le tue idee sono parte della mappa collettiva.</p><p class="note">Puoi modificarle finché la manche è aperta.</p><button class="btn white" onclick="editAnswers()">Modifica le mie risposte</button></div><div id="studentWaiting" class="ending invisible"><div style="font-size:3rem">⏳</div><h2>Pronti per la prossima!</h2><p>Aspetta che il docente apra la nuova manche.</p></div></div></section>
-<section id="screen" class="page"><div class="topline"><div class="status"><span class="roundbadge" id="teacherRound">MANCHE 1 / 3</span><span class="chip"><span class="dot" id="liveDot"></span><span id="liveText">In attesa</span></span></div><div class="status"><span class="mini">CODICE STANZA</span><span class="code" id="roomCode">------</span></div></div><div class="presenter"><div><div class="question"><div class="eyebrow" style="color:#c7baff;margin-bottom:0">PUENTE · ITALIA × ESPAÑA</div><h2 id="teacherTitle">Da vedere 👀</h2><p id="teacherSubtitle">Le due classi raccontano la loro città.</p><div class="status"><span id="teacherCount">0 studenti hanno risposto</span><span id="teacherState" class="chip" style="background:#26334c;color:white;border:0">APERTO</span></div></div><div class="questions"><div class="question-card italia"><div class="team-title"><span>🇮🇹 GRUPPO ITALIANO</span><span id="itCount" class="mini">0</span></div><div class="team-prompt"><span class="prompt-kicker">LA DOMANDA</span><p class="mini" id="itQuestion"></p></div><div class="words" id="itWords"><span class="note">Le risposte appariranno qui…</span></div></div><div class="question-card spagna"><div class="team-title"><span>🇪🇸 GRUPO ESPAÑOL</span><span id="esCount" class="mini">0</span></div><div class="team-prompt"><span class="prompt-kicker">LA PREGUNTA</span><p class="mini" id="esQuestion"></p></div><div class="words" id="esWords"><span class="note">Las respuestas aparecerán aquí…</span></div></div></div><p class="tap-hint">✨ Tocca una parola: si trasforma in fotografia, con una breve curiosità da raccontare.</p><div class="screen-bottom"><span>PUENTE · Una sola classe, due culture</span><button class="btn white smallbtn" onclick="toggleScreenFullscreen()">Schermo intero ⛶</button></div></div><aside class="side"><div><h3 style="margin:0">Partecipate!</h3><p class="note">Scansiona il QR: tutti rispondono nello stesso momento.</p></div><img id="qr" class="qr" alt="Codice QR per entrare nella stanza"><div><div class="mini">LINK DI ACCESSO</div><div class="link" id="joinUrl"></div><button style="margin-top:10px" class="btn white smallbtn" onclick="copyJoin()">Copia link</button><p class="note" id="cloudState"></p></div></aside></div></section>
+<section id="screen" class="page"><div class="topline"><div class="status"><span class="roundbadge" id="teacherRound">MANCHE 1 / 3</span><span class="chip"><span class="dot" id="liveDot"></span><span id="liveText">In attesa</span></span></div><div class="status"><span class="mini">CODICE STANZA</span><span class="code" id="roomCode">------</span></div></div><div class="presenter"><div><div class="question"><div class="eyebrow" style="color:#c7baff;margin-bottom:0">PUENTE · ITALIA × ESPAÑA</div><img class="anime-hero" id="teacherAnime" src="./anime-see.svg" alt="Illustrazione anime della manche" width="120" height="120"><h2 id="teacherTitle">Da vedere</h2><p id="teacherSubtitle">Le due classi raccontano la loro città.</p><div class="status"><span id="teacherCount">0 studenti hanno risposto</span><span id="teacherState" class="chip" style="background:#26334c;color:white;border:0">APERTO</span></div></div><div class="questions"><div class="question-card italia"><div class="team-title"><img class="anime-team" src="./anime-see.svg" alt="" width="54" height="54"><span>🇮🇹 GRUPPO ITALIANO</span><span id="itCount" class="mini">0</span></div><div class="team-prompt"><span class="prompt-kicker">LA DOMANDA</span><p class="mini" id="itQuestion"></p></div><div class="words" id="itWords"><span class="note">Le risposte appariranno qui…</span></div></div><div class="question-card spagna"><div class="team-title"><img class="anime-team" src="./anime-see.svg" alt="" width="54" height="54"><span>🇪🇸 GRUPO ESPAÑOL</span><span id="esCount" class="mini">0</span></div><div class="team-prompt"><span class="prompt-kicker">LA PREGUNTA</span><p class="mini" id="esQuestion"></p></div><div class="words" id="esWords"><span class="note">Las respuestas aparecerán aquí…</span></div></div></div><p class="tap-hint">✨ Tocca una parola: si trasforma in fotografia, con una breve curiosità da raccontare.</p><div class="screen-bottom"><span>PUENTE · Una sola classe, due culture</span><button class="btn white smallbtn" onclick="toggleScreenFullscreen()">Schermo intero ⛶</button></div></div><aside class="side"><div><h3 style="margin:0">Partecipate!</h3><p class="note">Scansiona il QR: tutti rispondono nello stesso momento.</p></div><img id="qr" class="qr" alt="Codice QR per entrare nella stanza"><div><div class="mini">LINK DI ACCESSO</div><div class="link" id="joinUrl"></div><button style="margin-top:10px" class="btn white smallbtn" onclick="copyJoin()">Copia link</button><p class="note" id="cloudState"></p></div></aside></div></section>
 <div id="assetModal" class="asset-modal" role="dialog" aria-modal="true" aria-labelledby="assetTitle" onclick="if(event.target===this)closeAsset()">
   <div class="asset-card"><button class="asset-close" onclick="closeAsset()" aria-label="Chiudi scheda">✕</button>
    <div class="asset-grid"><div id="assetVisual" class="asset-image" aria-live="polite"><div class="asset-fallback">🏛️</div></div>
@@ -340,6 +387,913 @@ window.PUENTE_CATALOG = {
   'gite': {title:'Le uscite didattiche',type:'scuola',icon:'🚌',kicker:'ITALIA × ESPAÑA · SCUOLA',aliases:['viaggi','viaggi di istruzione','excursiones','salidas'],desc:'Visite, viaggi e attività per conoscere il territorio fuori dall’aula.',tags:['Turismo','Territorio']},
   'orari': {title:'Gli orari scolastici',type:'scuola',icon:'🕒',kicker:'ITALIA × ESPAÑA · SCUOLA',aliases:['horarios','horario','recreo','intervallo'],desc:'L’inizio delle lezioni, le pause e l’organizzazione della giornata scolastica.',tags:['Vita scolastica','Confronto']}
 };
+/* Amplia il catalogo fotografico per le prime due manche con varianti IT/ES. */
+Object.assign(window.PUENTE_CATALOG,{
+ "chiesa del rosario": {
+  "title": "Chiesa del Rosario",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Lecce: chiesa barocca dedicata a San Giovanni Battista, nota per la ricca facciata.",
+  "search": "Chiesa del Rosario Lecce facciata",
+  "aliases": [
+   "san giovanni battista lecce",
+   "chiesa san giovanni battista lecce",
+   "rosario lecce"
+  ]
+ },
+ "sant irene": {
+  "title": "Chiesa di Sant’Irene",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La chiesa dedicata alla precedente patrona della città, nel cuore del centro storico.",
+  "search": "Chiesa Sant Irene Lecce facade",
+  "aliases": [
+   "chiesa sant irene",
+   "santa irene",
+   "sant irene lecce"
+  ]
+ },
+ "chiesa del gesu": {
+  "title": "Chiesa del Gesù",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La chiesa dei Gesuiti nel centro storico di Lecce.",
+  "search": "Chiesa del Gesù Lecce facciata",
+  "aliases": [
+   "chiesa gesu lecce",
+   "gesu lecce"
+  ]
+ },
+ "san niccolo e cataldo": {
+  "title": "San Niccolò e Cataldo",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Chiesa medievale leccese, con importanti trasformazioni successive.",
+  "search": "Chiesa San Niccolo e Cataldo Lecce",
+  "aliases": [
+   "san niccolo",
+   "san niccolo e cataldo lecce",
+   "chiesa di san niccolo e cataldo"
+  ]
+ },
+ "seminario di lecce": {
+  "title": "Palazzo del Seminario",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il palazzo del Seminario nella scenografica Piazza Duomo.",
+  "search": "Seminario Lecce Piazza Duomo",
+  "aliases": [
+   "seminario",
+   "palazzo seminario",
+   "seminario vescovile"
+  ]
+ },
+ "palazzo vescovile": {
+  "title": "Palazzo Vescovile",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "L'episcopio che si affaccia su Piazza Duomo a Lecce.",
+  "search": "Palazzo Vescovile Lecce Piazza Duomo",
+  "aliases": [
+   "episcopio",
+   "palazzo arcivescovile"
+  ]
+ },
+ "mura urbiche": {
+  "title": "Mura urbiche",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Resti delle fortificazioni che proteggevano la Lecce storica.",
+  "search": "Mura urbiche Lecce",
+  "aliases": [
+   "mura lecce",
+   "mura cittadine",
+   "mura storiche"
+  ]
+ },
+ "rudiae": {
+  "title": "Parco archeologico di Rudiae",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "L'area archeologica dell'antica Rudiae, con un anfiteatro romano.",
+  "search": "Rudiae Lecce archaeological amphitheater",
+  "aliases": [
+   "anfiteatro di rudiae",
+   "parco rudiae",
+   "rudie",
+   "rudiae lecce"
+  ]
+ },
+ "obelisco": {
+  "title": "Obelisco di Lecce",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Monumento presso Porta Napoli, legato alla storia della città.",
+  "search": "Obelisco Lecce Porta Napoli",
+  "aliases": [
+   "obelisco di lecce",
+   "obelisco porta napoli"
+  ]
+ },
+ "colonna sant oronzo": {
+  "title": "Colonna di Sant’Oronzo",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La colonna monumentale che domina Piazza Sant'Oronzo.",
+  "search": "Colonna di Sant Oronzo Lecce",
+  "aliases": [
+   "colonna sant oronzo lecce",
+   "statua sant oronzo",
+   "colonna di sant oronzo"
+  ]
+ },
+ "sedile": {
+  "title": "Il Sedile di Lecce",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La storica costruzione civica nella Piazza Sant'Oronzo.",
+  "search": "Sedile Lecce Piazza Sant Oronzo",
+  "aliases": [
+   "sedile di lecce",
+   "palazzo del sedile"
+  ]
+ },
+ "piazza mazzini": {
+  "title": "Piazza Mazzini",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Una delle piazze centrali della Lecce moderna.",
+  "search": "Piazza Mazzini Lecce",
+  "aliases": [
+   "piazza giuseppe mazzini"
+  ]
+ },
+ "via palmieri": {
+  "title": "Via Palmieri",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Una delle vie del centro storico con palazzi e scorci monumentali.",
+  "search": "Via Palmieri Lecce centro storico",
+  "aliases": [
+   "via giuseppe palmieri"
+  ]
+ },
+ "teatini": {
+  "title": "Ex Convento dei Teatini",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il complesso dei Teatini, oggi utilizzato per manifestazioni ed eventi.",
+  "search": "Ex Convento Teatini Lecce",
+  "aliases": [
+   "ex convento dei teatini",
+   "convento dei teatini",
+   "teatini lecce"
+  ]
+ },
+ "museo castromediano": {
+  "title": "Museo Sigismondo Castromediano",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Museo archeologico e storico-artistico del territorio salentino.",
+  "search": "Museo Castromediano Lecce",
+  "aliases": [
+   "castromediano",
+   "museo provinciale lecce",
+   "sigismondo castromediano"
+  ]
+ },
+ "museo ferroviario": {
+  "title": "Museo Ferroviario della Puglia",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Museo dedicato alla storia della ferrovia con locomotive e carrozze.",
+  "search": "Museo Ferroviario della Puglia Lecce",
+  "aliases": [
+   "museo dei treni",
+   "museo ferroviario lecce"
+  ]
+ },
+ "santa maria della grazia": {
+  "title": "Santa Maria della Grazia",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Chiesa nel centro storico, affacciata verso l'area dell'Anfiteatro romano.",
+  "search": "Santa Maria della Grazia Lecce church",
+  "aliases": [
+   "chiesa santa maria della grazia"
+  ]
+ },
+ "gallipoli": {
+  "title": "Gallipoli",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Centro salentino sul mare con città vecchia, porto e spiagge.",
+  "search": "Gallipoli Salento old town sea",
+  "aliases": [
+   "gallipoli salento"
+  ]
+ },
+ "otranto": {
+  "title": "Otranto",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Città costiera salentina con cattedrale medievale e centro storico.",
+  "search": "Otranto cathedral old town Puglia",
+  "aliases": [
+   "otranto puglia",
+   "cattedrale otranto"
+  ]
+ },
+ "santa maria di leuca": {
+  "title": "Santa Maria di Leuca",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Località salentina tra i due mari, con santuario e faro.",
+  "search": "Santa Maria di Leuca lighthouse",
+  "aliases": [
+   "leuca",
+   "santa maria leuca"
+  ]
+ },
+ "porto cesareo": {
+  "title": "Porto Cesareo",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Località costiera con spiagge e un'area marina protetta.",
+  "search": "Porto Cesareo Salento beach",
+  "aliases": [
+   "porto cesareo salento"
+  ]
+ },
+ "torre dell orso": {
+  "title": "Torre dell’Orso",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Località balneare del Salento nota per la baia sabbiosa.",
+  "search": "Torre dell Orso beach Salento",
+  "aliases": [
+   "torre dell'orso",
+   "torre del orso"
+  ]
+ },
+ "grotta della poesia": {
+  "title": "Grotta della Poesia",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La cavità naturale costiera nella zona di Roca Vecchia.",
+  "search": "Grotta della Poesia Roca Vecchia Salento",
+  "aliases": [
+   "grotta poesia",
+   "roca vecchia"
+  ]
+ },
+ "galatina": {
+  "title": "Galatina",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Città del Salento nota per Santa Caterina d'Alessandria e la tradizione del pasticciotto.",
+  "search": "Galatina Lecce historic center",
+  "aliases": [
+   "galatina lecce"
+  ]
+ },
+ "santa caterina galatina": {
+  "title": "Santa Caterina d’Alessandria",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La basilica di Galatina famosa per il ciclo di affreschi tardogotici.",
+  "search": "Basilica Santa Caterina d Alessandria Galatina interior frescoes",
+  "aliases": [
+   "santa caterina d alessandria",
+   "basilica santa caterina",
+   "santa caterina galatina"
+  ]
+ },
+ "plaza mayor": {
+  "title": "Plaza Mayor",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Piazza monumentale tipica di diverse città spagnole; il suo aspetto cambia da città a città.",
+  "search": "Plaza Mayor Salamanca Spain",
+  "aliases": [
+   "plaza mayor de españa",
+   "plaza major"
+  ]
+ },
+ "catedral": {
+  "title": "Catedral",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Le cattedrali spagnole raccontano secoli di storia e stili artistici.",
+  "search": "Catedral de Burgos Spain facade",
+  "aliases": [
+   "catedrales",
+   "catedral de la ciudad",
+   "cattedrale spagnola"
+  ]
+ },
+ "castillo": {
+  "title": "Castillo",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "I castelli spagnoli testimoniano le diverse epoche della storia iberica.",
+  "search": "Castillo de Coca Spain",
+  "aliases": [
+   "castillos",
+   "fortaleza",
+   "castello spagnolo"
+  ]
+ },
+ "casco historico": {
+  "title": "Casco histórico",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il centro antico: piazze, strade, palazzi e monumenti della città.",
+  "search": "casco histórico Toledo Spain streets",
+  "aliases": [
+   "casco antiguo",
+   "centro historico",
+   "barrio antiguo",
+   "ciudad vieja"
+  ]
+ },
+ "playa": {
+  "title": "Playa",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Una spiaggia da raccontare e confrontare tra Italia e Spagna.",
+  "search": "Playa de la Concha San Sebastian",
+  "aliases": [
+   "playas",
+   "spiaggia",
+   "spiagge spagnole"
+  ]
+ },
+ "museo": {
+  "title": "Museo",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Uno spazio per conoscere storia, arte e tradizioni della città.",
+  "search": "Museo del Prado Madrid exterior",
+  "aliases": [
+   "museos",
+   "museo de arte"
+  ]
+ },
+ "puerto": {
+  "title": "Puerto",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il porto: luogo di arrivi, partenze e scambi tra culture.",
+  "search": "puerto de Valencia Spain",
+  "aliases": [
+   "porto",
+   "puertos",
+   "porto spagnolo"
+  ]
+ },
+ "mercado": {
+  "title": "Mercado",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Un mercato cittadino: cibo, tradizioni e vita quotidiana.",
+  "search": "Mercado Central Valencia Spain",
+  "aliases": [
+   "mercado central",
+   "mercati",
+   "mercato spagnolo"
+  ]
+ },
+ "ayuntamiento": {
+  "title": "Ayuntamiento",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il municipio, spesso affacciato sulla piazza centrale.",
+  "search": "Ayuntamiento de Valencia Spain",
+  "aliases": [
+   "municipio",
+   "casa consistorial"
+  ]
+ },
+ "murallas": {
+  "title": "Murallas",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Mura storiche che proteggevano le città.",
+  "search": "Murallas de Ávila Spain",
+  "aliases": [
+   "muralla",
+   "mura spagnole"
+  ]
+ },
+ "sagrada familia": {
+  "title": "Sagrada Família",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "La celebre basilica di Antoni Gaudí a Barcellona.",
+  "search": "Sagrada Familia Barcelona basilica",
+  "aliases": [
+   "sagrada família",
+   "sagrada famiglia",
+   "basilica sagrada familia"
+  ]
+ },
+ "alhambra": {
+  "title": "Alhambra",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il complesso palaziale e fortificato di Granada, simbolo dell'arte islamica in Spagna.",
+  "search": "Alhambra Granada palace",
+  "aliases": [
+   "alhambra di granada",
+   "la alhambra"
+  ]
+ },
+ "mezquita cordoba": {
+  "title": "Mezquita-Catedral de Córdoba",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Monumento di Córdoba che conserva tracce della moschea e della cattedrale.",
+  "search": "Mezquita Catedral Cordoba interior arches",
+  "aliases": [
+   "mezquita",
+   "mezquita de cordoba",
+   "cattedrale cordoba"
+  ]
+ },
+ "parque guell": {
+  "title": "Parc Güell",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Il parco progettato da Antoni Gaudí a Barcellona, noto per mosaici e architetture.",
+  "search": "Park Guell Barcelona mosaic",
+  "aliases": [
+   "parc guell",
+   "park guell",
+   "parque güell"
+  ]
+ },
+ "museo del prado": {
+  "title": "Museo del Prado",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Uno dei maggiori musei d'arte della Spagna, a Madrid.",
+  "search": "Museo del Prado Madrid exterior",
+  "aliases": [
+   "prado",
+   "el prado"
+  ]
+ },
+ "real alcazar": {
+  "title": "Real Alcázar de Sevilla",
+  "type": "luoghi",
+  "icon": "🏛️",
+  "kicker": "LUOGHI · ITALIA × ESPAÑA",
+  "desc": "Un complesso di palazzi e giardini storici a Siviglia.",
+  "search": "Real Alcazar Seville gardens",
+  "aliases": [
+   "alcazar",
+   "alcazar de sevilla",
+   "reales alcazares"
+  ]
+ },
+ "taralli": {
+  "title": "Taralli pugliesi",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piccoli snack da forno croccanti, tipici della tradizione pugliese.",
+  "search": "taralli pugliesi food",
+  "aliases": [
+   "tarallo",
+   "tarallini",
+   "tarallini pugliesi"
+  ]
+ },
+ "focaccia": {
+  "title": "Focaccia pugliese",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Soffice focaccia con olio e pomodorini, diffusa in tutta la Puglia.",
+  "search": "focaccia pugliese pomodorini",
+  "aliases": [
+   "focaccia barese",
+   "focaccia con pomodorini"
+  ]
+ },
+ "panzerotto": {
+  "title": "Panzerotto",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Mezzaluna di pasta farcita, spesso fritta e ripiena di pomodoro e mozzarella.",
+  "search": "panzerotto pugliese fried",
+  "aliases": [
+   "panzerotti",
+   "calzone fritto"
+  ]
+ },
+ "sagne ncannulate": {
+  "title": "Sagne ’ncannulate",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Pasta fresca salentina dalla forma attorcigliata, spesso con salsa di pomodoro.",
+  "search": "sagne ncannulate salentine pasta",
+  "aliases": [
+   "sagne 'ncannulate",
+   "sagne incannulate",
+   "sagne ricce",
+   "sagne"
+  ]
+ },
+ "minchiareddhi": {
+  "title": "Minchiareddhi",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Tipica pasta fresca salentina, spesso servita con le orecchiette.",
+  "search": "minchiareddhi salentini pasta",
+  "aliases": [
+   "minchiareddi",
+   "maccheroncini salentini",
+   "maritati"
+  ]
+ },
+ "polpo alla pignata": {
+  "title": "Polpo alla pignata",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Polpo cotto lentamente secondo una ricetta tradizionale salentina.",
+  "search": "polpo alla pignata salentina",
+  "aliases": [
+   "polpo in pignata",
+   "purpu alla pignata"
+  ]
+ },
+ "purceddhruzzi": {
+  "title": "Purceddhruzzi",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolcetti fritti salentini con miele o vincotto, tipici delle feste.",
+  "search": "purceddhruzzi salentini",
+  "aliases": [
+   "purceddhruzzi",
+   "purcedduzzi",
+   "struffoli salentini"
+  ]
+ },
+ "cupeta": {
+  "title": "Cupeta salentina",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Croccante di mandorle e zucchero, venduto spesso nelle feste popolari.",
+  "search": "cupeta salentina croccante mandorle",
+  "aliases": [
+   "copeta",
+   "cupeta di mandorle"
+  ]
+ },
+ "cartellate": {
+  "title": "Cartellate",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolci pugliesi a forma di nastro arrotolato, tradizionalmente natalizi.",
+  "search": "cartellate pugliesi dessert",
+  "aliases": [
+   "carteddhate",
+   "carteddate"
+  ]
+ },
+ "pezzetti di cavallo": {
+  "title": "Pezzetti di cavallo",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Preparazione tradizionale della cucina salentina, servita con sugo di pomodoro.",
+  "search": "pezzetti di cavallo salentini",
+  "aliases": [
+   "pezzetti",
+   "carne di cavallo al sugo"
+  ]
+ },
+ "burrata": {
+  "title": "Burrata",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Formaggio fresco pugliese con involucro di pasta filata e cuore cremoso.",
+  "search": "burrata puglia cheese",
+  "aliases": [
+   "burrata pugliese",
+   "burratine"
+  ]
+ },
+ "caciocavallo": {
+  "title": "Caciocavallo",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Formaggio stagionato a pasta filata diffuso nell'Italia meridionale.",
+  "search": "caciocavallo puglia cheese",
+  "aliases": [
+   "caciocavallo pugliese"
+  ]
+ },
+ "ricotta forte": {
+  "title": "Ricotta forte",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Crema di ricotta fermentata dal sapore intenso, tipica della Puglia.",
+  "search": "ricotta forte puglia",
+  "aliases": [
+   "ricotta scante",
+   "ricotta ascuante"
+  ]
+ },
+ "parmigiana": {
+  "title": "Parmigiana di melanzane",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piatto a strati di melanzane, pomodoro e formaggio, diffuso in Italia meridionale.",
+  "search": "parmigiana di melanzane puglia",
+  "aliases": [
+   "parmigiana di melanzane",
+   "melanzane alla parmigiana"
+  ]
+ },
+ "bocconotti": {
+  "title": "Bocconotti",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piccoli dolci di pasta frolla con ripieno, presenti in diverse tradizioni regionali.",
+  "search": "bocconotti salentini dolci",
+  "aliases": [
+   "bocconotto"
+  ]
+ },
+ "cotognata": {
+  "title": "Cotognata",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolce compatto a base di mele cotogne, presente nella tradizione salentina.",
+  "search": "cotognata leccese",
+  "aliases": [
+   "cotognata leccese"
+  ]
+ },
+ "empanada": {
+  "title": "Empanada",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Preparazione spagnola di pasta ripiena, diffusa soprattutto in Galizia.",
+  "search": "empanada gallega Spanish food",
+  "aliases": [
+   "empanadas",
+   "empanada gallega"
+  ]
+ },
+ "bocadillo": {
+  "title": "Bocadillo",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Panino tipico della cucina quotidiana spagnola.",
+  "search": "bocadillo de jamon Spanish sandwich",
+  "aliases": [
+   "bocadillos",
+   "bocata"
+  ]
+ },
+ "pulpo a la gallega": {
+  "title": "Pulpo a la gallega",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Polpo della tradizione galiziana con olio, paprika e patate.",
+  "search": "pulpo a la gallega",
+  "aliases": [
+   "pulpo",
+   "pulpo a feira",
+   "pulpo á feira"
+  ]
+ },
+ "pimientos de padron": {
+  "title": "Pimientos de Padrón",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piccoli peperoni verdi spagnoli, serviti saltati con sale.",
+  "search": "pimientos de padron tapas",
+  "aliases": [
+   "pimientos del padron",
+   "pimientos",
+   "peperoni padron"
+  ]
+ },
+ "chorizo": {
+  "title": "Chorizo",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Insaccato speziato molto comune in Spagna.",
+  "search": "chorizo español food",
+  "aliases": [
+   "chorizo español"
+  ]
+ },
+ "fabada": {
+  "title": "Fabada asturiana",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Stufato di fagioli tipico delle Asturie.",
+  "search": "fabada asturiana",
+  "aliases": [
+   "fabada asturiana"
+  ]
+ },
+ "salmorejo": {
+  "title": "Salmorejo",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Crema fredda di pomodoro e pane tipica di Córdoba.",
+  "search": "salmorejo cordobes Spanish food",
+  "aliases": [
+   "salmorejo cordobes"
+  ]
+ },
+ "migas": {
+  "title": "Migas",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piatto tradizionale a base di briciole di pane, con diverse varianti regionali.",
+  "search": "migas españolas traditional dish",
+  "aliases": [
+   "migas españolas"
+  ]
+ },
+ "turron": {
+  "title": "Turrón",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolce spagnolo di mandorle e miele o zucchero.",
+  "search": "turron de jijona turron alicante",
+  "aliases": [
+   "turrón",
+   "torrone spagnolo"
+  ]
+ },
+ "crema catalana": {
+  "title": "Crema catalana",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolce alla crema con una crosta di zucchero caramellato.",
+  "search": "crema catalana dessert",
+  "aliases": [
+   "crema cremada"
+  ]
+ },
+ "ensaimada": {
+  "title": "Ensaimada",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Dolce a spirale tradizionale delle Isole Baleari.",
+  "search": "ensaimada mallorquina pastry",
+  "aliases": [
+   "ensaïmada",
+   "ensaimadas"
+  ]
+ },
+ "queso manchego": {
+  "title": "Queso manchego",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Formaggio spagnolo prodotto con latte di pecora manchega.",
+  "search": "queso manchego spanish cheese",
+  "aliases": [
+   "manchego",
+   "formaggio manchego"
+  ]
+ },
+ "pintxos": {
+  "title": "Pintxos",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Piccoli assaggi tipici dei Paesi Baschi, spesso serviti su pane.",
+  "search": "pintxos tapas basque",
+  "aliases": [
+   "pinchos",
+   "pintxo",
+   "pincho"
+  ]
+ },
+ "calamares": {
+  "title": "Calamares",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Calamari fritti, presenti anche nei famosi bocadillos di Madrid.",
+  "search": "calamares fritos Madrid",
+  "aliases": [
+   "calamares fritos",
+   "bocadillo de calamares"
+  ]
+ },
+ "horchata": {
+  "title": "Horchata de chufa",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Bevanda dolce tradizionale valenciana a base di chufa.",
+  "search": "horchata de chufa Valencia",
+  "aliases": [
+   "orxata",
+   "horchata valenciana"
+  ]
+ },
+ "patatas alioli": {
+  "title": "Patatas alioli",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Patate servite con salsa all'aglio e olio, tipiche di molte tapas.",
+  "search": "patatas alioli Spanish tapas",
+  "aliases": [
+   "patatas al alioli",
+   "alioli"
+  ]
+ },
+ "sangria": {
+  "title": "Sangría",
+  "type": "cibo",
+  "icon": "🍽️",
+  "kicker": "SAPORI · ITALIA × ESPAÑA",
+  "desc": "Bevanda spagnola a base di vino, frutta e altri ingredienti.",
+  "search": "sangria española drink",
+  "aliases": [
+   "sangría",
+   "sangria española"
+  ]
+ }
+});
 
 </script><script>
 /* Local QR-code renderer using Kazuhiko Arase's MIT-licensed QRCode library.
@@ -1614,7 +2568,7 @@ module.exports = QRCode;
 
 </script>
 <script>
-const THEMES=[{title:'Da vedere 👀',sub:'I luoghi che meritano un viaggio.',it:'Quali 3 luoghi di Lecce devono assolutamente visitare gli studenti spagnoli?',es:'¿Qué 3 lugares de vuestra ciudad deben visitar los estudiantes italianos?'},{title:'Da assaggiare 🍴',sub:'Un viaggio attraverso i sapori.',it:'Quali 3 specialità di Lecce o del Salento devono assaggiare gli ospiti?',es:'¿Qué 3 comidas típicas de España deben probar los estudiantes italianos?'},{title:'La scuola 🎒',sub:'Due scuole, due prospettive.',it:'Quali 3 aspetti della tua scuola mostreresti agli studenti spagnoli?',es:'¿Cuáles son las 3 diferencias más evidentes entre vuestra escuela española y esta escuela italiana?'}];
+const THEMES=[{title:'Da vedere',sub:'I luoghi che meritano un viaggio.',it:'Quali 3 luoghi di Lecce devono assolutamente visitare gli studenti spagnoli?',es:'¿Qué 3 lugares de vuestra ciudad deben visitar los estudiantes italianos?'},{title:'Da assaggiare',sub:'Un viaggio attraverso i sapori.',it:'Quali 3 specialità di Lecce o del Salento devono assaggiare gli ospiti?',es:'¿Qué 3 comidas típicas de España deben probar los estudiantes italianos?'},{title:'La scuola',sub:'Due scuole, due prospettive.',it:'Quali 3 aspetti della tua scuola mostreresti agli studenti spagnoli?',es:'¿Cuáles son las 3 diferencias más evidentes entre vuestra escuela española y esta escuela italiana?'}];
 const ASSET_DB=window.PUENTE_CATALOG||{};
 const assetKeys=Object.keys(ASSET_DB);
 const assetImageCache=new Map();
@@ -1671,6 +2625,7 @@ function render(){
  if(!room)return;const {n,displayN,theme:t,entries,it:a,es:b}=getRoundData();
  // LIM
  $('teacherRound').textContent=n>3?'INCONTRO COMPLETATO':'MANCHE '+n+' / 3';$('teacherTitle').textContent=n>3?'Il nostro ponte è completo 🎉':t.title;$('teacherSubtitle').textContent=n>3?'Queste sono le parole dell’ultima manche.':t.sub;
+ const animeArt=['./anime-see.svg','./anime-food.svg','./anime-school.svg'][displayN-1];$('teacherAnime').src=animeArt;document.querySelectorAll('.anime-team').forEach(img=>{if(img.getAttribute('src')!==animeArt)img.setAttribute('src',animeArt)});
  $('itQuestion').textContent=t.it;$('esQuestion').textContent=t.es;$('teacherState').textContent=n>3?'FINITO':session.meta.open?'APERTO':'CHIUSO';$('liveDot').classList.toggle('live',cloud);$('liveText').textContent=cloud?'LIVE':'DEMO';$('roomCode').textContent=room;
  $('teacherCount').textContent=entries.length+' studenti hanno risposto';$('itCount').textContent=a.length+' partecipanti';$('esCount').textContent=b.length+' participantes';renderWords('itWords',a);renderWords('esWords',b);
  $('joinUrl').textContent=joinLink();try{$('qr').src=window.PUENTE_QR(joinLink())}catch(e){console.warn('QR non disponibile',e);$('qr').alt='Utilizza il link o il codice stanza'}$('cloudState').textContent=cloud?'Risposte sincronizzate':'Solo demo locale';
@@ -1707,13 +2662,13 @@ function getWords(people){
 }
 function renderControlWords(id,people,team){
  const holder=$(id);holder.replaceChildren();const words=getWords(people);if(!words.length){holder.textContent='In attesa delle risposte…';return}
- words.forEach(w=>{const btn=document.createElement('button');btn.className='control-word';btn.textContent=w.text;if(w.count>1){const cnt=document.createElement('strong');cnt.textContent='×'+w.count;btn.append(cnt)}btn.title='Mostra '+w.text+' sulla LIM';btn.addEventListener('click',()=>spotlightWord(w.key,team));holder.append(btn)})
+ words.forEach(w=>{const btn=document.createElement('button');btn.className='control-word';btn.textContent=w.text;if(w.count>1){const cnt=document.createElement('strong');cnt.textContent='×'+w.count;btn.append(cnt)}btn.title=Number(session.meta.round)<=2?'Mostra '+w.text+' sulla LIM':'Parola della classe';if(Number(session.meta.round)<=2)btn.addEventListener('click',()=>spotlightWord(w.key,team));else btn.classList.add('no-photo');holder.append(btn)})
 }
 function syncFeatured(){
  const f=session.meta.featured;const sig=f?String(f.id||f.key):'';if(sig===lastFeaturedSig)return;lastFeaturedSig=sig;
- if(f?.key)openAsset(f.key);else if($('assetModal').classList.contains('open'))closeAsset();
+ if(f?.key&&Number(session.meta.round)<=2)openAsset(f.key);else if($('assetModal').classList.contains('open'))closeAsset();
 }
-function spotlightWord(key,team){if(!isTeacher)return;updateMeta({featured:{key,team,id:String(Date.now())+'-'+Math.random().toString(36).slice(2,5)}})}
+function spotlightWord(key,team){if(!isTeacher||Number(session.meta.round)>2)return;updateMeta({featured:{key,team,id:String(Date.now())+'-'+Math.random().toString(36).slice(2,5)}})}
 function hideSpotlight(){if(isTeacher)updateMeta({featured:null})}
 function renderWords(id,people){
  const words=getWords(people),holder=$(id);holder.replaceChildren();holder.classList.toggle('dense',words.length>16);holder.classList.toggle('ultra-dense',words.length>30);
@@ -1721,8 +2676,8 @@ function renderWords(id,people){
  const maxCount=Math.max(...words.map(w=>w.count)),cap=words.length>34?32:words.length>25?38:60;
  words.slice(0,cap).forEach((w,i)=>{
   const btn=document.createElement('button');btn.className='word tone-'+((i*3+Math.floor(i/6))%6);btn.type='button';const raw=1.08+Math.log2(w.count)*.43+(maxCount>1?.14*w.count/maxCount:0);btn.style.setProperty('--word-size',Math.min(3.1,raw).toFixed(2)+'rem');btn.style.animationDelay=Math.min(i*.018,.45)+'s';btn.textContent=w.text;
-  if(w.count>1){const count=document.createElement('strong');count.textContent='×'+w.count;btn.append(count)}if(w.recognized){const camera=document.createElement('span');camera.className='word-camera';camera.textContent='↗';btn.append(camera)}
-  btn.title='Apri scheda visiva: '+w.text;btn.addEventListener('click',()=>{if(isScreen){openAsset(w.key)}else if(isTeacher){spotlightWord(w.key,id==='itWords'?'it':'es')}else openAsset(w.key)});holder.append(btn)
+  if(w.count>1){const count=document.createElement('strong');count.textContent='×'+w.count;btn.append(count)}const withPhotos=Number(session.meta.round)<=2;if(withPhotos&&w.recognized){const camera=document.createElement('span');camera.className='word-camera';camera.textContent='↗';btn.append(camera)}
+  if(withPhotos){btn.title='Apri scheda visiva: '+w.text;btn.addEventListener('click',()=>{if(isScreen){openAsset(w.key)}else if(isTeacher){spotlightWord(w.key,id==='itWords'?'it':'es')}else openAsset(w.key)})}else{btn.title='Parola della classe';btn.classList.add('no-photo')}holder.append(btn)
  });
  if(words.length>cap){const extra=document.createElement('span');extra.className='note';extra.textContent='+'+(words.length-cap)+' altre parole';holder.append(extra)}
 }
