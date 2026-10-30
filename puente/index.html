@@ -2778,6 +2778,92 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('assetModal').cla
 async function submitAnswers(){let items=[1,2,3].map(k=>clean($('answer'+k).value));if(items.some(x=>!x)){$('answerError').textContent='Inserisci tutte e tre le risposte.';return}if(!session.meta.open||Number(session.meta.round)>3)return;let n=session.meta.round;let uid=user?.uid||'demo-'+role;let value={team:role,items,updated:Date.now()};try{if(cloud)await db.ref('sessions/'+room+'/answers/'+n+'/'+uid).set(value);else{session.answers[n] ||= {};session.answers[n][uid]=value;saveLocal()}$('answerError').textContent='';render()}catch(e){$('answerError').textContent='Invio non riuscito: '+e.message}}
 function editAnswers(){$('studentForm').classList.remove('invisible');$('studentDone').classList.add('invisible')}
 async function updateMeta(changes){if(!isTeacher)return;let m={...session.meta,...changes};try{if(cloud)await db.ref('sessions/'+room+'/meta').set(m);else{session.meta=m;saveLocal()}}catch(e){alert('Operazione non riuscita: '+e.message)}}
+
+/* Chiedilo a loro / Preguntas sin fronteras: moderazione esclusiva del docente. */
+function questionBoxPath(){return 'questionBoxes/'+room}
+function ownQuestionUid(){return user?.uid||'demo-'+role}
+function questionItems(){
+ const items=[];Object.entries(questionData||{}).forEach(([uid,box])=>{
+  if(!box||!['it','es'].includes(box.team))return;
+  [1,2,3].forEach(i=>{const value=clean(box['q'+i]||'').slice(0,200);if(value)items.push({id:uid+'-'+i,team:box.team,text:value})});
+ });return items;
+}
+function privateQuestionSet(name){try{return new Set(JSON.parse(localStorage.getItem('puente-'+name+'-'+room)||'[]'))}catch{return new Set()}}
+function markPrivateQuestion(name,id){const values=privateQuestionSet(name);values.add(id);try{localStorage.setItem('puente-'+name+'-'+room,JSON.stringify([...values]))}catch(e){}}
+function renderQuestionTeacher(){
+ if(!isTeacher||!room||session.meta.phase!=='questions')return;
+ const all=questionItems(),discard=privateQuestionSet('dismissed'),seen=privateQuestionSet('asked');
+ $('questionAdminCount').textContent=all.length+' domande ricevute · '+all.filter(q=>!discard.has(q.id)).length+' disponibili';
+ $('questionToggle').textContent=session.meta.open?'Chiudi raccolta':'Riapri raccolta';
+ for(const team of ['it','es']){
+  const id=team==='it'?'It':'Es',list=$('questionList'+id);list.replaceChildren();
+  const available=all.filter(q=>q.team===team&&!discard.has(q.id));
+  $('question'+id+'Count').textContent='('+available.length+')';
+  if(!available.length){const p=document.createElement('p');p.className='note';p.textContent='Nessuna domanda ricevuta.';list.append(p);continue}
+  available.forEach(q=>{
+   const box=document.createElement('article');box.className='question-entry'+(seen.has(q.id)?' used':'');
+   const p=document.createElement('p');p.textContent=q.text;box.append(p);
+   if(seen.has(q.id)){const label=document.createElement('span');label.className='mini';label.textContent='Già mostrata';box.append(label)}
+   const actions=document.createElement('div');actions.className='question-entry-actions';
+   const button=document.createElement('button');button.type='button';button.className='btn primary';button.textContent='Mostra sulla LIM';button.onclick=()=>showStageQuestion(q);
+   const dismiss=document.createElement('button');dismiss.type='button';dismiss.className='btn white';dismiss.textContent='Scarta';dismiss.onclick=()=>{markPrivateQuestion('dismissed',q.id);renderQuestionTeacher()};
+   actions.append(button,dismiss);box.append(actions);list.append(box);
+  });
+ }
+}
+function renderQuestionScreen(){
+ const current=session.meta.questionSpotlight,active=!!(current?.text&&current?.team);
+ $('questionStageCard').className='question-stage-card'+(active?' '+current.team:'');
+ $('questionStageTarget').textContent=active?(current.team==='it'?'🇮🇹 L’ITALIA CHIEDE · RISPONDE ESPAÑA':'🇪🇸 ESPAÑA PREGUNTA · RISPONDE ITALIA'):'DOMANDA A SORPRESA';
+ $('questionStageText').textContent=active?current.text:'Quale curiosità scopriremo insieme?';
+ $('questionStageHint').textContent=active?'La parola agli studenti: rispondete a voce.':'Aspettiamo che il docente selezioni la prima domanda.';
+ try{$('questionQr').src=window.PUENTE_QR(joinLink())}catch(e){console.warn('QR domande non disponibile',e)}
+}
+async function loadOwnCuriosities(){
+ if(!room||!role||isTeacher||isScreen)return;
+ if(cloud){try{const snapshot=await db.ref(questionBoxPath()+'/'+ownQuestionUid()).get();myQuestion=snapshot.val()||null;render()}catch(e){console.warn('Recupero delle proprie domande non riuscito',e)}}
+ else{myQuestion=(session.questions||{})[ownQuestionUid()]||null;render()}
+}
+function renderQuestionStudent(){
+ if(!room||!role||session.meta.phase!=='questions')return;
+ $('studentQuestionTitle').textContent=role==='it'?'Che cosa vuoi chiedere agli spagnoli?':'¿Qué quieres preguntar a los italianos?';
+ $('studentQuestionIntro').textContent=role==='it'?'Scrivi fino a 3 curiosità sulla Spagna o sulla scuola spagnola. Solo il docente le vedrà prima di selezionarle.':'Escribe hasta 3 preguntas sobre Italia o la escuela italiana. Solo el docente podrá verlas antes de elegirlas.';
+ const locked=!session.meta.open,done=!!myQuestion&&!editingCuriosities;
+ $('studentQuestionForm').hidden=locked||done;
+ $('studentQuestionDone').hidden=locked||!done;
+ $('studentQuestionWait').hidden=!locked;
+ if(myQuestion&&!editingCuriosities){[1,2,3].forEach(i=>{const el=$('curiosity'+i);if(document.activeElement!==el)el.value=myQuestion['q'+i]||''})}
+}
+async function submitCuriosities(){
+ if(!role||isTeacher||isScreen||session.meta.phase!=='questions')return;
+ if(!session.meta.open){$('studentQuestionError').textContent='La raccolta è chiusa.';return}
+ const answers=[1,2,3].map(i=>clean($('curiosity'+i).value).slice(0,200));
+ if(answers[0].length<5){$('studentQuestionError').textContent='Inserisci almeno una domanda di 5 caratteri.';return}
+ const payload={team:role,q1:answers[0],q2:answers[1],q3:answers[2]};
+ try{
+  if(cloud)await db.ref(questionBoxPath()+'/'+ownQuestionUid()).set(payload);
+  else{session.questions||={};session.questions[ownQuestionUid()]=payload;questionData=session.questions;saveLocal()}
+  myQuestion=payload;editingCuriosities=false;$('studentQuestionError').textContent='';render();
+ }catch(e){$('studentQuestionError').textContent='Invio non riuscito: '+e.message}
+}
+function editCuriosities(){editingCuriosities=true;[1,2,3].forEach(i=>{$('curiosity'+i).value=myQuestion?.['q'+i]||''});renderQuestionStudent()}
+async function showStageQuestion(q){
+ if(!isTeacher||session.meta.phase!=='questions'||!q)return;
+ markPrivateQuestion('asked',q.id);surprisePreview=null;$('questionPreview').hidden=true;
+ await updateMeta({questionSpotlight:{id:q.id,team:q.team,text:q.text}});renderQuestionTeacher();
+}
+function hideStageQuestion(){if(isTeacher&&session.meta.phase==='questions')updateMeta({questionSpotlight:null})}
+function surpriseQuestion(){
+ if(!isTeacher||session.meta.phase!=='questions')return;
+ const seen=privateQuestionSet('asked'),discard=privateQuestionSet('dismissed');
+ const choices=questionItems().filter(q=>!seen.has(q.id)&&!discard.has(q.id));
+ if(!choices.length){alert('Nessuna domanda nuova disponibile. Puoi riproporre una domanda dalla lista.');return}
+ surprisePreview=choices[Math.floor(Math.random()*choices.length)];
+ $('questionPreviewText').textContent=surprisePreview.text;$('questionPreview').hidden=false;
+}
+function cancelSurpriseQuestion(){surprisePreview=null;$('questionPreview').hidden=true}
+function confirmSurpriseQuestion(){if(surprisePreview)showStageQuestion(surprisePreview)}
+
 function nextRound(){if(session.meta.phase==='questions'||Number(session.meta.round)>3)return;const n=Number(session.meta.round);if(n===3){updateMeta({round:'4',phase:'questions',open:true,featured:null,questionSpotlight:null});return}updateMeta({round:String(n+1),open:true,featured:null})}
 function toggleStatus(){updateMeta({open:!session.meta.open})}
 function copyJoin(){copyText(joinLink())}
