@@ -154,35 +154,44 @@
       setTimeout(()=>alert('Il link dell’itinerario non è valido oppure è stato tagliato durante la condivisione.'),50);
       return;
     }
-
     const id=sessionStorage.getItem(OPEN_KEY);
     if(!id){document.documentElement.classList.remove('iaSharedCoverPending');return;}
-
     const openAsPresentation=sessionStorage.getItem(PRESENT_KEY)==='1';
-
-    try{
+    let attempts=0;
+    const openWhenReady=()=>{
       const projects=JSON.parse(localStorage.getItem(STORE)||'[]');
       const index=Array.isArray(projects)?projects.findIndex(p=>p?.id===id):-1;
       const cards=document.querySelectorAll('.projectCard');
       const openBtn=index>=0?cards[index]?.querySelector('[data-o]'):null;
-      if(!openBtn)document.documentElement.classList.remove('iaSharedCoverPending');
-      if(openBtn){
+      if(!openBtn){
+        if(++attempts<80){setTimeout(openWhenReady,100);return;}
+        document.documentElement.classList.remove('iaSharedCoverPending');
         sessionStorage.removeItem(OPEN_KEY);
         sessionStorage.removeItem(PRESENT_KEY);
-        openBtn.click();
-        if(openAsPresentation){
-          const presentBtn=document.getElementById('presentBtn');
-          if(presentBtn&&!document.body.classList.contains('presentation'))presentBtn.click();
-          window.__IA_SHOW_COVER?.();
-        }else{
-          setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
-        }
+        alert('Presentazione salvata, ma apertura automatica non riuscita. Seleziona l’itinerario dall’elenco.');
+        return;
       }
-    }catch{
-      document.documentElement.classList.remove('iaSharedCoverPending');
+      openBtn.click();
       sessionStorage.removeItem(OPEN_KEY);
       sessionStorage.removeItem(PRESENT_KEY);
-    }
+      if(openAsPresentation){
+        let checks=0;
+        const presentWhenReady=()=>{
+          const presentBtn=document.getElementById('presentBtn');
+          if(presentBtn){
+            if(!document.body.classList.contains('presentation'))presentBtn.click();
+            window.__IA_SHOW_COVER?.();
+            document.documentElement.classList.remove('iaSharedCoverPending');
+          }else if(++checks<40)setTimeout(presentWhenReady,100);
+          else document.documentElement.classList.remove('iaSharedCoverPending');
+        };
+        setTimeout(presentWhenReady,100);
+      }else{
+        document.documentElement.classList.remove('iaSharedCoverPending');
+        setTimeout(()=>alert('Itinerario condiviso aperto. È stata salvata anche una copia su questo dispositivo.'),250);
+      }
+    };
+    openWhenReady();
   }
 
   const viewerStyle=document.createElement('style');
