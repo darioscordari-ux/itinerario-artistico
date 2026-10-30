@@ -1598,7 +1598,22 @@ function render(){
  if(role&&!isTeacher&&!isScreen){$('studentRound').textContent=n>3?'CONCLUSO':'MANCHE '+n+' / 3';$('studentTeam').textContent=role==='it'?'🇮🇹 Italia':'🇪🇸 España';$('studentTitle').textContent=n>3?'Grazie!':t.title;$('studentPrompt').textContent=role==='it'?t.it:t.es;const mine=entries.find(x=>x.uid===(user?.uid||'demo-'+role));const locked=n>3||!session.meta.open;$('studentWaiting').classList.toggle('invisible',!locked);$('studentForm').classList.toggle('invisible',locked||!!mine);$('studentDone').classList.toggle('invisible',locked||!mine);if(mine){[1,2,3].forEach(k=>{const el=$('answer'+k);if(document.activeElement!==el)el.value=mine.items[k-1]||''})}}
 }
 function getWords(people){
- const totals=new Map();people.forEach(p=>(p.items||[]).forEach(w=>{w=clean(w).slice(0,75);if(!w)return;const recognized=getCatalogKey(w);const key=recognized||normalizeKey(w);const old=totals.get(key);if(old)old.count++;else totals.set(key,{text:recognized?ASSET_DB[recognized].title:w,key,count:1,recognized})}));
+ // Ogni studente contribuisce al massimo una volta al conteggio di ciascuna parola.
+ const totals=new Map();
+ people.forEach(p=>{
+  const mentioned=new Set();
+  (p.items||[]).forEach(raw=>{
+   const w=clean(raw).slice(0,75);
+   if(!w)return;
+   const recognized=getCatalogKey(w);
+   const key=recognized||normalizeKey(w);
+   if(!key||mentioned.has(key))return;
+   mentioned.add(key);
+   const existing=totals.get(key);
+   if(existing)existing.count++;
+   else totals.set(key,{text:recognized?ASSET_DB[recognized].title:w,key,count:1,recognized});
+  });
+ });
  return [...totals.values()].sort((a,b)=>b.count-a.count||a.text.localeCompare(b.text));
 }
 function renderControlWords(id,people,team){
