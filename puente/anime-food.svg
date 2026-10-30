@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Illustrazione originale stile anime">
+<defs><linearGradient id="bg" x2="0.9" y2="1"><stop stop-color="#ffd4b3"/><stop offset="1" stop-color="#fff3d9"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-opacity=".12"/></filter></defs>
+<rect x="2" y="2" width="156" height="156" rx="35" fill="url(#bg)"/>
+<circle cx="116" cy="37" r="25" fill="#efb943" opacity=".4"/>
+<path d="M8 38l9 4m-5-17l5 6M145 66l9-5m-8-8l-8-2" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+<path d="M14 63q7-16 14 0t14 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M10 77q20 15 39 0" fill="#ffcf75" stroke="#bf6048" stroke-width="3"/><path d="M14 71h31" stroke="#c95e49" stroke-width="4"/>
+<g filter="url(#s)">
+<path d="M45 162q-3-43 35-48 42-2 48 48" fill="#f47451" stroke="#30435d" stroke-width="3"/>
+<path d="M69 112v16q11 10 23-1v-17" fill="#f4b492" stroke="#a65b5d" stroke-width="2"/>
+<path d="M40 68q-9-48 34-54 45-7 49 46 7 47-26 59-51 12-57-51Z" fill="#352c49"/>
+<ellipse cx="81" cy="74" rx="36" ry="44" fill="#ffd2a5" stroke="#b87e79" stroke-width="2.3"/>
+<path d="M44 69Q33 16 80 19q40-2 44 38-12-11-18-22-7 20-21 20 0-8-5-13-16 22-36 27Z" fill="#352c49"/>
+<path d="M44 59q4-22 27-31m28-1q17 3 22 23" stroke="#9d7067" stroke-width="3" opacity=".42" fill="none"/>
+<ellipse cx="64" cy="77" rx="11" ry="14" fill="#fff"/><ellipse cx="99" cy="77" rx="11" ry="14" fill="#fff"/>
+<ellipse cx="67" cy="79" rx="6" ry="10" fill="#303a5e"/><ellipse cx="101" cy="79" rx="6" ry="10" fill="#303a5e"/>
+<circle cx="69" cy="75" r="3" fill="#fff"/><circle cx="103" cy="75" r="3" fill="#fff"/>
+<path d="M53 60q10-8 21-2m17 0q11-6 18 2" stroke="#352c49" fill="none" stroke-width="4" stroke-linecap="round"/>
+<ellipse cx="52" cy="96" rx="8" ry="4" fill="#f5a2a0" opacity=".65"/><ellipse cx="112" cy="96" rx="8" ry="4" fill="#f5a2a0" opacity=".65"/>
+<path d="M74 102q9 15 21-1" fill="#9d4962" stroke="#943e56" stroke-width="2" stroke-linecap="round"/>
+<path d="M74 103q10 4 20 0" stroke="#fff" stroke-width="2.7" fill="none"/>
+<path d="M54 134q25 20 53-2" stroke="#fff" stroke-width="3" fill="none" opacity=".6"/>
+</g><g><path d="M100 122q20 33 44 0Z" fill="#ffe6b1" stroke="#ba6649" stroke-width="4"/><path d="M104 122q17-7 35 0" fill="none" stroke="#a94b39" stroke-width="4"/><path d="M115 107q-6-6 0-13m11 13q-5-5 0-13" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></g></svg>
