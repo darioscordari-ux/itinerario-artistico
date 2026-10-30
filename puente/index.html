@@ -25,8 +25,13 @@
 .word:hover,.word:focus-visible{transform:translateY(-3px) rotate(0deg)!important;box-shadow:0 12px 20px rgba(30,32,58,.15);outline:2px solid #9e90eb;outline-offset:2px}
 .word strong{font-size:.54em;letter-spacing:0;opacity:.85;background:rgba(255,255,255,.56);border-radius:50px;padding:.28em .38em;margin-left:.15em}
 .word-camera{opacity:.65;font-size:.49em}.words{display:flex;align-content:center;align-items:center;justify-content:center;gap:clamp(5px,.7vw,12px);min-height:270px;flex-wrap:wrap;padding:7px 0;overflow-y:auto;scrollbar-width:thin}
-.italia .word.tone-0{background:#d1f8e9;color:#075c50}.italia .word.tone-1{background:#d8f2ff;color:#165682}.italia .word.tone-2{background:#dfe9ff;color:#3455a1}.italia .word.tone-3{background:#d8f8f6;color:#087e82}.italia .word.tone-4{background:#e2e7fd;color:#47509a}.italia .word.tone-5{background:#f0e4ff;color:#69469f}
-.spagna .word.tone-0{background:#ffe4d5;color:#a84423}.spagna .word.tone-1{background:#fff0b6;color:#91630a}.spagna .word.tone-2{background:#ffe1e7;color:#aa3456}.spagna .word.tone-3{background:#ffdccc;color:#ad5630}.spagna .word.tone-4{background:#fbe1fd;color:#914887}.spagna .word.tone-5{background:#ffebce;color:#a36b20}
+/* Pastello acceso: tinte più sature ma testo scuro ad alto contrasto sulla LIM */
+.italia .word.tone-0{background:#b9f0dd;color:#075b4a}.italia .word.tone-1{background:#bfe8ff;color:#15527b}.italia .word.tone-2{background:#cddcff;color:#234d9c}.italia .word.tone-3{background:#b2eee9;color:#096764}.italia .word.tone-4{background:#c9d4ff;color:#394787}.italia .word.tone-5{background:#e0ceff;color:#59317f}
+.spagna .word.tone-0{background:#ffcbb4;color:#8d3519}.spagna .word.tone-1{background:#ffe6a0;color:#70470a}.spagna .word.tone-2{background:#ffc8d9;color:#922e4f}.spagna .word.tone-3{background:#ffccb2;color:#8a3b1d}.spagna .word.tone-4{background:#eecaff;color:#713780}.spagna .word.tone-5{background:#ffdbab;color:#855019}
+.word.tone-0,.word.tone-1,.word.tone-2,.word.tone-3,.word.tone-4,.word.tone-5{border-color:rgba(16,23,43,.08);box-shadow:0 6px 16px rgba(16,23,43,.11)}
+body.screen-layout .question-card.italia{background:linear-gradient(180deg,#e8fff6 0%,#fff 26%);border:1px solid #8fddc5;border-top:7px solid #08a38b}
+body.screen-layout .question-card.spagna{background:linear-gradient(180deg,#fff1e6 0%,#fff 26%);border:1px solid #f6bea1;border-top:7px solid #ff7a50}
+body.screen-layout .question-card .team-title{font-size:clamp(1rem,1.35vw,1.24rem)}
 @keyframes word-arrive{from{opacity:0;transform:translateY(16px) scale(.74)}to{opacity:1;transform:translateY(0) scale(1)}}
 .words.dense .word{font-size:calc(var(--word-size,1rem)*.78)!important;padding:.23em .34em}.words.ultra-dense .word{font-size:calc(var(--word-size,1rem)*.64)!important;padding:.18em .25em}
 /* Proiezione: la LIM non mostra comandi di regia e usa tutto lo spazio utile */
