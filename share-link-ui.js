@@ -131,6 +131,8 @@
   function prepareButton(){
     const exportBtn=document.getElementById('exportBtn');
     if(!exportBtn||document.getElementById('shareLinkBtn'))return;
+    // Keep editable sharing available internally, but do not add a confusing third button.
+    return;
 
     const btn=document.createElement('button');
     btn.id='shareLinkBtn';
