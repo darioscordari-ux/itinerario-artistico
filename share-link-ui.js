@@ -49,8 +49,36 @@
     return base+marker+btoa(binary).split('+').join('-').split('/').join('_').replace(/=+$/,'');
   }
 
+  // Make shared presentations independent from external image hosts whenever CORS permits.
+  async function snapshotImages(project){
+    const urls=new Set();
+    function collect(src){if(typeof src==='string'&&/^https:\/\//i.test(src))urls.add(src);}
+    collect(project.coverImage);
+    for(const stop of project.stops||[])collect(stop.image);
+    for(const extra of Object.values(project._slideExtras||{}))for(const src of extra?.images||[])collect(src);
+    const replacements=new Map(),failed=[];
+    for(const url of urls){
+      try{
+        const response=await fetch(url,{mode:'cors',cache:'no-store'});
+        if(!response.ok)throw Error('HTTP '+response.status);
+        const blob=await response.blob();
+        if(!blob.type.startsWith('image/'))throw Error('Non è una fotografia');
+        if(blob.size>2500000)throw Error('Immagine oltre 2,5 MB');
+        const encoded=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('Lettura fallita'));reader.readAsDataURL(blob);});
+        replacements.set(url,encoded);
+      }catch(error){failed.push(url);console.warn('Immagine esterna non archiviabile',url,error);}
+    }
+    const replace=src=>replacements.get(src)||src;
+    project.coverImage=replace(project.coverImage);
+    for(const stop of project.stops||[])stop.image=replace(stop.image);
+    for(const extra of Object.values(project._slideExtras||{}))if(Array.isArray(extra?.images))extra.images=extra.images.map(replace);
+    return failed;
+  }
+
   async function makeLink(project,mode='work'){
     const prepared=shareableProject(project);
+    const failed=await snapshotImages(prepared.project);
+    if(failed.length)throw Error('Non posso garantire il salvataggio di '+failed.length+' fotografie esterne: il sito di origine ne impedisce il recupero. Scarica queste foto sul dispositivo e ricaricale nell’itinerario, poi riprova a condividere.');
     const data={version:2,mode:mode==='presentation'?'presentation':'work',project:prepared.project};
     const base=location.origin+location.pathname;
     // Store the complete project, including locally uploaded images, on Supabase.
