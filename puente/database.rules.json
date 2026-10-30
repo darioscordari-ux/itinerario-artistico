@@ -32,7 +32,7 @@
         "$uid": {
           ".read": "auth != null && auth.uid == $uid",
           ".write": "auth != null && auth.uid == $uid && root.child('sessions').child($room).child('meta').child('phase').val() == 'questions' && root.child('sessions').child($room).child('meta').child('open').val() == true && (!data.exists() || newData.child('team').val() == data.child('team').val())",
-          ".validate": "newData.hasChildren(['team','q1','q2','q3']) && newData.childrenCount == 4 && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('q1').isString() && newData.child('q1').val().length >= 5 && newData.child('q1').val().length <= 200 && newData.child('q2').isString() && newData.child('q2').val().length <= 200 && newData.child('q3').isString() && newData.child('q3').val().length <= 200",
+          ".validate": "newData.hasChildren(['team','q1','q2','q3']) && (newData.child('team').val() == 'it' || newData.child('team').val() == 'es') && newData.child('q1').isString() && newData.child('q1').val().length >= 5 && newData.child('q1').val().length <= 200 && newData.child('q2').isString() && newData.child('q2').val().length <= 200 && newData.child('q3').isString() && newData.child('q3').val().length <= 200",
           "team": {
             ".validate": "newData.isString() && (newData.val() == 'it' || newData.val() == 'es')"
           },
