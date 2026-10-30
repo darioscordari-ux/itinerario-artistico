@@ -28,26 +28,10 @@
   }
 
   function shareableProject(project){
-    let removedLocalImages=0;
     const clone=JSON.parse(JSON.stringify(project));
-    clone.stops=(clone.stops||[]).map(stop=>{
-      const next={...stop};
-      if(typeof next.image==='string' && next.image.startsWith('data:')){
-        next.image='';
-        next.credit='';
-        next.source='';
-        removedLocalImages++;
-      }
-      return next;
-    });
     try{const extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}');clone._slideExtras=JSON.parse(JSON.stringify(extras[project.id]||clone._slideExtras||{}));}catch{}
-    Object.values(clone._slideExtras||{}).forEach(extra=>{if(Array.isArray(extra.images))extra.images=extra.images.filter(src=>{if(typeof src==='string'&&src.startsWith('data:')){removedLocalImages++;return false;}return true;});});
-    if(typeof clone.coverImage==='string'&&clone.coverImage.startsWith('data:')){clone.coverImage='';removedLocalImages++;}
-    delete clone.id;
-    delete clone.created;
-    delete clone.updated;
-    delete clone.sharedCopy;
-    return {project:clone,removedLocalImages};
+    delete clone.id;delete clone.created;delete clone.updated;delete clone.sharedCopy;
+    return {project:clone,removedLocalImages:0};
   }
 
   async function localLink(data,base){
@@ -69,31 +53,19 @@
     const prepared=shareableProject(project);
     const data={version:2,mode:mode==='presentation'?'presentation':'work',project:prepared.project};
     const base=location.origin+location.pathname;
-    // Store the presentation online: WhatsApp gets only a short document ID.
-    const services=['https://jsonblob.com/api/jsonBlob','https://superjsonblob.com/api/jsonBlob'];
-    for(const endpoint of services){
-      try{
-        const response=await fetch(endpoint,{
-          method:'POST',
-          headers:{'Content-Type':'application/json','Accept':'application/json'},
-          body:JSON.stringify(data)
-        });
-        if(!response.ok)throw Error('HTTP '+response.status);
-        const raw=response.headers.get('Location')||response.headers.get('x-jsonblob')||'';
-        let id=raw.split('/').filter(Boolean).pop()||'';
-        if(!/^[a-zA-Z0-9-]{12,80}$/.test(id))throw Error('Identificativo non valido');
-        // Check that the saved content is really retrievable before sharing.
-        const verify=await fetch(endpoint+'/'+encodeURIComponent(id),{cache:'no-store'});
-        if(!verify.ok)throw Error('Lettura di verifica fallita: '+verify.status);
-        const stored=await verify.json();
-        if(!stored?.project||!Array.isArray(stored.project.stops)||stored.mode!==data.mode)throw Error('Dati salvati non validi');
-        const provider=endpoint.includes('superjsonblob')?'sj':'jb';
-        return {url:base+'?s='+provider+'.'+encodeURIComponent(id),removedLocalImages:prepared.removedLocalImages,short:true};
-      }catch(error){console.warn('Servizio condivisione non disponibile: '+endpoint,error);}
-    }
-    // Last resort only: an offline, possibly long link rather than a broken URL.
-    const url=await localLink(data,base);
-    return {url,removedLocalImages:prepared.removedLocalImages,short:false};
+    // Store the complete project, including locally uploaded images, on Supabase.
+    const endpoint='https://xcnsipeozpexqsephmsu.supabase.co/rest/v1/shared_itineraries';
+    const key='sb_publishable_d2KJWQld78oSUy3mtdYiNA_NdbaMvQT';
+    const body=JSON.stringify({payload:data});
+    if(new TextEncoder().encode(body).length>8000000)throw Error('Il progetto supera 8 MB. Riduci la dimensione delle fotografie prima di condividere il link. Il file scaricabile rimane completo.');
+    const response=await fetch(endpoint,{
+      method:'POST',headers:{'apikey':key,'Content-Type':'application/json','Prefer':'return=representation'},body
+    });
+    if(!response.ok)throw Error('Non è stato possibile salvare la presentazione online ('+response.status+'). Riprova più tardi.');
+    const rows=await response.json();
+    const id=rows?.[0]?.id;
+    if(!/^[a-f0-9-]{36}$/.test(id||''))throw Error('Salvataggio non verificato: link non creato.');
+    return {url:base+'?s=sb.'+id,removedLocalImages:0,short:true};
   }
 
   async function copyLink(url,message){
@@ -118,7 +90,7 @@
     const field=document.createElement('textarea');field.readOnly=true;field.value=url;field.setAttribute('aria-label','Link da condividere');field.style.cssText='width:100%;height:90px;word-break:break-all';
     const status=document.createElement('p');status.setAttribute('role','status');
     if(removedLocalImages)status.textContent=removedLocalImages+' immagini locali non incluse nel link. Le immagini online sono incluse.';
-    if(!short)status.textContent+=' Servizio link brevi non disponibile: è stato creato un link alternativo. Se l’app di messaggistica lo tronca, usa il file JSON.';
+
     const foot=document.createElement('div');foot.className='modalFoot';
     function button(label,fn){const el=document.createElement('button');el.type='button';el.className='btn';el.textContent=label;el.onclick=fn;foot.appendChild(el);return el;}
     button('Chiudi',()=>back.classList.add('hidden'));
