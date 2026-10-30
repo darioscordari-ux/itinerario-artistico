@@ -35,15 +35,18 @@
     if(key){
       let resource;
       const modern=/^(jb|sj)\.([a-zA-Z0-9-]{12,80})$/.exec(key);
-      if(modern){
+      if(/^sb\.[a-f0-9-]{36}$/.test(key)){
+        resource='https://xcnsipeozpexqsephmsu.supabase.co/rest/v1/shared_itineraries?id=eq.'+encodeURIComponent(key.slice(3))+'&select=payload';
+      }else if(modern){
         resource=(modern[1]==='jb'?'https://jsonblob.com/api/jsonBlob/':'https://superjsonblob.com/api/jsonBlob/')+encodeURIComponent(modern[2]);
       }else if(/^[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+$/.test(key)){
         resource='https://api.jsonstorage.net/v1/json/'+key;
       }else throw Error('Identificativo non valido');
       document.documentElement.classList.add('iaSharedCoverPending');
-      const response=await fetch(resource,{cache:'no-store'});
+      const response=await fetch(resource,{cache:'no-store',headers:key.startsWith('sb.')?{'apikey':'sb_publishable_d2KJWQld78oSUy3mtdYiNA_NdbaMvQT'}:{}});
       if(!response.ok)throw Error('Presentazione non disponibile');
       obj=await response.json();
+      if(key.startsWith('sb.'))obj=Array.isArray(obj)?obj[0]?.payload:null;
       encoded='s:'+key;
     }else{
       const compressed=hash.startsWith('#sharez=');
