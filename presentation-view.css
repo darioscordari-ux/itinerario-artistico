@@ -28,3 +28,9 @@ body.presentation:not([data-presentation-view="both"]) .iaArrivalBanner{display:
  .iaViewControl button{font-size:11px;padding:7px 8px}
  .iaMapOnlyNav button{font-size:12px}
 }
+
+/* Keep the right-hand photographs visible in combined view, including on mobile. */
+body.presentation[data-presentation-view="both"]:not(.iaMapJourney) .slidePanel{opacity:1!important;transform:none!important;pointer-events:auto!important;visibility:visible!important;min-width:0!important}
+body.presentation[data-presentation-view="both"]:not(.iaMapJourney) .slide .hero,body.presentation[data-presentation-view="both"]:not(.iaMapJourney) .slide .hero img{visibility:visible!important;opacity:1!important}
+body.presentation[data-presentation-view="both"]:not(.iaMapJourney) .slidePanel{display:flex!important;flex-direction:column}
+body.presentation[data-presentation-view="both"]:not(.iaMapJourney) .slide{min-height:0;overflow-y:auto}
