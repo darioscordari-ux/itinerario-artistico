@@ -7,6 +7,7 @@
   let bypass=false,busy=false;
   const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const combinedView=()=>!window.__IA_PRESENTATION_VIEW||window.__IA_PRESENTATION_VIEW()==='both';
+  const sharedViewer=()=>document.body.classList.contains('sharedViewer');
   const motionReduced=()=>!!window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
 
   function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch{return fallback}}
@@ -373,7 +374,7 @@
   // The cover opens the current first slide without advancing the route.
   window.__IA_PRESENT_FIRST_STOP=async closeCover=>{
     if(busy)return;
-    if(!combinedView()){closeCover();return;}
+    if(!combinedView()||sharedViewer()){closeCover();return;}
     busy=true;
     let bridge=null;
     const slide=$('slide');
@@ -408,7 +409,7 @@
       e.stopImmediatePropagation();
       return;
     }
-    if(!combinedView()||!canMove(btn))return;
+    if(!combinedView()||sharedViewer()||!canMove(btn))return;
 
     e.preventDefault();
     e.stopImmediatePropagation();
