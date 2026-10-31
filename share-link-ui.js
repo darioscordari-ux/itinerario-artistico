@@ -59,7 +59,7 @@
     const replacements=new Map(),failed=[];
     for(const url of urls){
       try{
-        const response=await fetch(url,{mode:'cors',cache:'no-store'});
+        const response=await fetch(url,{mode:'cors',cache:'no-store',signal:AbortSignal.timeout(8000)});
         if(!response.ok)throw Error('HTTP '+response.status);
         const blob=await response.blob();
         if(!blob.type.startsWith('image/'))throw Error('Non è una fotografia');
@@ -107,11 +107,13 @@
 
   async function shareLink(project,mode='work'){
     const isPresentation=mode==='presentation';
-    let link;
-    try{link=await makeLink(project,mode);}catch(error){alert(error.message);return;}
-    const {url,removedLocalImages,short}=link;
     const back=document.getElementById('modalBack'),modal=document.getElementById('modal');
-    if(!back||!modal)return;
+    if(!back||!modal){alert('Finestra di condivisione non disponibile. Ricarica la pagina.');return;}
+    modal.innerHTML='<h2>Preparazione del link…</h2><p>Salvataggio delle fotografie e della presentazione in corso. Attendi qualche secondo.</p>';
+    back.classList.remove('hidden');
+    let link;
+    try{link=await makeLink(project,mode);}catch(error){modal.innerHTML='';const h=document.createElement('h2');h.textContent='Link non generato';const p=document.createElement('p');p.textContent=error?.message||'Errore imprevisto';const b=document.createElement('button');b.className='btn primary';b.textContent='Chiudi';b.onclick=()=>back.classList.add('hidden');modal.append(h,p,b);return;}
+    const {url,removedLocalImages,short}=link;
     modal.replaceChildren();
     const title=document.createElement('h2');title.textContent=isPresentation?'Condividi solo presentazione':'Condividi itinerario';
     const info=document.createElement('p');info.textContent=isPresentation?'Chi apre il link vede copertina, tappe e immagini, senza comandi di modifica.':'Chi apre il link riceve una copia modificabile.';
