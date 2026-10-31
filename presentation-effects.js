@@ -167,6 +167,10 @@
   // In modalità Presenta, la mappa diventa protagonista solo durante il viaggio.
   // Nessun avanzamento automatico: un clic su Avanti/Indietro avvia una sola sequenza.
   function startMapJourney(){
+    if(sharedViewer()){
+      document.body.classList.add('iaSharedTravel');
+      return Promise.resolve();
+    }
     document.body.classList.add('iaMapJourney');
     return new Promise(resolve=>{
       setTimeout(()=>{
@@ -178,7 +182,7 @@
   function finishMapJourney(){
     hideArrival();
     hideDestinationPhoto();
-    document.body.classList.remove('iaMapJourney');
+    document.body.classList.remove('iaMapJourney','iaSharedTravel');
     setTimeout(()=>{try{window.__IA_MAP?.invalidateSize({pan:false})}catch{}},440);
   }
 
@@ -374,7 +378,7 @@
   // The cover opens the current first slide without advancing the route.
   window.__IA_PRESENT_FIRST_STOP=async closeCover=>{
     if(busy)return;
-    if(!combinedView()||sharedViewer()){closeCover();return;}
+    if(!combinedView()){closeCover();return;}
     busy=true;
     let bridge=null;
     const slide=$('slide');
@@ -409,7 +413,7 @@
       e.stopImmediatePropagation();
       return;
     }
-    if(!combinedView()||sharedViewer()||!canMove(btn))return;
+    if(!combinedView()||!canMove(btn))return;
 
     e.preventDefault();
     e.stopImmediatePropagation();
