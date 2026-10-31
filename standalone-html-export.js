@@ -40,6 +40,14 @@ async function exportHtml(p){
  try{if(navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({title:p.title||'Itinerario',text:'Apri la presentazione HTML con un browser.',files:[file]});return}}catch(e){if(e?.name==='AbortError')return;console.warn(e)}
  const u=URL.createObjectURL(file),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(u)},2000);
 }
+async function downloadHtml(p){
+ const name=(p.title||'itinerario').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()+'-presentazione.html';
+ const blob=new Blob([await build(pack(p))],{type:'text/html'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');
+ link.href=url;link.download=name;document.body.appendChild(link);link.click();
+ setTimeout(()=>{link.remove();URL.revokeObjectURL(url)},5000);
+}
+window.__IA_DOWNLOAD_HTML=downloadHtml;
 function setup(){return;const base=document.getElementById('exportBtn');if(!base||document.getElementById('shareHtmlStandalone'))return;const b=document.createElement('button');b.id='shareHtmlStandalone';b.type='button';b.className='btn primary';b.textContent='📄 Condividi file HTML';b.title='Esporta un file HTML autonomo per WhatsApp';(document.getElementById('shareExportBtn')||base).after(b)}
 document.addEventListener('click',e=>{if(e.target.closest('#settingsBtn'))setTimeout(setup,20);if(!e.target.closest('#shareHtmlStandalone'))return;e.preventDefault();e.stopImmediatePropagation();const p=current();if(!p)return alert('Apri prima un itinerario.');exportHtml(p).catch(x=>alert('Esportazione non riuscita: '+x.message))},true);
 window.__IA_EXPORT_HTML=exportHtml;
