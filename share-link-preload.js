@@ -67,6 +67,8 @@
         sessionStorage.setItem(OPEN_KEY,cached.id);
         if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
         else sessionStorage.removeItem(PRESENT_KEY);
+        history.replaceState(null,'',location.pathname);
+        location.reload();
         return;
       }
     }
@@ -99,6 +101,9 @@
     else sessionStorage.removeItem(PRESENT_KEY);
 
     sessionStorage.setItem('itinerarioArtistico.sharedSession.v1',JSON.stringify({encoded,id:project.id}));
+    // app.js reads projects into memory at startup. Reload so the new shared project appears in its library.
+    history.replaceState(null,'',location.pathname);
+    location.reload();
   }catch(err){
     document.documentElement.classList.remove('iaSharedCoverPending');
     console.error('Impossibile aprire itinerario condiviso',err);
