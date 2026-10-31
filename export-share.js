@@ -86,8 +86,8 @@
 
     if(exportBtn.dataset.shareReady!=='1'){
       exportBtn.dataset.shareReady='1';
-      exportBtn.textContent='⬇ Scarica file';
-      exportBtn.title='Salva il file JSON dell’itinerario sul dispositivo';
+      exportBtn.textContent='⬇ Scarica presentazione HTML';
+      exportBtn.title='Scarica la presentazione apribile in Chrome';
     }
 
     let shareBtn=document.getElementById('shareExportBtn');
@@ -100,6 +100,14 @@
     }
     shareBtn.textContent='▶ Condividi presentazione';
     shareBtn.title='Invia un link che apre direttamente questo itinerario in modalità presentazione';
+    exportBtn.onclick=e=>{
+      e.preventDefault();e.stopPropagation();
+      const project=currentProject();
+      if(!project)return alert('Itinerario non trovato.');
+      const download=window.__IA_DOWNLOAD_HTML;
+      if(typeof download!=='function')return alert('Download HTML non disponibile. Ricarica la pagina.');
+      download(enrichedProject(project)).catch(error=>alert('Download non riuscito: '+error.message));
+    };
     shareBtn.onclick=()=>{
       const project=currentProject();
       if(!project){alert('Itinerario non trovato.');return;}
@@ -114,7 +122,7 @@
   });
 
   document.addEventListener('click',e=>{
-    const btn=e.target?.closest?.('#exportBtn');
+    const btn=e.target?.closest?.('#__no_export_listener');
     if(!btn)return;
 
     e.preventDefault();
