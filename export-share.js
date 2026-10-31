@@ -100,6 +100,13 @@
     }
     shareBtn.textContent='▶ Condividi presentazione';
     shareBtn.title='Invia un link che apre direttamente questo itinerario in modalità presentazione';
+    shareBtn.onclick=()=>{
+      const project=currentProject();
+      if(!project){alert('Itinerario non trovato.');return;}
+      const fn=window.__IA_SHARE_LINK?.sharePresentation;
+      if(typeof fn!=='function'){alert('Modulo di condivisione non caricato. Chiudi e riapri Chrome.');return;}
+      fn(enrichedProject(project));
+    };
   }
 
   document.addEventListener('click',e=>{
@@ -107,7 +114,7 @@
   });
 
   document.addEventListener('click',e=>{
-    const btn=e.target?.closest?.('#exportBtn,#shareExportBtn');
+    const btn=e.target?.closest?.('#exportBtn');
     if(!btn)return;
 
     e.preventDefault();
