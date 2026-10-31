@@ -31,6 +31,15 @@
     mode=value;document.body.dataset.presentationView=mode;
     control.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===mode)));
     if(mode!=='both')document.querySelectorAll('.iaPhotoBridge,.iaDestinationPhoto').forEach(el=>el.remove());
+    // Switching views must never leave the slide hidden by a travel transition.
+    document.body.classList.remove('iaMapJourney');
+    const slide=document.getElementById('slide');
+    slide?.classList.remove('iaSlideLeavingNext','iaSlideLeavingPrev','iaSlideArriveNext','iaSlideArrivePrev');
+    if(mode==='both'){
+      const panel=document.querySelector('.slidePanel');
+      if(panel){panel.style.removeProperty('opacity');panel.style.removeProperty('transform');panel.style.removeProperty('pointer-events');}
+      slide?.querySelectorAll('.hero img').forEach(img=>{if(img.loading==='lazy')img.loading='eager';});
+    }
     requestAnimationFrame(()=>window.__IA_MAP?.invalidateSize?.({pan:false}));
     setTimeout(()=>window.__IA_MAP?.invalidateSize?.({pan:false}),550);
     syncStep();
