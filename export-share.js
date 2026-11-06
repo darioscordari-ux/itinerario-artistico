@@ -121,6 +121,13 @@
     if(e.target?.closest?.('#settingsBtn'))setTimeout(prepareSettingsButtons,0);
   });
 
+  // Settings are built dynamically: also handle delayed modal rendering.
+  const observer=new MutationObserver(()=>{
+    if(document.getElementById('exportBtn')&&!document.getElementById('shareExportBtn'))prepareSettingsButtons();
+  });
+  const startObserver=()=>observer.observe(document.getElementById('modal')||document.body,{childList:true,subtree:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startObserver,{once:true});else startObserver();
+
   document.addEventListener('click',e=>{
     const btn=e.target?.closest?.('#__no_export_listener');
     if(!btn)return;
