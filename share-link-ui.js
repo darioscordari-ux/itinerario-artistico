@@ -145,6 +145,12 @@
     else exportBtn.insertAdjacentElement('afterend',btn);
   }
 
+  const shareObserver=new MutationObserver(()=>{
+    if(document.getElementById('exportBtn')&&!document.getElementById('shareLinkBtn'))prepareButton();
+  });
+  const watchSharing=()=>shareObserver.observe(document.getElementById('modal')||document.body,{childList:true,subtree:true});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watchSharing,{once:true});else watchSharing();
+
   function autoOpenShared(){
     if(sessionStorage.getItem(ERROR_KEY)==='1'){
       document.documentElement.classList.remove('iaSharedCoverPending');
