@@ -683,40 +683,64 @@ Object.assign(window.PUENTE_CATALOG,{
   ]
  },
  "porto cesareo": {
-  "title": "Porto Cesareo",
+  "title": "Porto Cesareo e Torre Lapillo",
   "type": "luoghi",
-  "icon": "🏛️",
-  "kicker": "LUOGHI · ITALIA × ESPAÑA",
-  "desc": "Località costiera con spiagge e un'area marina protetta.",
-  "search": "Porto Cesareo Salento beach",
+  "icon": "🏖️",
+  "kicker": "IONIO",
+  "desc": "La spiaggia vicino a Torre Lapillo, nel territorio di Porto Cesareo.",
+  "search": "Porto Cesareo Torre Lapillo beach",
+  "img": "https://upload.wikimedia.org/wikipedia/commons/8/8b/A_beach_near_Torre_Lapillo_%284752199938%29.jpg",
+  "imgSource": "https://commons.wikimedia.org/wiki/File:A_beach_near_Torre_Lapillo_%284752199938%29.jpg",
   "aliases": [
-   "porto cesareo salento"
+    "porto cesareo salento",
+    "torre lapillo",
+    "spiaggia di porto cesareo"
   ]
- },
+},
  "torre dell orso": {
   "title": "Torre dell’Orso",
   "type": "luoghi",
-  "icon": "🏛️",
-  "kicker": "LUOGHI · ITALIA × ESPAÑA",
-  "desc": "Località balneare del Salento nota per la baia sabbiosa.",
-  "search": "Torre dell Orso beach Salento",
+  "icon": "🏖️",
+  "kicker": "ADRIATICO",
+  "desc": "All’estremità meridionale della baia si vedono i due faraglioni chiamati Le Due Sorelle.",
+  "search": "Torre dell Orso Due Sorelle",
+  "img": "https://upload.wikimedia.org/wikipedia/commons/9/99/Torre_dell%27Orso_-_Le_due_sorelle.jpg",
+  "imgSource": "https://commons.wikimedia.org/wiki/File:Torre_dell%27Orso_-_Le_due_sorelle.jpg",
   "aliases": [
-   "torre dell'orso",
-   "torre del orso"
+    "torre del orso",
+    "le due sorelle",
+    "spiaggia di torre dell orso"
   ]
- },
+},
  "grotta della poesia": {
-  "title": "Grotta della Poesia",
+  "title": "Roca Vecchia · Grotta della Poesia",
   "type": "luoghi",
-  "icon": "🏛️",
-  "kicker": "LUOGHI · ITALIA × ESPAÑA",
-  "desc": "La cavità naturale costiera nella zona di Roca Vecchia.",
-  "search": "Grotta della Poesia Roca Vecchia Salento",
+  "icon": "🏖️",
+  "kicker": "ADRIATICO",
+  "desc": "Una cavità naturale nella scogliera di Roca Vecchia, sulla costa di Melendugno.",
+  "search": "Grotta della Poesia Roca Vecchia",
+  "img": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Grotta_della_Poesia_-_Roca_Vecchia_%28LE%29.jpg",
+  "imgSource": "https://commons.wikimedia.org/wiki/File:Grotta_della_Poesia_-_Roca_Vecchia_%28LE%29.jpg",
   "aliases": [
-   "grotta poesia",
-   "roca vecchia"
+    "grotta poesia",
+    "roca vecchia",
+    "roca"
   ]
- },
+},
+ "frigole": {
+  "title": "Spiaggia di Frigole",
+  "type": "luoghi",
+  "icon": "🏖️",
+  "kicker": "MARINE DI LECCE",
+  "desc": "La spiaggia di Frigole, una delle marine di Lecce sulla costa adriatica.",
+  "search": "Frigole spiaggia Lecce",
+  "img": "https://upload.wikimedia.org/wikipedia/commons/7/70/Frigolespiaggia.JPG",
+  "imgSource": "https://commons.wikimedia.org/wiki/File:Frigolespiaggia.JPG",
+  "aliases": [
+    "spiaggia di frigole",
+    "marina di frigole"
+  ]
+},
  "galatina": {
   "title": "Galatina",
   "type": "luoghi",
@@ -2627,7 +2651,7 @@ const $=id=>document.getElementById(id),clean=s=>String(s??'').replace(/[<>]/g,'
 const normalizeKey=s=>clean(s).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’']/g,' ').replace(/[^a-z0-9ñçü\s-]/g,' ').replace(/\s+/g,' ').trim();
 const aliasToKey={};assetKeys.forEach(key=>[key,...(ASSET_DB[key].aliases||[])].forEach(alias=>{aliasToKey[normalizeKey(alias)]=key}));
 function getCatalogKey(word){return aliasToKey[normalizeKey(word)]||null}
-function galleryInit(){const examples=['santa croce','piazza sant oronzo','piazza duomo','castello carlo v','porta rudiae','pasticciotto','rustico','puccia','orecchiette','ciceri e tria','paella','churros'];const holder=$('assetGallery');holder.replaceChildren();examples.forEach(key=>{const el=document.createElement('button');el.className='gallery-word';el.textContent=ASSET_DB[key].icon+' '+ASSET_DB[key].title;el.type='button';el.addEventListener('click',()=>openAsset(key));holder.append(el)})}
+function galleryInit(){const examples=['santa croce','piazza sant oronzo','piazza duomo','castello carlo v','porta rudiae','porto cesareo','torre dell orso','grotta della poesia','frigole','pasticciotto','rustico','puccia','orecchiette','ciceri e tria','paella','churros'];const holder=$('assetGallery');holder.replaceChildren();examples.forEach(key=>{const el=document.createElement('button');el.className='gallery-word';el.textContent=ASSET_DB[key].icon+' '+ASSET_DB[key].title;el.type='button';el.addEventListener('click',()=>openAsset(key));holder.append(el)})}
 
 function show(id){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id===id));window.scrollTo(0,0)}
 function storageKey(){return 'puente-'+room}function readLocal(){try{return JSON.parse(localStorage.getItem(storageKey()))||session}catch{return session}}function saveLocal(){try{localStorage.setItem(storageKey(),JSON.stringify(session))}catch(e){console.warn("La memoria locale non è disponibile: la demo rimane attiva soltanto finché la pagina è aperta.")}render()}window.addEventListener('storage',e=>{if(!cloud&&room&&e.key===storageKey()){session=readLocal();render()}});
