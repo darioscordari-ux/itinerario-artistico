@@ -154,8 +154,8 @@
     btn.id='shareLinkBtn';
     btn.type='button';
     btn.className='btn primary';
-    btn.textContent='🔗 Condividi link';
-    btn.title='Condividi un link che apre normalmente questo itinerario';
+    btn.textContent='🔗 Condividi link presentazione';
+    btn.title='Condividi un link di sola visualizzazione, apribile su qualsiasi telefono';
 
     const sharePresentation=document.getElementById('shareExportBtn');
     if(sharePresentation)sharePresentation.insertAdjacentElement('afterend',btn);
@@ -244,7 +244,7 @@
       alert('Non riesco a individuare l’itinerario da condividere.');
       return;
     }
-    shareLink(project,'work');
+    shareLink(project,'presentation');
   },true);
 
   function ready(){Promise.resolve(window.__IA_SHARED_READY).then(autoOpenShared).catch(autoOpenShared);}
