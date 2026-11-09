@@ -77,7 +77,7 @@
     const source=obj?.project||obj;
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
-    const mode=obj?.mode==='presentation'?'presentation':'work';
+    // Shared URLs open as a read-only presentation by default, including older\n    // URLs marked 'work'. An intentional &import=1 opts into copying for editing.\n    const mode=(obj?.mode==='work'&&new URLSearchParams(location.search).get('import')==='1')?'work':'presentation';
     // Public presentations are read-only: render the Supabase payload in memory.
     // Never copy image-heavy slides into the recipient's localStorage/sessionStorage.
     if(mode==='presentation'){
@@ -87,14 +87,16 @@
       window.__IA_REMOTE_PRESENTATION={project:remote,extras:source._slideExtras||{}};
       sessionStorage.removeItem(OPEN_KEY);
       sessionStorage.removeItem(PRESENT_KEY);
-      history.replaceState(null,'',location.pathname);
       const show=()=>{
-        if(typeof window.__IA_OPEN_REMOTE_PRESENTATION==='function'){
+        try{
+          if(typeof window.__IA_OPEN_REMOTE_PRESENTATION!=='function')throw Error('Visualizzatore non inizializzato');
           window.__IA_OPEN_REMOTE_PRESENTATION(remote);
           document.documentElement.classList.remove('iaSharedCoverPending');
-        }else {
+          // Leave the share token in the URL so a refresh/reopen still works.
+        }catch(error){
           document.documentElement.classList.remove('iaSharedCoverPending');
-          alert('La presentazione è stata caricata, ma il visualizzatore non è pronto. Ricarica la pagina.');
+          console.error('Visualizzazione presentazione non riuscita',error);
+          alert('La presentazione è stata scaricata, ma non può essere visualizzata: '+(error?.message||'errore del visualizzatore'));
         }
       };
       if(document.readyState==='complete')setTimeout(show,0);
@@ -172,9 +174,11 @@
   }catch(err){
     document.documentElement.classList.remove('iaSharedCoverPending');
     console.error('Impossibile aprire itinerario condiviso',err);
-    sessionStorage.setItem('itinerarioArtistico.sharedError.v1',err?.message||'Impossibile aprire il collegamento');
+    sessionStorage.removeItem('itinerarioArtistico.sharedError.v1');
     sessionStorage.removeItem(PRESENT_KEY);
     sessionStorage.removeItem(OPEN_KEY);
-    history.replaceState(null,'',location.pathname+location.search);
+    // Async errors may occur after DOMContentLoaded: display them immediately.
+    if(location.hash.startsWith('#share'))history.replaceState(null,'',location.pathname+location.search);
+    setTimeout(()=>alert('Impossibile aprire il link condiviso: '+(err?.message||'errore imprevisto')),0);
   }})();
 })();
