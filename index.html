@@ -10,6 +10,16 @@
   <meta name="apple-mobile-web-app-title" content="Itinerario Artistico">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <title>Itinerario Artistico</title>
+  <script>
+    // Shared presentation links use an independent viewer; the editor is never
+    // initialized on recipient devices and cannot fill browser storage.
+    (function(){
+      var params=new URLSearchParams(location.search);
+      if(/^sb\.[a-f0-9-]{36}$/i.test(params.get('s')||'')&&params.get('import')!=='1'){
+        location.replace('./viewer.html'+location.search+location.hash);
+      }
+    })();
+  </script>
   <link rel="manifest" href="./manifest-install.webmanifest?v=1">
   <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
