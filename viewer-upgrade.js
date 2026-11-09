@@ -63,6 +63,43 @@ function interpolate(path,progress){
  return L.latLng(a.lat+(b.lat-a.lat)*fraction,a.lng+(b.lng-a.lng)*fraction);
 }
 function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+async function arrivalZoomAndPhoto(stop,map){
+ const lat=Number(stop.lat),lon=Number(stop.lon);
+ if(Number.isFinite(lat)&&Number.isFinite(lon)){
+  // Let the destination fill the map before unveiling its photograph.
+  map.flyTo([lat,lon],Math.max(map.getZoom(),17),{animate:!reduced(),duration:.75});
+  await wait(reduced()?60:820);
+ }
+ const src=typeof stop.image==='string'?stop.image:'';
+ if(!src)return;
+ const host=$('map');
+ if(!host)return;
+ const visual=document.createElement('div');
+ visual.className='ia-public-destination-photo';
+ const photo=document.createElement('img');
+ photo.alt=stop.title||'Fotografia della destinazione';
+ photo.src=src;
+ visual.appendChild(photo);
+ // A failed image must not delay or prevent advancing to the next slide.
+ const loaded=await new Promise(resolve=>{
+  if(photo.complete)return resolve(photo.naturalWidth>0);
+  let finished=false;
+  const done=ok=>{if(finished)return;finished=true;resolve(ok)};
+  photo.onload=()=>done(true);
+  photo.onerror=()=>done(false);
+  setTimeout(()=>done(false),1800);
+ });
+ if(!loaded)return;
+ host.appendChild(visual);
+ if(reduced()){visual.classList.add('ia-photo-visible');await wait(160);visual.remove();return}
+ await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ visual.classList.add('ia-photo-visible');
+ await wait(1180);
+ visual.classList.add('ia-photo-fade');
+ await wait(430);
+ visual.remove();
+}
 async function navigate(delta){
  const p=window.__IA_PUBLIC_PROJECT,m=window.__IA_PUBLIC_MAP,step=$('progress')?.textContent?.split('/')[0];
  const from=Number(step)-1,to=from+delta;
@@ -94,8 +131,9 @@ async function navigate(delta){
    }
   }
   const b=banner(finish.title);
-  await new Promise(resolve=>setTimeout(resolve,reduced()?80:650));
+  await wait(reduced()?80:480);
   b.hidden=true;
+  await arrivalZoomAndPhoto(finish,m);
   window.__IA_PUBLIC_GO(to);
   const sc=$('slideContent');sc.classList.remove('ia-arriving');void sc.offsetHeight;sc.classList.add('ia-arriving');
   m.panTo([Number(finish.lat),Number(finish.lon)],{animate:true,duration:.4});
