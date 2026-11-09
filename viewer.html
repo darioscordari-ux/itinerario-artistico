@@ -16,7 +16,7 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:12px;posit
 #overlay{position:fixed;inset:0;background:#1e1a18;z-index:5000;display:flex;justify-content:center;align-items:center;padding:18px;color:white}#overlay[hidden]{display:none}#cover{width:min(700px,100%);max-height:94dvh;overflow:auto;text-align:center}#coverImg{width:100%;max-height:38dvh;object-fit:cover;border-radius:9px;margin:16px 0}#cover h1{font-size:clamp(34px,6vw,72px);color:#fff}#cover p{line-height:1.5;color:#ddd}#cover .byline{font-size:14px}#status{margin:20px auto;padding:20px;max-width:560px;font-size:19px;line-height:1.5}#status[hidden]{display:none}
 @media(max-width:720px){header{padding:10px 12px}header strong{font-size:14px}main{height:calc(100dvh - 103px);display:flex;flex-direction:column;min-height:0}#map{flex:0 0 38%;min-height:120px}#slidePanel{flex:1;min-height:0}#slideContent{padding:14px 18px}#slideContent h1{font-size:31px}#photos{margin:10px 0}#photos img{height:115px}#photos img:only-child{height:clamp(160px,23vh,300px)}#photos img:first-child:nth-last-child(3){height:150px}#desc{font-size:15px}nav{padding:9px 14px}}
 </style>
-<link rel="stylesheet" href="./viewer-upgrade.css?v=1">
+<link rel="stylesheet" href="./viewer-upgrade.css?v=2">
 </head>
 <body data-view="both">
 <header><div><small>ITINERARIO ARTISTICO</small></div><strong id="projectTitle">Presentazione</strong><div class="switch" role="group" aria-label="Modalità visualizzazione"><button type="button" data-mode="map" aria-pressed="false">Mappa</button><button type="button" data-mode="slides" aria-pressed="false">Slide</button><button type="button" data-mode="both" aria-pressed="true">Entrambe</button></div></header>
@@ -46,6 +46,6 @@ el("prev").onclick=function(){go(index-1);};el("next").onclick=function(){go(ind
 (async function(){try{var key=new URLSearchParams(location.search).get("s");if(!key||!/^sb\.[a-f0-9-]{36}$/i.test(key))throw Error("Identificativo del link mancante o non valido");var endpoint="https://xcnsipeozpexqsephmsu.supabase.co/rest/v1/shared_itineraries?id=eq."+encodeURIComponent(key.slice(3))+"&select=payload";var response=await fetch(endpoint,{cache:"no-store",headers:{"apikey":"sb_publishable_d2KJWQld78oSUy3mtdYiNA_NdbaMvQT"}});if(!response.ok)throw Error("Servizio dati non disponibile (HTTP "+response.status+")");var rows=await response.json();if(!Array.isArray(rows)||!rows[0]||!rows[0].payload)throw Error("La presentazione non è presente nell'archivio");ready(rows[0].payload);}catch(err){console.error(err);message("Impossibile aprire la presentazione: "+(err&&err.message||"errore imprevisto"));}})();
 })();
 </script>
-<script src="./viewer-upgrade.js?v=1"></script>
+<script src="./viewer-upgrade.js?v=2"></script>
 </body>
 </html>
