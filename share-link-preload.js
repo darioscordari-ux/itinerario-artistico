@@ -109,11 +109,6 @@
     // Avoid ambiguous title-based lookups in existing presentation modules.
     const baseTitle=project.title;let suffix=1;
     while(projects.some(p=>p.title===project.title))project.title=baseTitle+' · condiviso '+suffix++;
-    if(source._slideExtras&&typeof source._slideExtras==='object'){
-      let extras={};try{extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}')}catch{}
-      extras[project.id]=source._slideExtras;
-      localStorage.setItem('itinerarioArtistico.slideExtras.v1',JSON.stringify(extras));
-    }
     // Opening a link on its originating device should not duplicate a large
     // project (photos can exceed the browser localStorage quota).
     const existing=projects.find(p=>p?.title===source.title&&
@@ -129,6 +124,11 @@
       history.replaceState(null,'',location.pathname);
       location.reload();
       return;
+    }
+    if(source._slideExtras&&typeof source._slideExtras==='object'){
+      let extras={};try{extras=JSON.parse(localStorage.getItem('itinerarioArtistico.slideExtras.v1')||'{}')}catch{}
+      extras[project.id]=source._slideExtras;
+      localStorage.setItem('itinerarioArtistico.slideExtras.v1',JSON.stringify(extras));
     }
     projects.push(project);
     try{localStorage.setItem(STORE,JSON.stringify(projects));}
