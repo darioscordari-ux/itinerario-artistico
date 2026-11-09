@@ -27,7 +27,23 @@
   function capture(){
     if(restoring||locked)return;
     const snap=snapshot();
-    nativeSet.call(localStorage,UNDO_KEY,JSON.stringify(snap));
+    // Undo is optional. Never block an itinerary save or a shared-link open.
+    // A full photo-heavy snapshot can exceed the browser storage quota.
+    try{
+      const data=JSON.stringify(snap);
+      if(data.length>600000){
+        nativeRemove.call(localStorage,UNDO_KEY);
+      }else{
+        nativeSet.call(localStorage,UNDO_KEY,data);
+      }
+    }catch(error){
+      if(error?.name==='QuotaExceededError'||error?.name==='NS_ERROR_DOM_QUOTA_REACHED'){
+        try{nativeRemove.call(localStorage,UNDO_KEY);}catch{}
+        console.warn('Cronologia annulla non salvata: memoria browser insufficiente');
+      }else{
+        console.warn('Cronologia annulla non disponibile',error);
+      }
+    }
     locked=true;
     clearTimeout(lockTimer);
     lockTimer=setTimeout(()=>{locked=false},180);
