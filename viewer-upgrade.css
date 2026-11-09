@@ -1,0 +1,61 @@
+/* Public presentation matches the original dark stage and split workspace. */
+body{background:#171614;color:#241e1b}
+header{background:rgba(23,22,20,.97);border-bottom:1px solid #ffffff21;padding:8px 14px;min-height:65px;gap:10px}
+header strong{font-weight:600}
+.switch{background:#ffffff10;border:1px solid #ffffff30;border-radius:12px;padding:3px;gap:3px}
+.switch button{border-radius:8px;font-size:13px;min-height:36px}
+.switch button[aria-pressed=true]{background:#f7edda;color:#24211b;box-shadow:0 2px 8px #0003}
+main{padding:12px;gap:12px;background:radial-gradient(circle at 78% 14%,#4b4134 0,#29251f 34%,#171614 78%);grid-template-columns:minmax(0,1.25fr) minmax(0,.9fr);height:calc(100dvh - 65px);min-height:0}
+#map,#slidePanel{min-width:0;border-radius:20px;overflow:hidden;box-shadow:0 15px 45px #0006;border:1px solid #ffffff1e}
+#map{min-height:0}
+#slidePanel{background:#fffdf8;position:relative}
+#slideContent{overflow-y:auto;min-height:0;padding:clamp(20px,2.7vw,44px);scrollbar-width:thin}
+#counter{display:inline-flex;background:#f3e8e2;color:#9c2119;border-radius:999px;padding:7px 10px;font-size:11px;letter-spacing:.12em}
+#heading{font-size:clamp(32px,3.7vw,58px);line-height:1;letter-spacing:-.025em;margin:15px 0 10px}
+#sub{font-size:14px;line-height:1.5;color:#756f66;font-weight:500}
+#photos{max-width:720px;margin:22px auto 12px;border-radius:18px;overflow:hidden;box-shadow:0 16px 38px #382c3029;gap:3px}
+#photos img{object-fit:cover;border-radius:0}
+#photos img:only-child{object-fit:contain;background:#f1ece4;max-height:440px}
+#desc{font-size:clamp(18px,1.55vw,23px);line-height:1.6;color:#2c2d29;max-width:760px;margin:18px auto}
+nav{position:relative;flex-shrink:0;margin:0 14px 14px;padding:9px 12px;border:1px solid #ded6cc;border-radius:16px;background:#f7f3ec;box-shadow:0 8px 22px #382c301a}
+nav button{border-radius:100px;font-size:13px;min-width:85px;padding:11px 16px;background:#211f1b}
+#viewer.is-travelling #slidePanel{opacity:.28;pointer-events:none;transition:opacity .3s}
+#viewer:not(.is-travelling) #slidePanel{opacity:1;transition:opacity .35s}
+#slideContent.ia-arriving{animation:iaPublicSlideIn .42s cubic-bezier(.2,.72,.22,1)}
+@keyframes iaPublicSlideIn{from{transform:translateX(18px);opacity:0}to{transform:none;opacity:1}}
+.ia-public-walker{background:transparent;border:0}.ia-public-walker div{width:38px;height:38px;display:grid;place-items:center;background:#fffdf8;border:2px solid #a9251c;border-radius:50%;font-size:24px;box-shadow:0 5px 16px #0006}
+#arrivalPublic{position:absolute;z-index:900;top:12%;left:50%;transform:translateX(-50%);background:#1d1e1bea;border:1px solid #ffffff4d;color:#fff;text-align:center;padding:12px 20px;border-radius:16px;box-shadow:0 14px 38px #0005;pointer-events:none;max-width:80%;font:500 24px/1.2 Georgia,serif}
+#arrivalPublic[hidden]{display:none}
+#mapOnlyNav{display:none}
+body[data-view=map] #mapOnlyNav{display:flex;align-items:center;justify-content:space-between;position:absolute;bottom:16px;left:25px;right:25px;z-index:950;gap:16px;pointer-events:none}
+#mapOnlyNav button{background:#211f1b;color:white;border:none;border-radius:12px;padding:12px;pointer-events:auto}
+body[data-view=map] main{display:block;position:relative}
+body[data-view=map] #map{height:100%;width:100%}
+body[data-view=slides] main{display:block}
+body[data-view=slides] #slidePanel{height:100%;width:100%}
+@media(max-width:720px){
+header{min-height:0;padding:6px;gap:4px;flex-wrap:wrap}
+header small{font-size:9px}
+header strong{font-size:12px;min-width:0}
+.switch{width:100%;justify-content:center;order:3}
+.switch button{font-size:11px;padding:7px 12px;min-height:32px}
+main{display:grid;grid-template-columns:minmax(0,48fr) minmax(0,52fr);grid-template-rows:minmax(0,1fr);flex-direction:initial;height:calc(100dvh - 97px);padding:4px;gap:5px}
+#map{flex:none;min-height:0;height:100%;border-radius:12px}
+#slidePanel{min-height:0;height:100%;border-radius:12px}
+#slideContent{padding:14px 10px}
+#counter{font-size:8px;padding:5px 7px}
+#heading{font-size:22px;line-height:1.04;margin:10px 0 8px}
+#sub{font-size:10px}
+#photos{margin:12px auto 8px;border-radius:12px}
+#photos img{height:105px}
+#photos img:only-child{height:auto;min-height:110px;max-height:26vh;object-fit:contain}
+#photos img:first-child:nth-last-child(3){height:120px}
+#desc{font-size:13px;line-height:1.5;margin:10px auto}
+nav{margin:0 4px 5px;padding:5px;gap:3px;border-radius:11px}
+nav button{min-width:0;padding:7px 8px;font-size:10px}
+nav span{font-size:10px}
+#arrivalPublic{font-size:16px;min-width:130px;padding:10px}
+body[data-view=map] main{height:calc(100dvh - 97px)}
+body[data-view=slides] main{height:calc(100dvh - 97px)}
+}
+@media(prefers-reduced-motion:reduce){#slideContent.ia-arriving{animation:none!important}}
