@@ -2,6 +2,7 @@
   'use strict';
 
   const STORE='itinerarioArtistico.projects.v4';
+  const LINK_VERSION='20261109-3';
   const OPEN_KEY='itinerarioArtistico.openShared.v1';
   const PRESENT_KEY='itinerarioArtistico.openSharedPresentation.v1';
 
@@ -113,8 +114,29 @@
       extras[project.id]=source._slideExtras;
       localStorage.setItem('itinerarioArtistico.slideExtras.v1',JSON.stringify(extras));
     }
+    // Opening a link on its originating device should not duplicate a large
+    // project (photos can exceed the browser localStorage quota).
+    const existing=projects.find(p=>p?.title===source.title&&
+      Array.isArray(p.stops)&&p.stops.length===source.stops.length&&
+      p.stops.every((s,i)=>s.title===source.stops[i]?.title&&s.lat===source.stops[i]?.lat&&s.lon===source.stops[i]?.lon));
+    if(existing){
+      // The same route already lives on this device: reuse it without saving
+      // another copy of all its photographs.
+      sessionStorage.setItem(OPEN_KEY,existing.id);
+      if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
+      else sessionStorage.removeItem(PRESENT_KEY);
+      sessionStorage.setItem('itinerarioArtistico.sharedSession.v1',JSON.stringify({encoded,id:existing.id}));
+      history.replaceState(null,'',location.pathname);
+      location.reload();
+      return;
+    }
     projects.push(project);
-    localStorage.setItem(STORE,JSON.stringify(projects));
+    try{localStorage.setItem(STORE,JSON.stringify(projects));}
+    catch(storageError){
+      if(storageError?.name==='QuotaExceededError'||storageError?.name==='NS_ERROR_DOM_QUOTA_REACHED')
+        throw Error('Memoria del browser piena: il collegamento è valido ma le fotografie non entrano nello spazio disponibile. Non cancellare i dati del sito: esporta prima gli itinerari.');
+      throw storageError;
+    }
     sessionStorage.setItem(OPEN_KEY,project.id);
     if(mode==='presentation')sessionStorage.setItem(PRESENT_KEY,'1');
     else sessionStorage.removeItem(PRESENT_KEY);
