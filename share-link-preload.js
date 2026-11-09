@@ -78,6 +78,30 @@
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
     const mode=obj?.mode==='presentation'?'presentation':'work';
+    // Public presentations are read-only: render the Supabase payload in memory.
+    // Never copy image-heavy slides into the recipient's localStorage/sessionStorage.
+    if(mode==='presentation'){
+      const now=Date.now();
+      const remote={...source,id:'ia-remote-'+now,created:now,updated:now,
+        sharedCopy:true,sharedPresentation:true,title:source.title||'Itinerario condiviso'};
+      window.__IA_REMOTE_PRESENTATION={project:remote,extras:source._slideExtras||{}};
+      sessionStorage.removeItem(OPEN_KEY);
+      sessionStorage.removeItem(PRESENT_KEY);
+      history.replaceState(null,'',location.pathname);
+      const show=()=>{
+        if(typeof window.__IA_OPEN_REMOTE_PRESENTATION==='function'){
+          window.__IA_OPEN_REMOTE_PRESENTATION(remote);
+          document.documentElement.classList.remove('iaSharedCoverPending');
+        }else {
+          document.documentElement.classList.remove('iaSharedCoverPending');
+          alert('La presentazione è stata caricata, ma il visualizzatore non è pronto. Ricarica la pagina.');
+        }
+      };
+      if(document.readyState==='complete')setTimeout(show,0);
+      else window.addEventListener('load',show,{once:true});
+      return;
+    }
+
     if(mode==='presentation')document.documentElement.classList.add('iaSharedCoverPending');
     let cached=null;
     try{cached=JSON.parse(sessionStorage.getItem('itinerarioArtistico.sharedSession.v1')||'null')}catch{}
