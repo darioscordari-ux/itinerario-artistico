@@ -93,6 +93,23 @@
     const rows=await response.json();
     const id=rows?.[0]?.id;
     if(!/^[a-f0-9-]{36}$/.test(id||''))throw Error('Salvataggio non verificato: link non creato.');
+    // Confirm the published link is actually readable before offering it to students.
+    let verified=false,reason='';
+    for(let attempt=0;attempt<3;attempt++){
+      try{
+        const check=await fetch(endpoint+'?id=eq.'+encodeURIComponent(id)+'&select=id',{
+          cache:'no-store',headers:{'apikey':key}
+        });
+        if(!check.ok)throw Error('verifica HTTP '+check.status);
+        const found=await check.json();
+        if(!Array.isArray(found)||found[0]?.id!==id)throw Error('presentazione non ancora disponibile');
+        verified=true;break;
+      }catch(error){
+        reason=error?.message||'errore di rete';
+        if(attempt<2)await new Promise(resolve=>setTimeout(resolve,450*(attempt+1)));
+      }
+    }
+    if(!verified)throw Error('La presentazione è stata salvata, ma il link non è verificabile ('+reason+'). Riprova la condivisione.');
     return {url:base+'?s=sb.'+id,removedLocalImages:0,short:true};
   }
 
@@ -152,11 +169,13 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watchSharing,{once:true});else watchSharing();
 
   function autoOpenShared(){
-    if(sessionStorage.getItem(ERROR_KEY)==='1'){
+    const sharedError=sessionStorage.getItem(ERROR_KEY);
+    if(sharedError){
       document.documentElement.classList.remove('iaSharedCoverPending');
       sessionStorage.removeItem(ERROR_KEY);
       sessionStorage.removeItem(PRESENT_KEY);
-      setTimeout(()=>alert('Il link dell’itinerario non è valido oppure è stato tagliato durante la condivisione.'),50);
+      const message=sharedError==='1'?'Impossibile aprire la presentazione condivisa.':sharedError;
+      setTimeout(()=>alert('Impossibile aprire il link: '+message+'. Verifica la connessione e riprova.'),50);
       return;
     }
     const id=sessionStorage.getItem(OPEN_KEY);
