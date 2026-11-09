@@ -43,10 +43,29 @@
         resource='https://api.jsonstorage.net/v1/json/'+key;
       }else throw Error('Identificativo non valido');
       document.documentElement.classList.add('iaSharedCoverPending');
-      const response=await fetch(resource,{cache:'no-store',headers:key.startsWith('sb.')?{'apikey':'sb_publishable_d2KJWQld78oSUy3mtdYiNA_NdbaMvQT'}:{}});
-      if(!response.ok)throw Error('Presentazione non disponibile');
-      obj=await response.json();
-      if(key.startsWith('sb.'))obj=Array.isArray(obj)?obj[0]?.payload:null;
+      // A temporary network failure is not evidence that a link was truncated.
+      let lastError=null;
+      for(let attempt=0;attempt<3;attempt++){
+        try{
+          const response=await fetch(resource,{cache:'no-store',headers:key.startsWith('sb.')?{'apikey':'sb_publishable_d2KJWQld78oSUy3mtdYiNA_NdbaMvQT'}:{}});
+          if(!response.ok){
+            const message=response.status===401||response.status===403
+              ?'Accesso al servizio di condivisione non autorizzato ('+response.status+')'
+              :'Il servizio di condivisione non risponde ('+response.status+')';
+            throw Error(message);
+          }
+          const result=await response.json();
+          const restored=key.startsWith('sb.')?(Array.isArray(result)?result[0]?.payload:null):result;
+          if(!restored)throw Error('Presentazione non trovata: il codice del link non esiste nell’archivio');
+          obj=restored;
+          lastError=null;
+          break;
+        }catch(error){
+          lastError=error;
+          if(attempt<2)await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
+        }
+      }
+      if(lastError)throw lastError;
       encoded='s:'+key;
     }else{
       const compressed=hash.startsWith('#sharez=');
@@ -107,7 +126,7 @@
   }catch(err){
     document.documentElement.classList.remove('iaSharedCoverPending');
     console.error('Impossibile aprire itinerario condiviso',err);
-    sessionStorage.setItem('itinerarioArtistico.sharedError.v1','1');
+    sessionStorage.setItem('itinerarioArtistico.sharedError.v1',err?.message||'Impossibile aprire il collegamento');
     sessionStorage.removeItem(PRESENT_KEY);
     sessionStorage.removeItem(OPEN_KEY);
     history.replaceState(null,'',location.pathname+location.search);
