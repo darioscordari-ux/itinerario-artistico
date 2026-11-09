@@ -7,11 +7,18 @@
   const $=id=>document.getElementById(id);
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 
-  function loadExtras(){try{return JSON.parse(localStorage.getItem(EXTRA_STORE)||'{}')}catch{return{}}}
+  function loadExtras(){
+    let stored={};try{stored=JSON.parse(localStorage.getItem(EXTRA_STORE)||'{}')}catch{}
+    const remote=window.__IA_REMOTE_PRESENTATION;
+    if(remote?.project?.id)stored[remote.project.id]=remote.extras||{};
+    return stored;
+  }
   function saveExtras(v){localStorage.setItem(EXTRA_STORE,JSON.stringify(v))}
   function currentProject(){
     const title=$('projectName')?.textContent?.trim();
     if(!title)return null;
+    const remote=window.__IA_REMOTE_PRESENTATION?.project;
+    if(remote?.title===title)return remote;
     try{
       const ps=JSON.parse(localStorage.getItem(PROJECT_STORE)||'[]');
       return ps.find(p=>p.title===title)||null;
