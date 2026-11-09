@@ -77,7 +77,9 @@
     const source=obj?.project||obj;
     if(!source||!Array.isArray(source.stops))throw new Error('Dati itinerario non validi');
 
-    // Shared URLs open as a read-only presentation by default, including older\n    // URLs marked 'work'. An intentional &import=1 opts into copying for editing.\n    const mode=(obj?.mode==='work'&&new URLSearchParams(location.search).get('import')==='1')?'work':'presentation';
+    // Shared URLs open as read-only, including older work links.
+    // Explicit import=1 permits a local editable copy.
+    const mode=(obj?.mode==='work'&&new URLSearchParams(location.search).get('import')==='1')?'work':'presentation';
     // Public presentations are read-only: render the Supabase payload in memory.
     // Never copy image-heavy slides into the recipient's localStorage/sessionStorage.
     if(mode==='presentation'){
