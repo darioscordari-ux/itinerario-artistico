@@ -7,7 +7,6 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Itinerario Artistico · Presentazione</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="./viewer-upgrade.css?v=1">
 <style>
 *{box-sizing:border-box}body{margin:0;background:#f5f0e9;color:#241e1b;font-family:system-ui,-apple-system,sans-serif}button{font:inherit;cursor:pointer}button:disabled{opacity:.36;cursor:default}
 header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#211d1a;color:white;padding:11px 16px;min-height:65px}header strong{font-size:16px;flex:1;min-width:140px}header small{font-size:11px;letter-spacing:.15em;color:#dfc7aa}
@@ -17,6 +16,7 @@ nav{display:flex;align-items:center;justify-content:space-between;gap:12px;posit
 #overlay{position:fixed;inset:0;background:#1e1a18;z-index:5000;display:flex;justify-content:center;align-items:center;padding:18px;color:white}#overlay[hidden]{display:none}#cover{width:min(700px,100%);max-height:94dvh;overflow:auto;text-align:center}#coverImg{width:100%;max-height:38dvh;object-fit:cover;border-radius:9px;margin:16px 0}#cover h1{font-size:clamp(34px,6vw,72px);color:#fff}#cover p{line-height:1.5;color:#ddd}#cover .byline{font-size:14px}#status{margin:20px auto;padding:20px;max-width:560px;font-size:19px;line-height:1.5}#status[hidden]{display:none}
 @media(max-width:720px){header{padding:10px 12px}header strong{font-size:14px}main{height:calc(100dvh - 103px);display:flex;flex-direction:column;min-height:0}#map{flex:0 0 38%;min-height:120px}#slidePanel{flex:1;min-height:0}#slideContent{padding:14px 18px}#slideContent h1{font-size:31px}#photos{margin:10px 0}#photos img{height:115px}#photos img:only-child{height:clamp(160px,23vh,300px)}#photos img:first-child:nth-last-child(3){height:150px}#desc{font-size:15px}nav{padding:9px 14px}}
 </style>
+<link rel="stylesheet" href="./viewer-upgrade.css?v=1">
 </head>
 <body data-view="both">
 <header><div><small>ITINERARIO ARTISTICO</small></div><strong id="projectTitle">Presentazione</strong><div class="switch" role="group" aria-label="Modalità visualizzazione"><button type="button" data-mode="map" aria-pressed="false">Mappa</button><button type="button" data-mode="slides" aria-pressed="false">Slide</button><button type="button" data-mode="both" aria-pressed="true">Entrambe</button></div></header>
