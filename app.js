@@ -155,6 +155,15 @@ function updateRouteSummary(){const box=$('routeSummary');if(!segments.length){b
 
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;$('installBtn').classList.remove('hidden')});$('installBtn').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;$('installBtn').classList.add('hidden')};
 if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+window.__IA_OPEN_REMOTE_PRESENTATION=function(project){
+  if(!project||!Array.isArray(project.stops))return;
+  // A transient entry exists only in JavaScript memory; never persist to localStorage.
+  projects=projects.filter(p=>p.id!==project.id);
+  projects.push(project);
+  renderLibrary();
+  openProject(project.id,true);
+  setTimeout(()=>window.__IA_SHOW_COVER?.(),150);
+};
 renderLibrary();
 })();
 
