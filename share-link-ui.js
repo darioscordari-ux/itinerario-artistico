@@ -110,7 +110,7 @@
       }
     }
     if(!verified)throw Error('La presentazione è stata salvata, ma il link non è verificabile ('+reason+'). Riprova la condivisione.');
-    return {url:base+'?s=sb.'+id,removedLocalImages:0,short:true};
+    return {url:new URL('viewer.html?s=sb.'+id,base).href,removedLocalImages:0,short:true};
   }
 
   async function copyLink(url,message){
