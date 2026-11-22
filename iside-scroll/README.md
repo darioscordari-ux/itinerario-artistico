@@ -1,5 +1,10 @@
-# Dall'Egitto al Salento: il viaggio di Iside
+# Dall'Egitto al Salento · Il viaggio di Iside
 
-Web app didattica autonoma per smartphone. Apri `index.html` oppure visita la pagina GitHub Pages del progetto. Scorri verticalmente per srotolare la pergamena; tocca le immagini per ingrandirle e i reperti per leggere le informazioni.
+Web app didattica a scorrimento verticale per smartphone.
 
-Immagini e ricostruzioni a scopo illustrativo, non riproduzioni scientifiche dei reperti.
+- Fotografie autentiche di opere egizie e di Palazzo Vernazza, con fonti e attribuzioni.
+- Modello museale del tempio di Iside a Pompei, **esplicitamente diverso** dal santuario di Lupiae.
+- Pochi testi e cinque capitoli; nessun quiz, popup o zoom.
+- La grafica è pensata per essere letta senza interazioni oltre allo scorrimento.
+
+Le immagini da musei e siti di terze parti sono incorporate dai siti originali e possono richiedere connessione Internet. Sono accreditate nella pagina. Questo progetto non rivendica ricostruzioni storiche inesistenti.
