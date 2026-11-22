@@ -10,6 +10,8 @@
 <meta property="og:description" content="Una pergamena da srotolare sullo smartphone: immagini reali, reperti e storia di Lupiae.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="manifest" href="manifest.webmanifest">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzxjAOu+L7yXtMOgLqY1iZI=" crossorigin="">
 <title>Dall'Egitto al Salento · Il viaggio di Iside</title>
 <style>
 :root{color-scheme:light;--ink:#1a393a;--earth:#9e5a37;--ochre:#bd8e4a;--paper:#f6ead2;--soft:#fff8e7;--shadow:rgba(48,30,9,.15);--progress:0}
@@ -31,6 +33,22 @@
 .reveal{opacity:0;transform:translateY(15px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
 @media(max-width:650px){.scroll{margin:29px 9px 42px}.hero{min-height:72svh;padding-top:70px}.sheet{padding-left:24px;padding-right:24px}.section{padding-top:47px;padding-bottom:27px}.duo{gap:8px}.duo .tile{padding:11px}.duo strong{font-size:14px}.duo p{font-size:13px}.photograph.wide img{max-height:360px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hint .arr{animation:none}.reveal{opacity:1;transform:none;transition:none}}
+
+/* Carta geografica reale e micro-approfondimenti a soffietto */
+.mapframe{padding:0;overflow:hidden;box-shadow:0 8px 22px #2b281b18}
+#map-real{height:clamp(265px,65vw,355px);width:100%;z-index:1;background:#bcd7d3;pointer-events:none}
+#map-real .leaflet-control-attribution{font:9px system-ui,sans-serif!important;background:#fffdf1d9!important}
+.map-legend{padding:10px 12px;background:#f8f0de;font:12px/1.45 system-ui,sans-serif;color:#63503a}
+.map-legend .line{display:inline-block;width:26px;border-top:3px solid #b4322f;vertical-align:middle;margin:0 6px 2px 0}
+.insight{margin:14px 0;background:#efe0c3;border:1px solid #d5b787;border-left:3px solid #a2613b;border-radius:4px}
+.insight summary{display:flex;align-items:center;justify-content:space-between;gap:9px;cursor:pointer;list-style:none;padding:13px 14px;font:700 14px/1.4 system-ui,sans-serif;color:#204442}
+.insight summary::-webkit-details-marker{display:none}
+.insight summary:after{content:"+";font-size:23px;font-weight:400;line-height:1;color:#9a5631}
+.insight[open] summary:after{content:"−"}
+.insight .info{padding:0 14px 14px;font:14px/1.55 system-ui,sans-serif;color:#4d463b}
+.insight .info p{margin:0}
+.lead-small{font-size:14px;color:#5d513f;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.insight summary{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -42,7 +60,7 @@
 <div class="kicker">Storia dell'arte · Egitto e territorio</div>
 <div class="ornament" aria-hidden="true"><span>✦</span></div>
 <h1>Dall'Egitto<br>al Salento<span>Il viaggio di Iside</span></h1>
-<p class="intro">Una divinità egizia, un viaggio nel Mediterraneo, un santuario nel cuore della Lecce romana.</p>
+<p class="intro">Dall’antico culto di una dea egizia alla sua diffusione tra le religioni praticate nel mondo romano.</p>
 <div class="hint">Scorri per srotolare <span class="arr" aria-hidden="true">↓</span></div>
 </header>
 
@@ -54,7 +72,8 @@
 <div class="photograph portrait tall"><div class="tag">Opera autentica</div><img loading="lazy" decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Statuette_of_Isis_nursing_Horus%2C_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg/500px-Statuette_of_Isis_nursing_Horus%2C_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg" alt="Autentica statuetta egizia in pietra: Iside seduta tiene in braccio il piccolo Horo, Museo Metropolitano di New York."></div>
 <figcaption class="credit">Iside con il piccolo Horo · Egitto, 664–332 a.C. circa · Metropolitan Museum of Art · fotografia CC0.</figcaption>
 </figure>
-<p class="short reveal">Il suo culto continuò anche in età greca e romana. Le immagini della dea cambiarono nel tempo, ma rimasero importanti i rituali, la protezione e il legame simbolico con l'acqua.</p>
+<p class="short reveal">Il culto di Iside si diffuse nel mondo greco e romano e fu praticato anche in molte città dell'Impero.</p>
+<details class="insight reveal"><summary>Perché Iside era così importante?</summary><div class="info"><p>Il mito racconta che Iside ricompose il corpo di Osiride, suo sposo, e lo riportò in vita. Per questo era associata alla protezione, alla rinascita e alla speranza di una vita oltre la morte.</p></div></details>
 </section>
 
 <section class="section" id="viaggio">
@@ -63,20 +82,10 @@
 <p class="lead">Attraverso gli scambi e i contatti culturali, il culto di Iside si diffuse dall'Egitto al mondo greco e romano.</p>
 <figure class="reveal">
 <div class="mapframe">
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 300" role="img" aria-label="Schema geografico semplificato: l'Egitto a sud-est e Lecce sul versante adriatico dell'Italia; freccia attraverso il Mediterraneo.">
-<defs><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#acc9c5"/><stop offset="1" stop-color="#80aaa7"/></linearGradient><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1 1L7 4.5L1 8" fill="none" stroke="#9e5231" stroke-width="1.5"/></marker></defs>
-<rect x="0" y="0" width="540" height="300" rx="7" fill="url(#sea)"/>
-<path d="M0 0H200L195 23 166 38 156 64 124 85 112 109 73 126 0 119Z" fill="#ddc5a0" stroke="#ac936a" stroke-width="2"/>
-<path d="M0 241L75 227 134 244 198 236 258 253 328 247 366 263 414 260 540 249V300H0Z" fill="#ddc5a0" stroke="#ac936a" stroke-width="2"/>
-<path d="M170 0L218 0 225 28 244 51 251 64 269 77 274 90 278 106 297 117 303 130 324 150 341 163 355 164 368 155 387 156 381 168 363 181 342 184 327 179 303 162 287 143 273 126 266 111 254 99 249 86 244 71 224 58 215 48 206 26 191 19Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
-<path d="M368 137L387 149 393 162 380 174 374 169Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
-<path d="M441 40L460 56 474 81 486 106 468 133 447 150 439 178 456 192 473 208 489 234 463 253 417 254 398 237 399 196 416 167 423 145 415 118Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
-<path d="M432 243Q377 214 343 185Q333 173 354 161" fill="none" stroke="#9d4d2d" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 9" marker-end="url(#arrow)"/>
-<circle cx="432" cy="243" r="8" fill="#a45031" stroke="#fff4da" stroke-width="3"/><circle cx="354" cy="161" r="8" fill="#a45031" stroke="#fff4da" stroke-width="3"/>
-<g fill="#173d3e" font-family="system-ui,sans-serif" font-weight="700" font-size="17"><text x="394" y="277">EGITTO</text><text x="312" y="147">LECCE</text><text x="98" y="214" fill="#24575c" font-size="15">MAR MEDITERRANEO</text></g>
-</svg>
+<div id="map-real" role="img" aria-label="Carta geografica reale OpenStreetMap del Mediterraneo: una linea rossa collega l'Egitto, presso Alessandria, a Lupiae, l'odierna Lecce."></div>
+<div class="map-legend"><span class="line"></span>Diffusione del culto dall'Egitto a Lupiae: collegamento illustrativo, <strong>non una rotta storica ricostruita</strong>.</div>
 </div>
-<figcaption class="mapnote">Schema geografico orientativo, non una rotta commerciale documentata.</figcaption>
+<figcaption class="mapnote">Base geografica reale: © OpenStreetMap contributors. La linea rossa rappresenta una relazione culturale, non un itinerario nautico accertato.</figcaption>
 </figure>
 <p class="motto reveal">La religione egizia non rimase confinata lungo il Nilo: alcune sue divinità furono venerate anche nelle città dell'Impero romano.</p>
 </section>
@@ -97,6 +106,8 @@
 <div class="numberline"><b>1</b><div><strong>Il portico</strong>Gli archeologi hanno riconosciuto resti architettonici di un portico dell'area sacra.</div></div>
 <div class="numberline"><b>2</b><div><strong>Il Purgatorium</strong>Una vasca scavata nella roccia, raggiungibile mediante gradini, era collegata ai rituali di purificazione. L'acqua richiamava simbolicamente quella del Nilo.</div></div>
 </div>
+<details class="insight reveal"><summary>Che cos’era il Purgatorium?</summary><div class="info"><p>Era un ambiente con vasca destinato ai riti di purificazione. L’acqua aveva un significato religioso ed evocava simbolicamente quella del Nilo: non risulta che fosse effettivamente trasportata dall’Egitto.</p></div></details>
+<details class="insight reveal"><summary>Chi era Serapide?</summary><div class="info"><p>Serapide era una divinità nata nell’Egitto di età tolemaica dall’incontro di tradizioni egizie e greche. Il suo culto si diffuse, insieme a quello di Iside, anche nel mondo romano.</p></div></details>
 <p class="caption">Importante: il santuario antico <strong>non era tutto sotterraneo</strong>. Oggi sono sotterranei i resti conservati sotto il palazzo costruito successivamente.</p>
 </section>
 
@@ -108,6 +119,12 @@
 <div class="photograph wide"><div class="tag">Modello museale</div><img loading="lazy" decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Naples_National_Archaeological_Museum_%2814399322638%29.jpg/960px-Naples_National_Archaeological_Museum_%2814399322638%29.jpg" alt="Fotografia del plastico ricostruttivo del tempio romano di Iside a Pompei, conservato al Museo Archeologico Nazionale di Napoli."></div>
 <figcaption class="credit">Plastico ricostruttivo del santuario di Iside a <strong>Pompei</strong>, Museo Archeologico Nazionale di Napoli · foto Carole Raddato, CC BY-SA 2.0.</figcaption>
 </figure>
+<figure class="reveal">
+<div class="photograph wide"><div class="tag">Interno del complesso · plastico museale</div><img loading="lazy" decoding="async" src="https://www.pompeiiinpictures.com/pompeiiinpictures/R8/8%2007%2028%20p12_files/image004.jpg" alt="Veduta dall'alto del plastico scientifico del Tempio di Iside di Pompei. Si distinguono il santuario su podio, il cortile e il portico circostante."></div>
+<figcaption class="credit">Veduta dall'interno del complesso ricostruito in scala · plastico del Tempio di Iside a Pompei, Museo Archeologico Nazionale di Napoli · fotografia Buzz Ferebee, pubblicata da Pompeii in Pictures.</figcaption>
+</figure>
+<p class="lead-small">Nel modello sono riconoscibili <strong>il cortile porticato</strong>, il tempietto su podio e gli ambienti disposti intorno all'area sacra. A Pompei sono documentati anche il purgatorium, il sacrarium e la sala degli iniziati.</p>
+<details class="insight reveal"><summary>Come si svolgevano i riti nel santuario?</summary><div class="info"><p>Il purgatorium serviva ai riti di purificazione, mentre altare, cortile e ambienti del complesso ospitavano altre attività religiose. La disposizione è documentata a Pompei: non possiamo attribuirla identica al santuario di Lupiae.</p></div></details>
 <p class="motto reveal"><strong>Attenzione:</strong> questa non è la ricostruzione di Lupiae. È un confronto documentato con un altro santuario romano dedicato alla stessa dea. Il MUST di Lecce presenta anche un plastico interpretativo del santuario leccese.</p>
 </section>
 
@@ -124,18 +141,33 @@
 <div class="numberline"><b>2</b><div><strong>Labrum</strong>Un bacino in marmo con una dedica a Iside di Memmius Cinyps Tiberinus: una testimonianza epigrafica del culto.</div></div>
 <div class="numberline"><b>3</b><div><strong>Sistro e situla</strong>Strumento musicale e recipiente rituale, documentati nell'iconografia del culto isiaco e nel contesto dei ritrovamenti.</div></div>
 </div>
+<details class="insight reveal"><summary>Che cosa rappresenta l’oscillum?</summary><div class="info"><p>È una decorazione marmorea sospesa e lavorata su entrambe le facce: vi compaiono Iside e Anubi, figure della tradizione religiosa egizia. Non sono due dischi separati.</p></div></details>
+<details class="insight reveal"><summary>Perché è importante il labrum?</summary><div class="info"><p>Il bacino reca una dedica legata al culto di Iside. Le iscrizioni sono testimonianze storiche fondamentali perché documentano nomi e pratiche religiose dei fedeli.</p></div></details>
 </section>
 
 <footer class="ending" id="fine">
 <div class="eyebrow">La conclusione</div><div class="ornament" aria-hidden="true"><span>✦</span></div>
-<h2>Un Egitto lontano.<br>Una storia vicina.</h2>
-<p>A Lecce non troviamo un tempio costruito dagli antichi Egizi, ma un culto di origine egizia <strong>reinterpretato nella città romana</strong>.</p>
+<h2>Iside tra i culti del mondo romano</h2>
+<p>Il santuario di Lupiae testimonia come <strong>la religione egizia sia entrata a far parte dei diversi culti praticati nel mondo romano</strong>. A Lecce, Iside e Serapide erano venerati all’interno di una società che accoglieva divinità e tradizioni di origini differenti.</p>
 <div class="place"><strong>Palazzo Castromediano-Vernazza · Lecce</strong><span>Vico Vernazza 8 · Qui è visitabile il percorso archeologico con i resti del santuario.</span></div>
-<div class="sources"><strong>Fonti e immagini</strong><p>Testi basati su Palazzo Vernazza, Comune di Lecce e ricerche dell'Università del Salento. Le foto sono autentiche; il plastico rappresenta Pompei e non Lupiae. Nessuna ricostruzione inventata è presentata come evidenza archeologica.</p><ul class="source-links"><li><a href="https://www.palazzovernazza.it/visit-vernazza/">Palazzo Vernazza · Il santuario</a></li><li><a href="https://visitlecce.eu/it/luogo/palazzo-castromediano-vernazza">Visit Lecce · Palazzo Vernazza e plastico del MUST</a></li><li><a href="https://arteeluoghi.it/index.php/2020/10/09/palazzo-vernazza-e-i-suoi-ipogei-lecce-da-scoprire/">Arte e Luoghi · fotografie degli scavi</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Statuette_of_Isis_nursing_Horus,_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg">The Met · Iside con Horo (CC0)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Naples_National_Archaeological_Museum_(14399322638).jpg">Modello di Pompei · Carole Raddato (CC BY-SA 2.0)</a></li></ul><p class="citation-note">Le immagini di Palazzo Vernazza e Arte e Luoghi sono mostrate dai siti originali, con attribuzione. L'app non include fotografie prive di provenienza.</p></div>
+<div class="sources"><strong>Fonti e immagini</strong><p>Testi basati su Palazzo Vernazza, Comune di Lecce e ricerche dell'Università del Salento. Le foto sono autentiche; il plastico rappresenta Pompei e non Lupiae. Nessuna ricostruzione inventata è presentata come evidenza archeologica.</p><ul class="source-links"><li><a href="https://www.museoarcheologiconapoli.it/portfolio-item/tempio-di-iside/">MANN · il plastico e le decorazioni del Tempio di Iside a Pompei</a></li><li><a href="https://pompeiisites.org/en/visiting-info/map-and-guide-to-the-excavations/">Parco archeologico di Pompei · guida agli scavi</a></li><li><a href="https://www.pompeiiinpictures.com/pompeiiinpictures/R8/8%2007%2028%20p12.htm">Pompeii in Pictures · fotografia del plastico, Buzz Ferebee</a></li><li><a href="https://www.openstreetmap.org/copyright">OpenStreetMap · cartografia e attribuzione</a></li><li><a href="https://www.palazzovernazza.it/visit-vernazza/">Palazzo Vernazza · Il santuario</a></li><li><a href="https://visitlecce.eu/it/luogo/palazzo-castromediano-vernazza">Visit Lecce · Palazzo Vernazza e plastico del MUST</a></li><li><a href="https://arteeluoghi.it/index.php/2020/10/09/palazzo-vernazza-e-i-suoi-ipogei-lecce-da-scoprire/">Arte e Luoghi · fotografie degli scavi</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Statuette_of_Isis_nursing_Horus,_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg">The Met · Iside con Horo (CC0)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Naples_National_Archaeological_Museum_(14399322638).jpg">Modello di Pompei · Carole Raddato (CC BY-SA 2.0)</a></li></ul><p class="citation-note">Le immagini di Palazzo Vernazza e Arte e Luoghi sono mostrate dai siti originali, con attribuzione. L'app non include fotografie prive di provenienza.</p></div>
 </footer>
 </div><div class="roller bottom" aria-hidden="true"></div>
 </main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-(()=>{'use strict';const root=document.documentElement;let busy=false;function progress(){const max=Math.max(1,root.scrollHeight-innerHeight);root.style.setProperty('--progress',String(Math.min(1,Math.max(0,scrollY/max))));busy=false}addEventListener('scroll',()=>{if(!busy){busy=true;requestAnimationFrame(progress)}},{passive:true});addEventListener('resize',progress);progress();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!reduced&&'IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{rootMargin:'0px 0px -5% 0px',threshold:0.06});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e))}else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'))})();
+(()=>{'use strict';
+if(window.L&&document.getElementById('map-real')){
+ const map=L.map('map-real',{zoomControl:false,dragging:false,touchZoom:false,scrollWheelZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false,attributionControl:true});
+ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+ const egypt=[31.2001,29.9187],lupiae=[40.3515,18.1750];
+ const route=L.polyline([egypt,lupiae],{color:'#af342f',weight:4,opacity:0.95,dashArray:'9 6',interactive:false}).addTo(map);
+ const pin=(where,name)=>L.circleMarker(where,{radius:7,color:'#fff5df',weight:2,fillColor:'#a52f2f',fillOpacity:1,interactive:false}).addTo(map);
+ pin(egypt,'Egitto');pin(lupiae,'Lupiae');
+ map.fitBounds(route.getBounds().pad(.27),{animate:false});
+ L.marker(egypt,{icon:L.divIcon({className:'',html:'<span style="background:#fff9e7;padding:3px 6px;font:700 12px system-ui;white-space:nowrap;border-radius:3px;border:1px solid #bb9a6c">Egitto</span>',iconSize:[72,24],iconAnchor:[36,-9]}),interactive:false}).addTo(map);
+ L.marker(lupiae,{icon:L.divIcon({className:'',html:'<span style="background:#fff9e7;padding:3px 6px;font:700 12px system-ui;white-space:nowrap;border-radius:3px;border:1px solid #bb9a6c">Lupiae · Lecce</span>',iconSize:[110,24],iconAnchor:[55,32]}),interactive:false}).addTo(map);
+}
+const root=document.documentElement;let busy=false;function progress(){const max=Math.max(1,root.scrollHeight-innerHeight);root.style.setProperty('--progress',String(Math.min(1,Math.max(0,scrollY/max))));busy=false}addEventListener('scroll',()=>{if(!busy){busy=true;requestAnimationFrame(progress)}},{passive:true});addEventListener('resize',progress);progress();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!reduced&&'IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{rootMargin:'0px 0px -5% 0px',threshold:0.06});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e))}else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'))})();
 </script>
 </body></html>
