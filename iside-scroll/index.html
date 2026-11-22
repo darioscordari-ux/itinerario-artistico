@@ -1,119 +1,141 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#163d42">
-  <meta name="description" content="Dall'Egitto al Salento: una pergamena interattiva per scoprire il viaggio del culto di Iside fino a Lupiae, la Lecce romana.">
-  <meta property="og:title" content="Il viaggio di Iside · Dall'Egitto al Salento">
-  <meta property="og:description" content="Srotola la pergamena, esplora i reperti archeologici e scopri il legame fra arte egizia e Lecce romana.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="assets/viaggio.webp">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.webmanifest">
-  <title>Il viaggio di Iside · Pergamena interattiva</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#233e3d">
+<meta name="description" content="Dall'Egitto al Salento: una pergamena digitale a scorrimento sull'antico culto di Iside a Lupiae, con fotografie autentiche e confronti archeologici documentati.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Il viaggio di Iside · Dall'Egitto al Salento">
+<meta property="og:description" content="Una pergamena da srotolare sullo smartphone: immagini reali, reperti e storia di Lupiae.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Dall'Egitto al Salento · Il viaggio di Iside</title>
 <style>
-:root{--ink:#183e40;--rust:#a34425;--rust2:#cd6b3e;--gold:#bd9055;--paper:#f7e7bb;--paper2:#ead4a4;--muted:#67543b;--max:760px;--scroll:0;--opening:0}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:98px}body{margin:0;min-width:320px;color:#293b34;background:radial-gradient(ellipse at center,#436d68,#10292f 78%);font-family:Georgia,'Times New Roman',serif;-webkit-font-smoothing:antialiased}button{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #e7a14d;outline-offset:4px}a{color:var(--ink)}p{line-height:1.55;margin:.7em 0}h1,h2,h3{line-height:1.15}img{max-width:100%}#toproll{position:fixed;top:0;left:0;width:100%;height:72px;z-index:30;display:flex;align-items:flex-start;justify-content:center;pointer-events:none}#toproll .rod{position:absolute;top:4px;left:calc(50% - min(380px, 49vw));width:min(760px, 98vw);height:37px;border:1px solid #9b642f;border-radius:16px;background:linear-gradient(#ad783d 0%,#eac786 18%,#c18b46 42%,#8e541f 68%,#e9bb75 91%,#9a5b2a);box-shadow:0 8px 9px #1a292944;transform:rotate(calc(var(--opening)*1deg));transition:transform .15s ease}#toproll .rod:before,#toproll .rod:after{content:"";position:absolute;top:-4px;width:26px;height:42px;border-radius:13px;background:linear-gradient(90deg,#633714,#d5a557 30%,#9c6227 60%,#48310e);border:2px solid #76501a}#toproll .rod:before{left:-12px}#toproll .rod:after{right:-12px}#toproll .rod em{position:absolute;left:50%;top:7px;transform:translateX(-50%);white-space:nowrap;color:#513113;font-size:14px;font-style:normal;font-weight:700;letter-spacing:.1em}#progress-track{position:absolute;width:min(675px,83vw);height:5px;border-radius:10px;background:#305456;top:51px;box-shadow:0 1px 3px #0004}#progress-fill{display:block;width:calc(var(--scroll)*100%);height:100%;border-radius:inherit;background:linear-gradient(90deg,#e6aa66,#fff0b0)}#progress-label{position:absolute;top:58px;color:#ebdbb6;letter-spacing:.08em;font:600 11px system-ui,sans-serif;text-shadow:0 1px 3px #111}
-.shell{position:relative;isolation:isolate;max-width:var(--max);margin:60px auto 40px;overflow:hidden;background:linear-gradient(90deg,#bd955580 0px,#fffbdf 19px,#f7e9c0 50%,#d5b177 100%);box-shadow:0 0 0 1px #72532c,0 20px 60px #04171bb8;border-radius:6px 6px 12px 12px}
-.shell::before,.shell::after{content:"";position:absolute;top:0;bottom:0;width:13px;z-index:2;pointer-events:none;background:linear-gradient(90deg,#875e35a8,#d6b17a15);filter:blur(2px)}.shell::before{left:0}.shell::after{right:0;transform:scaleX(-1)}
-.paper{position:relative;padding:30px clamp(18px,5vw,55px) 45px;background-image:radial-gradient(#a9784130 .7px,transparent .9px),radial-gradient(ellipse at 75% 5%,#f7e9c04c,#0000 52%);background-size:17px 23px,100% 100%}
-.cover{text-align:center;padding-top:65px;padding-bottom:35px;min-height:calc(90svh - 55px);display:flex;flex-direction:column;justify-content:center;align-items:center}.eyebrow{font:700 12px system-ui,sans-serif;letter-spacing:.23em;color:var(--rust);text-transform:uppercase;margin:0 0 16px}.cover .sigil{font-size:60px;color:var(--ink);line-height:1;margin:0 0 10px;font-family:Georgia,serif}h1{font-size:clamp(43px,9.7vw,75px);font-weight:600;letter-spacing:-.04em;color:var(--ink);margin:0}h1 span{display:block;font-size:.43em;letter-spacing:.03em;margin:8px 0 0;color:var(--rust)}.subtitle{font-size:clamp(17px,3.5vw,24px);max-width:540px;color:#65482c;margin:23px auto}.ribbon{max-width:440px;margin:10px auto;padding:10px 20px;background:var(--ink);color:#f4e6bf;border-radius:4px 4px 15px 15px;box-shadow:0 4px 0 #896438;line-height:1.35}.cta,.mini-btn,.share-btn,.restart,.quiz button,.section-jump{border:0;cursor:pointer}.cta{display:inline-flex;align-items:center;gap:11px;margin:30px 0 3px;background:var(--rust);border-radius:25px;padding:14px 26px;color:white;box-shadow:0 6px 0 #793414,0 7px 12px #0002;font:700 16px system-ui,sans-serif;min-height:50px}.cta:active{transform:translateY(3px);box-shadow:0 3px 0 #793414}.down-arrow{display:block;font-size:24px;animation:bob 2s infinite;color:#935534;margin-top:12px}.cover-art{width:min(480px,100%);height:170px;border-radius:50% 50% 12px 12px;overflow:hidden;margin:16px 0 8px;box-shadow:inset 0 0 0 8px #ebd2a3;background:#edd7ac}.cover-art img{height:100%;width:100%;object-fit:cover;object-position:35% 23%}
-.chapter{position:relative;padding-top:72px;min-height:620px;border-top:2px solid #b792604a;scroll-margin-top:60px}.chapter:before{content:'✦  ❧  ✦';display:block;text-align:center;color:#977342;margin-bottom:22px;letter-spacing:.9em;font-size:17px}.chapter-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}.chapter-index{display:grid;place-items:center;flex:0 0 54px;height:54px;border-radius:100%;border:2px solid #b18a56;color:#f5e0aa;background:var(--ink);font-size:24px}.chapter h2{color:var(--ink);font-size:clamp(28px,6vw,43px);margin:0;letter-spacing:-.02em}.lead{font-size:clamp(18px,3.8vw,23px);color:#58402e;margin-bottom:26px}.scene{border:1px solid #a67d4b;background:#fff8ddaa;padding:14px;margin:23px 0;border-radius:16px;box-shadow:0 6px 16px #79592d17;opacity:.85;transform:translateY(16px);transition:opacity .6s,transform .6s}.scene.visible{opacity:1;transform:none}.scene h3{font-size:25px;color:var(--ink);margin:2px 0 10px}.small-cap{font:700 11px system-ui,sans-serif;letter-spacing:.19em;text-transform:uppercase;color:var(--rust);margin:0 0 5px}.art{position:relative;overflow:hidden;border-radius:11px;box-shadow:0 2px 0 #b48752;background:#e8d1a7}.art>img{display:block;width:100%;height:auto}.crop{height:clamp(225px,64vw,350px)}.crop img{height:100%;width:300%;max-width:none;object-fit:cover}.crop.left img{transform:translateX(0)}.crop.middle img{transform:translateX(-33.333%)}.crop.right img{transform:translateX(-66.666%)}.art.full{border:3px solid #d4ae76}.art.full img{width:100%;height:auto}.img-open{position:absolute;bottom:9px;right:9px;background:#193e40e8;color:#fff8df;border:1px solid #f5eacb88;min-height:38px;padding:8px 12px;border-radius:18px;cursor:pointer;font:700 12px system-ui,sans-serif}.story-text{font-size:17px;margin:15px 2px 8px}.key{background:#efd9a9;border-left:4px solid var(--rust);padding:15px;border-radius:6px;font-size:16px;margin:19px 0}.key strong{color:var(--rust)}.path{display:flex;align-items:center;justify-content:space-between;gap:5px;margin:28px 0;color:var(--rust);font:700 12px system-ui,sans-serif;letter-spacing:.05em}.path span{background:#e9cf9e;border-radius:30px;padding:9px 8px;text-align:center}.path b{font-size:19px}
-.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.compare .art{height:200px}.compare img{width:200%;height:100%;max-width:none;object-fit:cover}.compare .first img{transform:translateX(0)}.compare .second img{transform:translateX(-50%)}.compare figcaption{font-weight:700;color:var(--ink);text-align:center;font-size:15px;margin:7px 0}.compare figure{margin:0}.details{margin:12px 0;border-radius:9px;border:1px solid #c69d66;background:#faefd1;overflow:hidden}.details summary{padding:16px 14px;cursor:pointer;color:var(--ink);font-size:18px;font-weight:bold;list-style:none;display:flex;justify-content:space-between;gap:5px}.details summary:after{content:'+';font-size:23px;line-height:1}.details[open] summary:after{content:'−'}.details>p{margin:0;padding:3px 14px 17px;font-size:16px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fact{background:#f0dcb5;border:1px solid #cbad7d;border-radius:12px;padding:15px}.fact b{display:block;color:var(--rust);font-size:20px;margin-bottom:5px}.fact span{font-size:14px;line-height:1.35;display:block}
-.artifact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.artifact{border:1px solid #bf965e;background:#f5e5c3;border-radius:12px;padding:12px;text-align:left;cursor:pointer;min-height:130px;box-shadow:0 3px 0 #a68251;display:flex;flex-direction:column;justify-content:space-between}.artifact .num{font:700 12px system-ui,sans-serif;color:var(--rust)}.artifact .glyph{font-size:38px;color:var(--ink);margin:5px 0;font-family:Georgia,serif}.artifact .name{font-size:20px;font-weight:700;color:var(--ink)}.artifact p{font:400 13px/1.3 system-ui,sans-serif;margin:4px 0;color:#604c37}.artifact.active{border:2px solid #9a4327;background:#fff8e5;box-shadow:0 1px 0 #9b6848}.artifact-detail{background:#224a49;color:#fff4d2;padding:20px;border-radius:12px;min-height:135px;margin:13px 0;transition:background .3s}.artifact-detail h3{color:#fff8df;margin:0;font-size:26px}.artifact-detail p{margin:8px 0 0;font-size:16px}.question{background:linear-gradient(150deg,#163e40,#315d53);border:3px solid #caa16a;padding:24px 17px;color:#fdf1d4;text-align:center;border-radius:15px;margin:33px 0}.question h3{font-size:27px;color:#fff4d8;margin:5px 0}.question p{font-size:17px}.quiz-options{display:grid;gap:9px;margin:20px auto;max-width:490px}.quiz button{border:1px solid #d2b58d;border-radius:10px;background:#f5e3b9;color:#254443;padding:13px 12px;text-align:left;font:600 15px system-ui,sans-serif;min-height:48px}.quiz button.correct{background:#cbe9d0;border-color:#277c4d;color:#12462a}.quiz button.wrong{background:#f7caba;border-color:#a94435;color:#6b2a25}.quiz button:disabled{opacity:.9;cursor:default}.quiz-result{min-height:38px;font-size:17px;font-weight:700}.quiz-result[hidden]{display:block;visibility:hidden}.finish{text-align:center;padding:35px 0 12px}.finish h2{font-size:clamp(30px,7vw,45px);color:var(--ink);margin:0 0 11px}.finish p{font-size:17px}.share-btn,.restart{border-radius:25px;padding:13px 18px;margin:8px 5px;background:var(--ink);color:#fff8d9;font:600 14px system-ui,sans-serif;min-height:47px}.restart{background:#e8d3a4;color:#23413f;border:1px solid #b59266}.credits{font:12px/1.6 system-ui,sans-serif;color:#675641;text-align:center;margin:25px 10px 0}.bottom-roll{height:36px;border:2px solid #8d592e;border-radius:19px;background:linear-gradient(#ad783d 0%,#edc785 27%,#a27133 64%,#76451c 90%,#d8aa62);margin:0 8px 5px;box-shadow:0 5px 6px #0003}
-#lightbox{border:0;padding:0;width:100vw;height:100dvh;max-width:none;max-height:none;background:#10272bed;color:white}#lightbox::backdrop{background:#102729ee}#lightbox .modal-head{position:fixed;top:0;left:0;right:0;height:61px;background:#173b3b;display:flex;justify-content:space-between;align-items:center;z-index:2;padding:10px 15px;gap:8px;font:700 14px system-ui,sans-serif}#lightbox .modal-head button{border:1px solid #f2dbab;color:#fff4dc;border-radius:20px;background:transparent;padding:9px 13px;cursor:pointer}#lightbox .modal-body{height:100%;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:74px 5px 26px;touch-action:pan-x pan-y pinch-zoom}#lightbox img{width:min(1050px,95vw);max-width:none;object-fit:contain;box-shadow:0 8px 32px #0009}#lightbox img.zoomed{width:1500px}.modal-foot{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:9px;background:#163c3de6;color:#fceccc;font:12px system-ui,sans-serif;white-space:nowrap}
-@keyframes bob{50%{transform:translateY(7px)}}
-@media(min-width:760px){.shell{margin-top:80px}.cover{min-height:700px}.crop{height:370px}.compare .art{height:280px}.artifact-grid{grid-template-columns:repeat(3,1fr)}.paper{padding-left:56px;padding-right:56px}}
-@media(max-width:399px){.paper{padding-inline:15px}.chapter-index{flex-basis:44px;height:44px;font-size:22px}.scene{padding:11px}.artifact .name{font-size:18px}.crop{height:230px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.down-arrow{animation:none}.scene{opacity:1;transform:none;transition:none}#toproll .rod{transition:none}}
+:root{color-scheme:light;--ink:#1a393a;--earth:#9e5a37;--ochre:#bd8e4a;--paper:#f6ead2;--soft:#fff8e7;--shadow:rgba(48,30,9,.15);--progress:0}
+*{box-sizing:border-box}html{scroll-behavior:smooth;overflow-x:hidden}body{margin:0;min-width:280px;background:radial-gradient(ellipse at 50% 20%,#4c6860,#1b3336 75%);color:#312e26;font-family:Georgia,'Times New Roman',serif;-webkit-font-smoothing:antialiased}a{color:#23545a;text-decoration-thickness:1px;text-underline-offset:2px}a:focus-visible{outline:2px solid #c46a37;outline-offset:3px}img{display:block;max-width:100%}h1,h2,h3,p,figure{margin-top:0}h1,h2,h3{color:var(--ink)}p{line-height:1.55}
+.progressbar{height:4px;background:#cb9f61;position:fixed;top:0;left:0;right:0;z-index:40;transform:scaleX(var(--progress));transform-origin:left;pointer-events:none}
+.scroll{max-width:620px;margin:46px auto 68px;position:relative;background:linear-gradient(90deg,#d7b587 0,#f6ead3 18px,#fbf1d9 50%,#e6d0a7 calc(100% - 16px),#cda675 100%);box-shadow:0 20px 80px #08181799,0 0 0 1px #b9905b;border-radius:6px}
+.scroll:before,.scroll:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:12px;pointer-events:none;background:linear-gradient(90deg,#72502a35,#ffffff00)}.scroll:before{left:0}.scroll:after{right:0;transform:rotate(180deg)}
+.roller{position:absolute;left:8px;right:8px;height:34px;border-radius:19px;border:2px solid #946135;background:linear-gradient(#d3a766,#ffddb0 17%,#c88a3e 44%,#a56d30 65%,#f3c384 89%,#986336);box-shadow:0 4px 12px #4a2b1780;z-index:4}.roller.top{top:-18px}.roller.bottom{bottom:-17px}.roller:before,.roller:after{content:"";position:absolute;top:-4px;width:18px;height:39px;border:3px solid #705027;border-radius:10px;background:linear-gradient(90deg,#6c4325,#dbad68,#7b512c)}.roller:before{left:-10px}.roller:after{right:-10px}
+.sheet{padding:0 clamp(23px,6vw,49px) 52px;background-image:radial-gradient(#996a4120 .7px,transparent 1px);background-size:18px 20px;overflow:hidden}
+.hero{min-height:78svh;padding:100px 0 40px;display:flex;flex-direction:column;justify-content:center;text-align:center}.kicker,.eyebrow{color:var(--earth);font:700 11px/1.3 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.21em}.ornament{margin:24px auto 20px;display:flex;align-items:center;gap:13px;justify-content:center;color:var(--ochre)}.ornament:before,.ornament:after{content:"";display:block;height:1px;background:#b99561;flex:1;max-width:95px}.ornament span{font-size:24px}h1{font-size:clamp(42px,9vw,68px);letter-spacing:-.05em;line-height:1.04;font-weight:600;margin:12px 0 20px}h1 span{display:block;font-size:.64em;color:var(--earth);margin-top:12px}.intro{font-size:19px;max-width:400px;margin:0 auto 28px;color:#67523b}.hint{display:flex;align-items:center;gap:10px;justify-content:center;font:600 12px/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#5c6151;margin:18px 0 0}.hint .arr{font-size:26px;animation:down 1.9s infinite}@keyframes down{50%{transform:translateY(9px)}}
+.section{padding:62px 0 45px;border-top:1px solid #be955e70;position:relative}.section-number{font:700 11px/1.3 system-ui,sans-serif;color:var(--earth);letter-spacing:.24em;text-transform:uppercase;margin-bottom:10px}.section h2{font-size:clamp(30px,6.2vw,43px);line-height:1.11;letter-spacing:-.035em;margin:0 0 17px}.lead{font-size:19px;line-height:1.53;margin-bottom:23px;color:#51493a}.short{font-size:16px;color:#493d2e}
+.photograph{overflow:hidden;background:#dfc9a4;border-radius:3px;box-shadow:0 7px 18px var(--shadow);margin:22px 0 12px;position:relative}.photograph img{width:100%;height:auto}.photograph.wide img{max-height:425px;object-fit:cover}.photograph.portrait img{max-height:435px;object-fit:contain;background:#e6d8c3}.photograph.portrait.tall img{max-height:470px}.photograph .tag{position:absolute;left:12px;top:12px;padding:7px 10px;border-radius:3px;background:#173d3bdc;color:#fff7e7;letter-spacing:.1em;text-transform:uppercase;font:700 10px system-ui,sans-serif}
+.credit{font:12px/1.45 system-ui,sans-serif;color:#76644e;margin:7px 2px 23px}.caption{font-size:14px;line-height:1.55;padding-left:13px;border-left:2px solid var(--ochre);color:#64513d;margin:13px 0 20px}.duo{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:25px 0}.duo .tile{background:#eee0c2;padding:14px;border-radius:4px;border-top:3px solid #a1703c}.duo strong{font-size:15px;color:var(--ink);display:block;margin-bottom:7px}.duo p{font-size:14px;margin:0;line-height:1.43}
+.motto{margin:25px 0 8px;padding:19px 17px;background:#e8d1a5;border-left:4px solid var(--earth);font-size:17px;line-height:1.53;color:#33453c}
+.mapframe{margin:25px 0 12px;border:1px solid #c6a272;background:#e4dbc1;border-radius:4px;padding:10px}.mapframe svg{display:block;width:100%;height:auto}.mapnote{font:12px/1.4 system-ui,sans-serif;color:#76644e;margin:0 0 15px}
+.numbers{display:grid;gap:19px;margin:22px 0}.numberline{display:grid;grid-template-columns:38px 1fr;gap:12px}.numberline b{display:grid;place-items:center;border:1px solid #b48750;width:33px;height:33px;background:#efe0bc;color:var(--earth);font-size:20px}.numberline div{font-size:16px;line-height:1.47}.numberline strong{display:block;font-size:19px;color:var(--ink);margin-bottom:2px}
+.place{margin:31px 0 0;display:grid;gap:6px;padding:12px 0;border-top:1px solid #c4aa80;border-bottom:1px solid #c4aa80}.place strong{color:var(--ink);font-size:18px}.place span{font:13px/1.5 system-ui,sans-serif;color:#604f3f}
+.ending{text-align:center;padding:68px 0 32px;border-top:1px solid #bc9d6c}.ending h2{font-size:clamp(31px,7vw,44px);line-height:1.12}.ending p{font-size:18px;color:#594d3d}.sources{text-align:left;font:12px/1.5 system-ui,sans-serif;border-top:1px solid #bf9d6c;margin-top:45px;padding-top:17px;color:#5c5849}.sources p{margin:7px 0;font:12px/1.55 system-ui,sans-serif}.source-links{padding:0 0 0 15px}.source-links li{margin:5px 0}.citation-note{font-size:12px;color:#796b56}
+.reveal{opacity:0;transform:translateY(15px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}
+@media(max-width:650px){.scroll{margin:29px 9px 42px}.hero{min-height:72svh;padding-top:70px}.sheet{padding-left:24px;padding-right:24px}.section{padding-top:47px;padding-bottom:27px}.duo{gap:8px}.duo .tile{padding:11px}.duo strong{font-size:14px}.duo p{font-size:13px}.photograph.wide img{max-height:360px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hint .arr{animation:none}.reveal{opacity:1;transform:none;transition:none}}
 </style>
 </head>
 <body>
-<header id="toproll" aria-label="Avanzamento della pergamena"><div class="rod"><em>PERGAMENA DI ISIDE</em></div><div id="progress-track" aria-hidden="true"><span id="progress-fill"></span></div><div id="progress-label">Pronta da srotolare</div></header>
-<main class="shell" id="pergamena"><div class="paper">
-  <section class="cover" id="inizio">
-    <div class="sigil" aria-hidden="true">☥</div>
-    <p class="eyebrow">Un viaggio nell'arte e nel territorio</p>
-    <h1>Dall'Egitto<br>al Salento<span>Il viaggio di Iside</span></h1>
-    <p class="subtitle">Una pergamena interattiva: dall'antica civiltà del Nilo al santuario di Iside nella Lecce romana.</p>
-    <div class="cover-art"><img src="assets/viaggio.webp" alt="Dea Iside, mappa del Mediterraneo e santuario di Lupiae" loading="eager"></div>
-    <div class="ribbon">Tre tappe da scoprire.<br>Una storia che arriva fino a casa nostra.</div>
-    <button class="cta" id="begin" type="button">Srotola la pergamena <span aria-hidden="true">↓</span></button>
-    <span class="down-arrow" aria-hidden="true">⌄</span>
-  </section>
-  <section class="chapter" id="tappa-1" data-title="1 · Il viaggio">
-    <div class="chapter-head"><span class="chapter-index">1</span><h2>Dall'Egitto al Salento</h2></div>
-    <p class="lead">Come arrivò il culto di una divinità egizia nell'antica <em>Lupiae</em>?</p>
-    <article class="scene" aria-label="Iside in Egitto"><p class="small-cap">Prima tappa · Egitto</p><h3>Iside, la dea del Nilo</h3>
-      <div class="art crop left"><img src="assets/viaggio.webp" alt="Illustrazione di Iside con sistro, situla e simboli del Nilo" loading="lazy"><button class="img-open" data-img="assets/viaggio.webp" data-caption="Dall'Egitto al Salento: panoramica completa">⤢ Ingrandisci</button></div>
-      <p class="story-text">Iside era venerata come dea della <strong>protezione</strong>, della <strong>maternità</strong> e della <strong>magia</strong>. Tra i suoi simboli compaiono il <strong>sistro</strong> e la <strong>situla</strong>.</p>
-    </article>
-    <article class="scene" aria-label="Il viaggio nel Mediterraneo"><p class="small-cap">Seconda tappa · Mediterraneo</p><h3>Le idee attraversano il mare</h3>
-      <div class="art crop middle"><img src="assets/viaggio.webp" alt="Mappa schematica della diffusione del culto di Iside nel Mediterraneo" loading="lazy"><button class="img-open" data-img="assets/viaggio.webp" data-caption="Il viaggio del culto di Iside">⤢ Ingrandisci</button></div>
-      <p class="story-text">I contatti commerciali e culturali diffusero il culto di Iside nel <strong>mondo greco e romano</strong>. La rotta illustrata è simbolica, non la ricostruzione di un singolo viaggio.</p>
-      <div class="path" aria-label="Diffusione dall'Egitto al Salento"><span>EGITTO</span><b>➜</b><span>MEDITERRANEO</span><b>➜</b><span>LUPIAE</span></div>
-    </article>
-    <article class="scene" aria-label="Il santuario di Lupiae"><p class="small-cap">Terza tappa · Lecce romana</p><h3>Iside arriva a Lupiae</h3>
-      <div class="art crop right"><img src="assets/viaggio.webp" alt="Ricostruzione illustrativa del santuario romano di Iside a Lecce" loading="lazy"><button class="img-open" data-img="assets/viaggio.webp" data-caption="Il santuario di Iside a Lupiae">⤢ Ingrandisci</button></div>
-      <p class="story-text">Nella Lecce romana esisteva un santuario dedicato a <strong>Iside e Serapide</strong>. I suoi resti sono stati scoperti sotto <strong>Palazzo Vernazza</strong>, nel centro storico.</p>
-      <p class="key"><strong>Idea chiave:</strong> una tradizione religiosa egizia arriva nel Salento, ma si esprime nel contesto culturale e artistico romano.</p>
-    </article>
-  </section>
-  <section class="chapter" id="tappa-2" data-title="2 · I templi">
-    <div class="chapter-head"><span class="chapter-index">2</span><h2>Due luoghi sacri a confronto</h2></div>
-    <p class="lead">Il santuario leccese non era una copia di un tempio egizio.</p>
-    <article class="scene"><p class="small-cap">Osserva e confronta</p><h3>Che cosa cambia?</h3>
-      <div class="art full"><img src="assets/confronto.webp" loading="lazy" alt="Schema che confronta tempio egizio e santuario di Iside a Lupiae"><button class="img-open" data-img="assets/confronto.webp" data-caption="Tempio egizio e santuario di Lupiae">⤢ Ingrandisci</button></div>
-      <p class="story-text">Nel tempio egizio riconosciamo <strong>pilone, cortile, sala ipostila e naos</strong>. A Lupiae le testimonianze riguardano un <strong>santuario di età romana</strong>, il portico e una vasca rituale.</p>
-    </article>
-    <details class="details"><summary>Che cos'è il Purgatorium?</summary><p>È un ambiente con una vasca scavata nella roccia, usata per i riti di purificazione. L'acqua era associata simbolicamente al Nilo: non significa che provenisse realmente dall'Egitto.</p></details>
-    <details class="details"><summary>Che differenza c'è nell'architettura?</summary><p>Il tempio egizio monumentale segue spesso un percorso assiale con spazi progressivamente più sacri. L'Iseo di Lupiae appartiene invece a un contesto architettonico romano. La ricostruzione mostrata è illustrativa e non una fotografia fedele dell'edificio originale.</p></details>
-    <details class="details"><summary>Che cosa resta in comune?</summary><p>Il culto di Iside, diversi simboli religiosi e l'importanza dell'acqua nei rituali. I Romani adottarono questi elementi, adattandoli a nuove forme artistiche e sociali.</p></details>
-    <div class="facts"><div class="fact"><b>Egitto</b><span>Divinità, forme e spazi sacri della tradizione faraonica.</span></div><div class="fact"><b>Lupiae</b><span>Culto isiaco in una città dell'Impero romano.</span></div></div>
-  </section>
-  <section class="chapter" id="tappa-3" data-title="3 · I reperti">
-    <div class="chapter-head"><span class="chapter-index">3</span><h2>Le prove a Lecce</h2></div>
-    <p class="lead">I reperti sotto Palazzo Vernazza raccontano una storia concreta: tocca gli oggetti per scoprirla.</p>
-    <div class="art full"><img src="assets/reperti.webp" loading="lazy" alt="Tavola illustrata sui reperti del santuario di Iside a Lecce"><button class="img-open" data-img="assets/reperti.webp" data-caption="I reperti del santuario di Iside">⤢ Ingrandisci</button></div>
-    <div class="artifact-grid" aria-label="Esplora i reperti">
-      <button type="button" class="artifact active" data-reperto="0"><span class="num">REPERTO 01</span><span class="glyph" aria-hidden="true">▱</span><span class="name">Purgatorium</span><p>Vasca per purificarsi</p></button>
-      <button type="button" class="artifact" data-reperto="1"><span class="num">REPERTO 02</span><span class="glyph" aria-hidden="true">◉</span><span class="name">Oscillum</span><p>Iside e Anubi</p></button>
-      <button type="button" class="artifact" data-reperto="2"><span class="num">REPERTO 03</span><span class="glyph" aria-hidden="true">♬</span><span class="name">Sistro</span><p>Musica rituale</p></button>
-      <button type="button" class="artifact" data-reperto="3"><span class="num">REPERTO 04</span><span class="glyph" aria-hidden="true">♜</span><span class="name">Situla</span><p>Recipiente cerimoniale</p></button>
-      <button type="button" class="artifact" data-reperto="4"><span class="num">REPERTO 05</span><span class="glyph" aria-hidden="true">◠</span><span class="name">Labrum</span><p>Bacino con dedica</p></button>
-    </div>
-    <div class="artifact-detail" role="status" aria-live="polite"><h3 id="artifact-title">Purgatorium</h3><p id="artifact-body">Una vasca scavata nella roccia, utilizzata per rituali di purificazione legati al culto isiaco.</p></div>
-    <p class="key"><strong>La scoperta:</strong> il santuario, l'oscillum e i recipienti rituali dimostrano la presenza del culto egizio nella Lecce romana. I disegni sono ricostruzioni didattiche, non fotografie dei reperti.</p>
-  </section>
-  <section class="question" aria-labelledby="quiz-title"><p class="small-cap" style="color:#e2bd7f">La prova finale</p><h3 id="quiz-title">Hai seguito il viaggio?</h3><p>Perché il santuario di Iside a Lecce è importante?</p>
-    <div class="quiz quiz-options">
-      <button type="button" data-ok="false">Perché fu costruito dai faraoni in Salento.</button>
-      <button type="button" data-ok="true">Perché mostra la diffusione del culto egizio nel mondo romano.</button>
-      <button type="button" data-ok="false">Perché custodiva la tomba di una regina egizia.</button>
-    </div><p id="quiz-result" class="quiz-result" hidden aria-live="polite"> </p>
-  </section>
-  <footer class="finish"><p class="eyebrow">Fine della pergamena</p><h2>Il viaggio continua a Lecce</h2><p>Il santuario di Iside è visitabile nel percorso archeologico di <strong>Palazzo Vernazza</strong>. La storia del culto egizio è anche una storia del nostro territorio.</p>
-    <button class="share-btn" type="button" id="share">↗ Condividi con la classe</button><button class="restart" type="button" id="again">↑ Ricomincia</button>
-    <p class="credits">Percorso didattico di Storia dell'arte · Fonti principali: Palazzo Vernazza e Comune di Lecce. Le immagini sono ricostruzioni illustrative, non riproduzioni scientifiche degli edifici o dei reperti.<br><a href="https://www.palazzovernazza.it/visit-vernazza/" target="_blank" rel="noopener">Visita Palazzo Vernazza</a> · <a href="https://www.comune.lecce.it/vivi-lecce/musei-e-gallerie/must---museo-storico-della-citt%C3%A0-di-lecce" target="_blank" rel="noopener">MUST Lecce</a></p>
-  </footer>
-</div><div class="bottom-roll" aria-hidden="true"></div></main>
-<dialog id="lightbox" aria-label="Ingrandimento immagine"><div class="modal-head"><span id="modal-caption">Immagine</span><button type="button" id="close-modal">✕ Chiudi</button></div><div class="modal-body"><img id="modal-img" src="" alt="Immagine ingrandita"></div><div class="modal-foot">Tocca l'immagine per ingrandire</div></dialog>
+<div class="progressbar" aria-hidden="true"></div>
+<main class="scroll" id="pergamena">
+<div class="roller top" aria-hidden="true"></div>
+<div class="sheet">
+<header class="hero">
+<div class="kicker">Storia dell'arte · Egitto e territorio</div>
+<div class="ornament" aria-hidden="true"><span>✦</span></div>
+<h1>Dall'Egitto<br>al Salento<span>Il viaggio di Iside</span></h1>
+<p class="intro">Una divinità egizia, un viaggio nel Mediterraneo, un santuario nel cuore della Lecce romana.</p>
+<div class="hint">Scorri per srotolare <span class="arr" aria-hidden="true">↓</span></div>
+</header>
+
+<section class="section" id="iside">
+<div class="section-number">01 · Le origini</div>
+<h2>Chi era Iside?</h2>
+<p class="lead">Nell'antico Egitto, <strong>Iside</strong> era una dea legata alla maternità, alla magia e alla protezione.</p>
+<figure class="reveal">
+<div class="photograph portrait tall"><div class="tag">Opera autentica</div><img loading="lazy" decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Statuette_of_Isis_nursing_Horus%2C_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg/500px-Statuette_of_Isis_nursing_Horus%2C_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg" alt="Autentica statuetta egizia in pietra: Iside seduta tiene in braccio il piccolo Horo, Museo Metropolitano di New York."></div>
+<figcaption class="credit">Iside con il piccolo Horo · Egitto, 664–332 a.C. circa · Metropolitan Museum of Art · fotografia CC0.</figcaption>
+</figure>
+<p class="short reveal">Il suo culto continuò anche in età greca e romana. Le immagini della dea cambiarono nel tempo, ma rimasero importanti i rituali, la protezione e il legame simbolico con l'acqua.</p>
+</section>
+
+<section class="section" id="viaggio">
+<div class="section-number">02 · La diffusione</div>
+<h2>Dal Nilo al Mediterraneo</h2>
+<p class="lead">Attraverso gli scambi e i contatti culturali, il culto di Iside si diffuse dall'Egitto al mondo greco e romano.</p>
+<figure class="reveal">
+<div class="mapframe">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 300" role="img" aria-label="Schema geografico semplificato: l'Egitto a sud-est e Lecce sul versante adriatico dell'Italia; freccia attraverso il Mediterraneo.">
+<defs><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#acc9c5"/><stop offset="1" stop-color="#80aaa7"/></linearGradient><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M1 1L7 4.5L1 8" fill="none" stroke="#9e5231" stroke-width="1.5"/></marker></defs>
+<rect x="0" y="0" width="540" height="300" rx="7" fill="url(#sea)"/>
+<path d="M0 0H200L195 23 166 38 156 64 124 85 112 109 73 126 0 119Z" fill="#ddc5a0" stroke="#ac936a" stroke-width="2"/>
+<path d="M0 241L75 227 134 244 198 236 258 253 328 247 366 263 414 260 540 249V300H0Z" fill="#ddc5a0" stroke="#ac936a" stroke-width="2"/>
+<path d="M170 0L218 0 225 28 244 51 251 64 269 77 274 90 278 106 297 117 303 130 324 150 341 163 355 164 368 155 387 156 381 168 363 181 342 184 327 179 303 162 287 143 273 126 266 111 254 99 249 86 244 71 224 58 215 48 206 26 191 19Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
+<path d="M368 137L387 149 393 162 380 174 374 169Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
+<path d="M441 40L460 56 474 81 486 106 468 133 447 150 439 178 456 192 473 208 489 234 463 253 417 254 398 237 399 196 416 167 423 145 415 118Z" fill="#e9d6b6" stroke="#ac936a" stroke-width="2"/>
+<path d="M432 243Q377 214 343 185Q333 173 354 161" fill="none" stroke="#9d4d2d" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 9" marker-end="url(#arrow)"/>
+<circle cx="432" cy="243" r="8" fill="#a45031" stroke="#fff4da" stroke-width="3"/><circle cx="354" cy="161" r="8" fill="#a45031" stroke="#fff4da" stroke-width="3"/>
+<g fill="#173d3e" font-family="system-ui,sans-serif" font-weight="700" font-size="17"><text x="394" y="277">EGITTO</text><text x="312" y="147">LECCE</text><text x="98" y="214" fill="#24575c" font-size="15">MAR MEDITERRANEO</text></g>
+</svg>
+</div>
+<figcaption class="mapnote">Schema geografico orientativo, non una rotta commerciale documentata.</figcaption>
+</figure>
+<p class="motto reveal">La religione egizia non rimase confinata lungo il Nilo: alcune sue divinità furono venerate anche nelle città dell'Impero romano.</p>
+</section>
+
+<section class="section" id="lupiae">
+<div class="section-number">03 · Il territorio</div>
+<h2>Iside arriva a Lupiae</h2>
+<p class="lead">Nella Lecce romana esisteva un <strong>santuario dedicato a Iside e Serapide</strong>. I suoi resti sono stati scoperti durante gli scavi sotto Palazzo Castromediano-Vernazza.</p>
+<figure class="reveal">
+<div class="photograph wide"><div class="tag">Fotografia reale</div><img loading="lazy" decoding="async" src="https://arteeluoghi.it/wp-content/uploads/photo-gallery/Palazzo_Vernazza/thumb/IMG_20200929_161105.jpg?bwg=1602354380" alt="Fotografia della facciata e delle finestre di Palazzo Castromediano-Vernazza a Lecce."></div>
+<figcaption class="credit">Palazzo Vernazza, Lecce · foto Sara Foti Sciavaliere, da Arte e Luoghi (2020).</figcaption>
+</figure>
+<figure class="reveal">
+<div class="photograph wide"><div class="tag">Scavi archeologici</div><img loading="lazy" decoding="async" src="https://arteeluoghi.it/wp-content/uploads/photo-gallery/Palazzo_Vernazza/thumb/IMG_20200813_185521.jpg?bwg=1602354380" alt="Fotografia reale di uno degli ambienti archeologici sotterranei di Palazzo Vernazza, Lecce."></div>
+<figcaption class="credit">Ambiente archeologico sotterraneo di Palazzo Vernazza · foto Sara Foti Sciavaliere, da Arte e Luoghi (2020).</figcaption>
+</figure>
+<div class="numbers reveal">
+<div class="numberline"><b>1</b><div><strong>Il portico</strong>Gli archeologi hanno riconosciuto resti architettonici di un portico dell'area sacra.</div></div>
+<div class="numberline"><b>2</b><div><strong>Il Purgatorium</strong>Una vasca scavata nella roccia, raggiungibile mediante gradini, era collegata ai rituali di purificazione. L'acqua richiamava simbolicamente quella del Nilo.</div></div>
+</div>
+<p class="caption">Importante: il santuario antico <strong>non era tutto sotterraneo</strong>. Oggi sono sotterranei i resti conservati sotto il palazzo costruito successivamente.</p>
+</section>
+
+<section class="section" id="confronto">
+<div class="section-number">04 · Confronto archeologico</div>
+<h2>Che aspetto poteva avere?</h2>
+<p class="lead">A Lupiae rimangono solo parti del santuario. Per comprenderne la tipologia si può osservare il <strong>tempio di Iside a Pompei</strong>, meglio conosciuto dagli archeologi.</p>
+<figure class="reveal">
+<div class="photograph wide"><div class="tag">Modello museale</div><img loading="lazy" decoding="async" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Naples_National_Archaeological_Museum_%2814399322638%29.jpg/960px-Naples_National_Archaeological_Museum_%2814399322638%29.jpg" alt="Fotografia del plastico ricostruttivo del tempio romano di Iside a Pompei, conservato al Museo Archeologico Nazionale di Napoli."></div>
+<figcaption class="credit">Plastico ricostruttivo del santuario di Iside a <strong>Pompei</strong>, Museo Archeologico Nazionale di Napoli · foto Carole Raddato, CC BY-SA 2.0.</figcaption>
+</figure>
+<p class="motto reveal"><strong>Attenzione:</strong> questa non è la ricostruzione di Lupiae. È un confronto documentato con un altro santuario romano dedicato alla stessa dea. Il MUST di Lecce presenta anche un plastico interpretativo del santuario leccese.</p>
+</section>
+
+<section class="section" id="reperti">
+<div class="section-number">05 · Le prove materiali</div>
+<h2>Le immagini e gli oggetti del culto</h2>
+<p class="lead">I reperti di Palazzo Vernazza permettono di riconoscere la presenza della religione isiaca nella città.</p>
+<figure class="reveal">
+<div class="photograph portrait"><div class="tag">Fotografia da Palazzo Vernazza</div><img loading="lazy" decoding="async" src="https://www.palazzovernazza.it/wp-content/uploads/2020/09/mostraiside01.jpg" alt="Frammento di rilievo antico marmoreo con figura femminile in abiti e attributi rituali, pubblicato dal sito di Palazzo Vernazza."></div>
+<figcaption class="credit">Frammento figurato pubblicato dal sito di Palazzo Vernazza nella sezione dedicata al santuario · foto: Palazzo Vernazza. La precisa identificazione del frammento richiede la scheda di catalogo.</figcaption>
+</figure>
+<div class="numbers reveal">
+<div class="numberline"><b>1</b><div><strong>Oscillum</strong>Decorazione marmorea bifacciale: un lato raffigura Iside, l'altro Anubi. Non è una coppia di medaglioni separati.</div></div>
+<div class="numberline"><b>2</b><div><strong>Labrum</strong>Un bacino in marmo con una dedica a Iside di Memmius Cinyps Tiberinus: una testimonianza epigrafica del culto.</div></div>
+<div class="numberline"><b>3</b><div><strong>Sistro e situla</strong>Strumento musicale e recipiente rituale, documentati nell'iconografia del culto isiaco e nel contesto dei ritrovamenti.</div></div>
+</div>
+</section>
+
+<footer class="ending" id="fine">
+<div class="eyebrow">La conclusione</div><div class="ornament" aria-hidden="true"><span>✦</span></div>
+<h2>Un Egitto lontano.<br>Una storia vicina.</h2>
+<p>A Lecce non troviamo un tempio costruito dagli antichi Egizi, ma un culto di origine egizia <strong>reinterpretato nella città romana</strong>.</p>
+<div class="place"><strong>Palazzo Castromediano-Vernazza · Lecce</strong><span>Vico Vernazza 8 · Qui è visitabile il percorso archeologico con i resti del santuario.</span></div>
+<div class="sources"><strong>Fonti e immagini</strong><p>Testi basati su Palazzo Vernazza, Comune di Lecce e ricerche dell'Università del Salento. Le foto sono autentiche; il plastico rappresenta Pompei e non Lupiae. Nessuna ricostruzione inventata è presentata come evidenza archeologica.</p><ul class="source-links"><li><a href="https://www.palazzovernazza.it/visit-vernazza/">Palazzo Vernazza · Il santuario</a></li><li><a href="https://visitlecce.eu/it/luogo/palazzo-castromediano-vernazza">Visit Lecce · Palazzo Vernazza e plastico del MUST</a></li><li><a href="https://arteeluoghi.it/index.php/2020/10/09/palazzo-vernazza-e-i-suoi-ipogei-lecce-da-scoprire/">Arte e Luoghi · fotografie degli scavi</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Statuette_of_Isis_nursing_Horus,_dedicated_by_Ankhhor_MET_45.2.10_EGDP013278.jpg">The Met · Iside con Horo (CC0)</a></li><li><a href="https://commons.wikimedia.org/wiki/File:Naples_National_Archaeological_Museum_(14399322638).jpg">Modello di Pompei · Carole Raddato (CC BY-SA 2.0)</a></li></ul><p class="citation-note">Le immagini di Palazzo Vernazza e Arte e Luoghi sono mostrate dai siti originali, con attribuzione. L'app non include fotografie prive di provenienza.</p></div>
+</footer>
+</div><div class="roller bottom" aria-hidden="true"></div>
+</main>
 <script>
-(function(){'use strict';
- const chapters=[...document.querySelectorAll('.chapter')];
- const label=document.getElementById('progress-label');
- const update=()=>{const max=Math.max(1,document.documentElement.scrollHeight-innerHeight);const percent=Math.max(0,Math.min(1,scrollY/max));document.documentElement.style.setProperty('--scroll',percent.toFixed(4));document.documentElement.style.setProperty('--opening',(percent*2).toFixed(2));let active='Pronta da srotolare';chapters.forEach(c=>{if(c.getBoundingClientRect().top<innerHeight*.45)active=c.dataset.title});if(percent>.97)active='Pergamena completata';label.textContent=active+' · '+Math.round(percent*100)+'%'};
- let scheduled=false;addEventListener('scroll',()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;update()})},{passive:true});addEventListener('resize',update);update();
- if('IntersectionObserver'in window){const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.08});document.querySelectorAll('.scene').forEach(el=>obs.observe(el))}else document.querySelectorAll('.scene').forEach(el=>el.classList.add('visible'));
- document.getElementById('begin').addEventListener('click',()=>document.getElementById('tappa-1').scrollIntoView({behavior:'smooth'}));
- document.getElementById('again').addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
- const contents=[['Purgatorium','Una vasca scavata nella roccia, utilizzata per rituali di purificazione legati al culto isiaco. Il riferimento al Nilo è simbolico.'],['Oscillum','Una decorazione marmorea sospesa, con Iside su un lato e Anubi sull’altro. Ci permette di riconoscere le divinità egizie nella Lupiae romana.'],['Sistro','Uno strumento musicale a sonagli usato nelle cerimonie di Iside. Il suono accompagnava momenti del rituale.'],['Situla','Un piccolo recipiente legato alle cerimonie e all’acqua rituale: uno degli oggetti che aiutano a ricostruire il culto.'],['Labrum','Grande bacino marmoreo con dedica del mercante Tito Memmio Cinyps Tiberino, importante testimonianza della storia del santuario.']];
- document.querySelectorAll('[data-reperto]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-reperto]').forEach(x=>x.classList.remove('active'));b.classList.add('active');const [t,s]=contents[Number(b.dataset.reperto)];document.getElementById('artifact-title').textContent=t;document.getElementById('artifact-body').textContent=s;}));
- const q=document.getElementById('quiz-result');document.querySelectorAll('.quiz button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.quiz button').forEach(btn=>{btn.disabled=true;if(btn.dataset.ok==='true')btn.classList.add('correct');else if(btn===b)btn.classList.add('wrong')});q.hidden=false;q.textContent=b.dataset.ok==='true'?'Esatto: la cultura egizia si diffuse anche nelle città romane.':'Non proprio. Il santuario è romano: testimonia la diffusione di un culto di origine egizia.'}));
- const dialog=document.getElementById('lightbox'),modal=document.getElementById('modal-img');document.querySelectorAll('.img-open').forEach(b=>b.addEventListener('click',()=>{modal.src=b.dataset.img;modal.alt=b.dataset.caption;document.getElementById('modal-caption').textContent=b.dataset.caption;modal.classList.remove('zoomed');dialog.showModal()}));document.getElementById('close-modal').addEventListener('click',()=>dialog.close());modal.addEventListener('click',()=>modal.classList.toggle('zoomed'));dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
- document.getElementById('share').addEventListener('click',async()=>{const data={title:'Il viaggio di Iside',text:'Srotola la pergamena interattiva: dall’Egitto al Salento.',url:location.href};try{if(navigator.share){await navigator.share(data)}else if(navigator.clipboard){await navigator.clipboard.writeText(location.href);document.getElementById('share').textContent='✓ Link copiato'}else{prompt('Copia il link:',location.href)}}catch(e){if(e.name!=='AbortError')prompt('Copia il link:',location.href)}});
- if('serviceWorker'in navigator && location.protocol==='https:'){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-})();
+(()=>{'use strict';const root=document.documentElement;let busy=false;function progress(){const max=Math.max(1,root.scrollHeight-innerHeight);root.style.setProperty('--progress',String(Math.min(1,Math.max(0,scrollY/max))));busy=false}addEventListener('scroll',()=>{if(!busy){busy=true;requestAnimationFrame(progress)}},{passive:true});addEventListener('resize',progress);progress();const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!reduced&&'IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{rootMargin:'0px 0px -5% 0px',threshold:0.06});document.querySelectorAll('.reveal').forEach(e=>observer.observe(e))}else document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'))})();
 </script>
 </body></html>
